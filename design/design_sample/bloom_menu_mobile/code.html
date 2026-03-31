@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html lang="ja"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary-fixed": "#0b1c30",
+              "surface-variant": "#e0e3e5",
+              "on-tertiary-container": "#f7edff",
+              "on-error": "#ffffff",
+              "surface": "#f7f9fb",
+              "on-primary-container": "#eeefff",
+              "surface-bright": "#f7f9fb",
+              "inverse-surface": "#2d3133",
+              "secondary-container": "#d0e1fb",
+              "secondary": "#505f76",
+              "primary-container": "#2563eb",
+              "on-tertiary-fixed": "#25005a",
+              "primary-fixed": "#dbe1ff",
+              "surface-container-highest": "#e0e3e5",
+              "on-primary-fixed-variant": "#003ea8",
+              "tertiary": "#6a1edb",
+              "inverse-primary": "#b4c5ff",
+              "on-secondary-fixed-variant": "#38485d",
+              "secondary-fixed": "#d3e4fe",
+              "on-tertiary-fixed-variant": "#5a00c6",
+              "tertiary-fixed-dim": "#d2bbff",
+              "outline-variant": "#c3c6d7",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "secondary-fixed-dim": "#b7c8e1",
+              "surface-container": "#eceef0",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed": "#eaddff",
+              "on-tertiary": "#ffffff",
+              "tertiary-container": "#8343f4",
+              "error-container": "#ffdad6",
+              "on-secondary-container": "#54647a",
+              "outline": "#737686",
+              "on-surface-variant": "#434655",
+              "surface-container-low": "#f2f4f6",
+              "surface-container-high": "#e6e8ea",
+              "surface-dim": "#d8dadc",
+              "on-background": "#191c1e",
+              "primary": "#004ac6",
+              "inverse-on-surface": "#eff1f3",
+              "on-secondary": "#ffffff",
+              "on-surface": "#191c1e",
+              "primary-fixed-dim": "#b4c5ff",
+              "surface-tint": "#0053db",
+              "error": "#ba1a1a",
+              "background": "#f7f9fb",
+              "on-primary-fixed": "#00174b"
+            },
+            fontFamily: {
+              "headline": ["Inter", "Noto Sans JP"],
+              "body": ["Inter", "Noto Sans JP"],
+              "label": ["Inter", "Noto Sans JP"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', 'Noto Sans JP', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white dark:bg-slate-900 border-b border-slate-200/50 dark:border-slate-800/50 font-inter antialiased">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-blue-600 dark:text-blue-400">layers</span>
+<h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50">ReserveHub</h1>
+</div>
+<button class="bg-primary-container text-white px-5 py-2 rounded font-semibold transition-transform active:scale-95 duration-200 text-sm">
+                Book Now
+            </button>
+</div>
+</header>
+<main class="pt-24 pb-32 px-4 max-w-2xl mx-auto">
+<!-- Page Title -->
+<div class="mb-8">
+<h1 class="text-[28px] font-bold text-on-surface leading-tight tracking-tight">メニュー・料金</h1>
+<p class="text-[13px] text-secondary mt-2">リラクゼーションサロン BLOOM の厳選メニュー一覧</p>
+</div>
+<!-- Horizontal Tabs -->
+<div class="flex overflow-x-auto hide-scrollbar space-x-2 mb-8 -mx-4 px-4 sticky top-16 bg-surface/90 backdrop-blur-md py-3 z-40">
+<button class="bg-primary-container text-on-primary px-5 py-2 rounded-full text-sm font-medium flex-shrink-0">All</button>
+<button class="bg-surface-container-low text-on-surface-variant px-5 py-2 rounded-full text-sm font-medium flex-shrink-0 hover:bg-surface-container transition-colors">Body Care</button>
+<button class="bg-surface-container-low text-on-surface-variant px-5 py-2 rounded-full text-sm font-medium flex-shrink-0 hover:bg-surface-container transition-colors">Facial</button>
+<button class="bg-surface-container-low text-on-surface-variant px-5 py-2 rounded-full text-sm font-medium flex-shrink-0 hover:bg-surface-container transition-colors">Options</button>
+</div>
+<!-- Menu Section -->
+<div class="space-y-6">
+<!-- Menu Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm">
+<div class="h-48 w-full relative">
+<img alt="Body Care" class="w-full h-full object-cover" data-alt="Close-up of a massage therapist applying pressure to a client's back in a serene dim-lit spa with warm wood accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnqnRTo6_S8MjHJoidOBfyUzVUguR5y87KPbuFcI6enQNcz6v0cedwO6NmbB0BK_C3J64rds7tcTUMoeZMwcUBOImS0bECMpwCGpt6HQEKqfSguSbzW13ie2IbOnvp40cb2UMsf1jQlyJCwWRfgs68_x02pegg0MDACn8t-HtwSizJ-TyUg814AUboQj9mpDhj8QEf0Il4jbtxDJI8IEdsl0VAXxaoTXHYKijEr-3ViZnY2Spaa8M-uO0-g6n6_i8_R8hTHWJ6LA"/>
+<div class="absolute top-4 left-4">
+<span class="bg-tertiary text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Most Popular</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h2 class="text-[22px] font-bold text-on-surface">全身アロマボディケア</h2>
+<div class="flex items-center text-primary font-bold">
+<span class="material-symbols-outlined text-sm mr-1">schedule</span>
+<span class="text-sm">60min</span>
+</div>
+</div>
+<p class="text-[15px] text-on-surface-variant leading-relaxed mb-6">
+                        厳選された天然オイルを使用し、全身のリンパを丁寧に流します。日々の疲れをリセットし、極上の癒やしを提供いたします。
+                    </p>
+<div class="bg-surface-container-low rounded-lg p-4 mb-6 space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-[13px] font-medium text-secondary">平日料金</span>
+<span class="text-lg font-bold text-on-surface">¥8,000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[13px] font-medium text-secondary">土日祝料金</span>
+<span class="text-lg font-bold text-on-surface">¥10,000</span>
+</div>
+</div>
+<div class="space-y-2 mb-6">
+<div class="flex items-center justify-between py-2 border-b border-outline-variant/20">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-primary text-[18px] mr-2">spa</span>
+<span class="text-[13px] text-on-surface">ドライヘッドスパ追加</span>
+</div>
+<span class="text-[13px] font-bold text-tertiary">+¥1,500</span>
+</div>
+<div class="flex items-center justify-between py-2 border-b border-outline-variant/20">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-primary text-[18px] mr-2">water_drop</span>
+<span class="text-[13px] text-on-surface">高級アロマ変更</span>
+</div>
+<span class="text-[13px] font-bold text-tertiary">+¥500</span>
+</div>
+</div>
+<button class="w-full bg-primary-container text-white py-3.5 rounded-lg font-bold text-sm transition-transform active:scale-95 duration-200">
+                        Reserve this menu
+                    </button>
+</div>
+</div>
+<!-- Menu Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm">
+<div class="h-48 w-full relative">
+<img alt="Facial Care" class="w-full h-full object-cover" data-alt="Macro shot of clear skin being treated with a specialized serum during a facial treatment in a clean minimalist environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD58gld_ctODpHjLk61nONvuOtNkGLd9n2xwcY53RVwuTXh7kBZUi3_tbgwvRiIWqyRczfNW6vLf4DY3LVx0I00aKDhiRiAJTlDd_ZDOFtHuueVgehPQHuHQzcmbBZLmlTEePv2Nuv7YeuttlMVvEoDsEh5rDKPHnTLdq_ly3bqkiHRtYcOfIKDV7MqLehDGBZm-pzMCu4OHw0CBG6xUPgxxwiDwjOa3rq7W1BaYZk7qtDjE1RFGgTHBdXyvt4h1NhMr02iCbMFlw"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h2 class="text-[22px] font-bold text-on-surface">美肌フェイシャルコース</h2>
+<div class="flex items-center text-primary font-bold">
+<span class="material-symbols-outlined text-sm mr-1">schedule</span>
+<span class="text-sm">60min</span>
+</div>
+</div>
+<p class="text-[15px] text-on-surface-variant leading-relaxed mb-6">
+                        毛穴の汚れを徹底洗浄し、深層まで潤いを与える集中ケア。ワントーン明るい、透明感のある肌へと導きます。
+                    </p>
+<div class="bg-surface-container-low rounded-lg p-4 mb-6 space-y-3">
+<div class="flex justify-between items-center">
+<span class="text-[13px] font-medium text-secondary">平日料金</span>
+<span class="text-lg font-bold text-on-surface">¥9,000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[13px] font-medium text-secondary">土日祝料金</span>
+<span class="text-lg font-bold text-on-surface">¥11,000</span>
+</div>
+</div>
+<button class="w-full bg-primary-container text-white py-3.5 rounded-lg font-bold text-sm transition-transform active:scale-95 duration-200">
+                        Reserve this menu
+                    </button>
+</div>
+</div>
+</div>
+<!-- Coupons/Tickets Section -->
+<div class="mt-12 mb-10">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-tertiary">confirmation_number</span>
+<h2 class="text-[22px] font-bold text-on-surface">お得な回数券</h2>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant/50 rounded-xl p-6 relative overflow-hidden">
+<!-- Decorative element -->
+<div class="absolute -right-8 -top-8 w-24 h-24 bg-tertiary/10 rounded-full blur-2xl"></div>
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="bg-tertiary-container text-on-tertiary-container text-[11px] font-bold px-2 py-0.5 rounded-full mb-2 inline-block">PREMIUM TICKET</span>
+<h3 class="text-lg font-bold text-on-surface">ボディケア 10回券</h3>
+</div>
+<div class="text-right">
+<div class="text-[28px] font-bold text-primary leading-none">¥70,000</div>
+<div class="text-[13px] text-secondary mt-1">(1回あたり ¥7,000)</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-6 border-t border-dashed border-outline-variant pt-4">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-secondary text-[18px] mr-2">event_note</span>
+<span class="text-[13px] text-on-surface-variant">有効期限: 6ヶ月</span>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-secondary text-[18px] mr-2">groups</span>
+<span class="text-[13px] text-on-surface-variant">ご本人様のみ有効</span>
+</div>
+</div>
+<button class="w-full bg-white border border-primary text-primary py-3 rounded-lg font-bold text-sm hover:bg-primary-fixed transition-colors active:scale-95 duration-200">
+                    回数券を購入する
+                </button>
+</div>
+</div>
+<!-- Notes -->
+<div class="bg-surface-container p-6 rounded-xl space-y-3">
+<div class="flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined text-[18px]">info</span>
+<span class="text-[13px] font-bold">ご利用上の注意点</span>
+</div>
+<ul class="text-[13px] text-on-surface-variant space-y-2 list-disc pl-5">
+<li>曜日や時間帯、セラピストの指名状況により料金が変動する場合がございます。</li>
+<li>キャンセルは前日までにお願いいたします。当日の場合はキャンセル料が発生する可能性がございます。</li>
+<li>回数券の払い戻しは原則お受けできませんので予めご了承ください。</li>
+</ul>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 px-6 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
+<div class="flex flex-col items-center space-y-4 text-center w-full">
+<div class="font-bold text-slate-900 dark:text-slate-100">ReserveHub</div>
+<div class="flex gap-6">
+<a class="text-sm text-slate-500 hover:text-slate-800 transition-all" href="#">Privacy</a>
+<a class="text-sm text-slate-500 hover:text-slate-800 transition-all" href="#">Terms</a>
+<a class="text-sm text-slate-500 hover:text-slate-800 transition-all" href="#">Support</a>
+</div>
+<p class="text-sm text-slate-500 font-inter">© 2024 ReserveHub Architectural Ledger. All rights reserved.</p>
+</div>
+</footer>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 shadow-[0_-4px_20px_rgba(15,23,42,0.04)]">
+<div class="flex justify-around items-center h-16 px-4">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined">home_work</span>
+<span class="text-[11px] font-medium tracking-wide">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 font-bold transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="text-[11px] font-medium tracking-wide">Schedule</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined">badge</span>
+<span class="text-[11px] font-medium tracking-wide">Staff</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[11px] font-medium tracking-wide">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

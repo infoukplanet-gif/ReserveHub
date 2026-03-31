@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ServiceSuite | Business Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-low": "#f2f4f6",
+                        "outline-variant": "#c3c6d7",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface": "#f7f9fb",
+                        "secondary": "#505f76",
+                        "on-surface": "#191c1e",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "surface-tint": "#0053db",
+                        "secondary-fixed": "#d3e4fe",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-container": "#f7edff",
+                        "surface-container-highest": "#e0e3e5",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary": "#ffffff",
+                        "outline": "#737686",
+                        "tertiary-fixed": "#eaddff",
+                        "secondary-container": "#d0e1fb",
+                        "on-background": "#191c1e",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-dim": "#d8dadc",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-container": "#8343f4",
+                        "surface-container-high": "#e6e8ea",
+                        "on-primary-container": "#eeefff",
+                        "background": "#f7f9fb",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "surface-container": "#eceef0",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-fixed": "#25005a",
+                        "on-surface-variant": "#434655",
+                        "on-primary-fixed": "#00174b",
+                        "tertiary-fixed-dim": "#d2bbff",
+                        "on-tertiary-fixed-variant": "#5a00c6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#0b1c30",
+                        "on-secondary-container": "#54647a",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#2d3133",
+                        "primary": "#004ac6",
+                        "tertiary": "#6a1edb",
+                        "surface-variant": "#e0e3e5"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 text-on-surface">
+<!-- Auth Card Container -->
+<main class="w-full max-w-[400px] bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-[0px_4px_20px_rgba(15,23,42,0.04)] overflow-hidden">
+<!-- Header & Logo Section -->
+<div class="px-8 pt-10 pb-6 text-center">
+<div class="flex items-center justify-center mb-6 gap-2">
+<div class="w-10 h-10 bg-primary-container flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined text-white" data-icon="hub">hub</span>
+</div>
+<span class="text-xl font-extrabold tracking-tight text-on-surface">ReserveHub</span>
+</div>
+<h1 class="text-[22px] font-bold text-on-surface leading-tight mb-2">Login to Business Account</h1>
+<p class="text-[13px] text-secondary font-medium">Welcome back to your ServiceSuite manager</p>
+</div>
+<!-- Action Section -->
+<div class="px-8 pb-10">
+<!-- Social Login -->
+<button class="w-full h-11 flex items-center justify-center gap-3 bg-white border border-outline-variant hover:bg-surface-container-low transition-colors rounded-lg mb-6 group">
+<img alt="Google Logo" class="w-4 h-4" data-alt="Official Google G icon with original brand colors on a white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSuog3r_ntqLYxzoshxnYFUvRQE1aAlHuUCXfMwcbeP_AH6oYtLZAjDHqEgYKwvk5pZ4_OV9HWEEh4N1Ay33cwmQViP5GQw1rbl5H9v7pSkT3enkREmNYdNEh4Q7m4zI_uv3o4c3nJhbiItbty9nSQ-oMxi-GGRmk4vNhvj9QnrtL2mqpglFOErYZtf9Qg1hgOt_FzPqOiF-cM9RUypMkWzARVsUfbirZfEAVUY-mv0v6VcqTR6h3XBI92RBp--lgn3hNMLnvAsA"/>
+<span class="text-[14px] font-medium text-on-surface-variant group-active:scale-95 transition-transform">Continue with Google</span>
+</button>
+<div class="relative flex items-center mb-6">
+<div class="flex-grow border-t border-outline-variant/50"></div>
+<span class="flex-shrink mx-4 text-[11px] font-semibold text-outline tracking-widest uppercase">Or email</span>
+<div class="flex-grow border-t border-outline-variant/50"></div>
+</div>
+<!-- Login Form -->
+<form class="space-y-4">
+<div class="space-y-1.5">
+<label class="text-[13px] font-semibold text-on-surface-variant ml-0.5" for="email">Work Email</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]" data-icon="mail">mail</span>
+<input class="w-full pl-10 pr-4 h-11 bg-surface-container rounded-lg border-none focus:ring-2 focus:ring-primary-container/20 focus:bg-white transition-all text-[15px] placeholder:text-outline/70" id="email" placeholder="name@company.com" type="email"/>
+</div>
+</div>
+<div class="space-y-1.5">
+<div class="flex justify-between items-center px-0.5">
+<label class="text-[13px] font-semibold text-on-surface-variant" for="password">Password</label>
+<a class="text-[12px] font-semibold text-primary-container hover:underline" href="#">Forgot?</a>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]" data-icon="lock">lock</span>
+<input class="w-full pl-10 pr-4 h-11 bg-surface-container rounded-lg border-none focus:ring-2 focus:ring-primary-container/20 focus:bg-white transition-all text-[15px] placeholder:text-outline/70" id="password" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<div class="pt-2">
+<button class="w-full h-11 bg-primary-container hover:bg-[#1D4ED8] text-white font-semibold rounded-lg shadow-sm transition-all active:scale-[0.98] text-[15px]" type="submit">
+                        Login
+                    </button>
+</div>
+</form>
+<div class="mt-8 text-center">
+<p class="text-[13px] text-secondary">
+                    Don't have a business account? 
+                    <a class="text-primary-container font-semibold hover:underline" href="#">Start free trial</a>
+</p>
+</div>
+</div>
+<!-- Footer Policy Links -->
+<div class="bg-surface-container-low px-8 py-4 border-t border-outline-variant/30 flex justify-center gap-4">
+<a class="text-[11px] font-medium text-outline hover:text-secondary transition-colors" href="#">Privacy Policy</a>
+<span class="text-outline/30">•</span>
+<a class="text-[11px] font-medium text-outline hover:text-secondary transition-colors" href="#">Terms of Service</a>
+</div>
+</main>
+<!-- Background Decorative Elements -->
+<div class="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
+<div class="absolute top-[10%] right-[15%] w-[400px] h-[400px] rounded-full bg-primary-container/5 blur-3xl"></div>
+<div class="absolute bottom-[10%] left-[10%] w-[300px] h-[300px] rounded-full bg-tertiary-container/5 blur-3xl"></div>
+</div>
+</body></html>

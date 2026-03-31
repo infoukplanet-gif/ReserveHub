@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html lang="ja"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#f7f9fb",
+              "outline-variant": "#c3c6d7",
+              "on-tertiary-container": "#f7edff",
+              "error": "#ba1a1a",
+              "tertiary-fixed": "#eaddff",
+              "inverse-on-surface": "#eff1f3",
+              "secondary-fixed": "#d3e4fe",
+              "inverse-primary": "#b4c5ff",
+              "secondary-fixed-dim": "#b7c8e1",
+              "on-primary-fixed": "#00174b",
+              "surface-container-highest": "#e0e3e5",
+              "primary-container": "#2563eb",
+              "tertiary": "#6a1edb",
+              "primary-fixed-dim": "#b4c5ff",
+              "primary": "#004ac6",
+              "inverse-surface": "#2d3133",
+              "on-secondary": "#ffffff",
+              "tertiary-fixed-dim": "#d2bbff",
+              "surface-container-high": "#e6e8ea",
+              "on-tertiary": "#ffffff",
+              "on-surface-variant": "#434655",
+              "error-container": "#ffdad6",
+              "on-error": "#ffffff",
+              "background": "#f7f9fb",
+              "on-background": "#191c1e",
+              "surface-container-low": "#f2f4f6",
+              "on-secondary-container": "#54647a",
+              "surface-variant": "#e0e3e5",
+              "surface-container": "#eceef0",
+              "surface-tint": "#0053db",
+              "secondary": "#505f76",
+              "on-tertiary-fixed": "#25005a",
+              "on-primary": "#ffffff",
+              "on-primary-container": "#eeefff",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed": "#0b1c30",
+              "tertiary-container": "#8343f4",
+              "primary-fixed": "#dbe1ff",
+              "on-tertiary-fixed-variant": "#5a00c6",
+              "on-error-container": "#93000a",
+              "on-surface": "#191c1e",
+              "outline": "#737686",
+              "surface-bright": "#f7f9fb",
+              "on-primary-fixed-variant": "#003ea8",
+              "on-secondary-fixed-variant": "#38485d",
+              "surface-dim": "#d8dadc",
+              "secondary-container": "#d0e1fb"
+            },
+            fontFamily: {
+              "headline": ["Inter", "Noto Sans JP"],
+              "body": ["Inter", "Noto Sans JP"],
+              "label": ["Inter", "Noto Sans JP"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        display: inline-block;
+        line-height: 1;
+        text-transform: none;
+        letter-spacing: normal;
+        word-wrap: normal;
+        white-space: nowrap;
+        direction: ltr;
+      }
+      body {
+        background-color: #f8fafc;
+        color: #0f172a;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Shell -->
+<header class="w-full top-0 sticky z-40 bg-white dark:bg-slate-900 border-b border-slate-200/50 dark:border-slate-800/50 transition-colors">
+<div class="flex items-center h-16 px-4 w-full max-w-5xl mx-auto">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-blue-600 dark:text-blue-400 cursor-pointer active:scale-95 duration-200" data-icon="arrow_back">arrow_back</span>
+<span class="font-['Inter'] font-bold text-[22px] leading-[1.4] text-slate-900 dark:text-slate-100">Salon Relaxation</span>
+</div>
+<nav class="hidden md:flex ml-12 gap-8">
+<a class="text-slate-500 hover:text-blue-600 transition-colors font-medium" href="#">Home</a>
+<a class="text-blue-600 font-semibold transition-colors" href="#">Staff</a>
+<a class="text-slate-500 hover:text-blue-600 transition-colors font-medium" href="#">Access</a>
+<a class="text-slate-500 hover:text-blue-600 transition-colors font-medium" href="#">My Page</a>
+</nav>
+</div>
+</header>
+<main class="max-w-5xl mx-auto px-4 py-12 md:py-20">
+<!-- Editorial Header Section -->
+<div class="mb-16 md:mb-24">
+<h1 class="text-[36px] font-bold text-on-surface tracking-tight mb-4 leading-tight">スタッフ紹介</h1>
+<div class="h-1 w-12 bg-primary-container rounded-full"></div>
+<p class="mt-6 text-secondary max-w-2xl leading-relaxed">
+                BLOOMが誇る、各分野のスペシャリストたち。お客様一人ひとりの身体の状態に合わせ、最適な施術をご提案いたします。
+            </p>
+</div>
+<!-- Asymmetric Staff Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Staff Member 1 -->
+<div class="bg-surface-container-lowest border border-outline/10 rounded-xl p-6 shadow-[0_4px_20px_rgba(15,23,42,0.04)] transition-all hover:shadow-[0_8px_30px_rgba(15,23,42,0.06)] flex flex-col h-full">
+<div class="relative mb-6">
+<img alt="" class="w-full aspect-square object-cover rounded-[16px]" data-alt="professional headshot of a female therapist with calm expression in a clean modern salon setting soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBy5-_9iHy0MT4uWRB7B7Dzv7-UeN8IjjllNHHpdMxceIvv316ADZ_0tHDgAKQaSsAJTUsrHer6kQgNIcP6y7lXkpfHbII2CYFMPMASmDZW40XKauqexvyTZIL1bROqFwA7K0nuwIqrnL-c-Hq_GJlNxi6gpBEIU0mL5F3woDBOpB7sC_tmbSqkWMPMxoyHAKGY7xBnvpad00LKDPbBboOivWOJCj8r0toeV5hY9-sAT7AXGjcwu-sR_9CpIeIIJmrSWdMVNWGQGw"/>
+<div class="absolute top-4 right-4">
+<span class="bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase">Chief</span>
+</div>
+</div>
+<div class="flex-grow">
+<div class="mb-2">
+<span class="text-secondary text-[13px] font-medium uppercase tracking-widest">店長 / トップセラピスト</span>
+<h3 class="text-[22px] font-semibold text-on-surface mt-1">佐藤 真由美</h3>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-surface-container-low text-on-secondary-container px-2 py-1 rounded text-[12px] font-medium">深層筋アロマ</span>
+<span class="bg-surface-container-low text-on-secondary-container px-2 py-1 rounded text-[12px] font-medium">骨盤矯正</span>
+</div>
+<p class="text-secondary italic text-[14px] leading-relaxed mb-6 border-l-2 border-primary-container/20 pl-4">
+                        「心と身体の調和を大切に、日常の疲れを根本から癒やすお手伝いをいたします。」
+                    </p>
+</div>
+<div class="mt-auto pt-6 border-t border-outline/5">
+<div class="flex justify-between items-center mb-6">
+<span class="text-on-surface-variant text-[13px]">指名料</span>
+<span class="text-[18px] font-bold text-on-surface">¥1,100 <span class="text-[12px] font-normal text-secondary"> (税込)</span></span>
+</div>
+<button class="w-full py-3 px-4 border border-primary text-primary font-semibold rounded-lg hover:bg-primary-container/5 transition-colors active:scale-95 duration-200 text-[15px]">
+                        このスタッフで予約
+                    </button>
+</div>
+</div>
+<!-- Staff Member 2 -->
+<div class="bg-surface-container-lowest border border-outline/10 rounded-xl p-6 shadow-[0_4px_20px_rgba(15,23,42,0.04)] transition-all hover:shadow-[0_8px_30px_rgba(15,23,42,0.06)] flex flex-col h-full">
+<div class="relative mb-6">
+<img alt="" class="w-full aspect-square object-cover rounded-[16px]" data-alt="portrait of a male massage therapist in a minimalist uniform friendly smile soft ambient indoor lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQjy5MszJiOdIVTcZMRoZT2Wm7c-8b1bIPM7QO7_-NLQxJRnvjiEAdRB-Cx-Hcq-yCAABvCvc1u_J3Owa595RBgzfFx-zBGdgr7GDLWDQXd28Y-yPUFkVgwblB6yVleMXOpfUg7ICW7NB_ABa630chIcyT7zH6dXkXkK3M1RYj9V6CdDCwDCh12xJKtygt2MAOPAerN_hVuForDNonDwtaJtITA0BlPC6jUldLzGnYVAoZsgh_HrErpGk9-XDMbFHkxsp1f8_NHA"/>
+</div>
+<div class="flex-grow">
+<div class="mb-2">
+<span class="text-secondary text-[13px] font-medium uppercase tracking-widest">シニアセラピスト</span>
+<h3 class="text-[22px] font-semibold text-on-surface mt-1">田中 健一</h3>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-surface-container-low text-on-secondary-container px-2 py-1 rounded text-[12px] font-medium">スポーツマッサージ</span>
+<span class="bg-surface-container-low text-on-secondary-container px-2 py-1 rounded text-[12px] font-medium">筋膜リリース</span>
+</div>
+<p class="text-secondary italic text-[14px] leading-relaxed mb-6 border-l-2 border-primary-container/20 pl-4">
+                        「確かな技術で、お身体の可動域を広げ、軽やかな毎日をサポートします。」
+                    </p>
+</div>
+<div class="mt-auto pt-6 border-t border-outline/5">
+<div class="flex justify-between items-center mb-6">
+<span class="text-on-surface-variant text-[13px]">指名料</span>
+<span class="text-[18px] font-bold text-on-surface">¥550 <span class="text-[12px] font-normal text-secondary"> (税込)</span></span>
+</div>
+<button class="w-full py-3 px-4 border border-primary text-primary font-semibold rounded-lg hover:bg-primary-container/5 transition-colors active:scale-95 duration-200 text-[15px]">
+                        このスタッフで予約
+                    </button>
+</div>
+</div>
+<!-- Staff Member 3 -->
+<div class="bg-surface-container-lowest border border-outline/10 rounded-xl p-6 shadow-[0_4px_20px_rgba(15,23,42,0.04)] transition-all hover:shadow-[0_8px_30px_rgba(15,23,42,0.06)] flex flex-col h-full">
+<div class="relative mb-6">
+<img alt="" class="w-full aspect-square object-cover rounded-[16px]" data-alt="professional female therapist headshot with warm expression neutral background clean aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBapej_ESVXdi4td1mb7H-Wmsd3Rgw1ho1sTeXJbmStADEUBPWN8bwTtfeQ4uIhuZdg7V3UHdlbIvxPMpJSIuFForXLad-HnhfxPodKQxUosIoOhyEOx03K6Oem-g8SoXxZ_ZL8bpAGz_fz2cviwMuf9709zqlZmRHbT6Xomc1fSQsNrtcuWSTee1UOnZvLwiMvAE05XfRPh06YGgUPX_O8fWAIy8pYQiUnS-pF2BjWml0RDyHYgIwLsGoisnBnvEABtsyxoKj8UA"/>
+</div>
+<div class="flex-grow">
+<div class="mb-2">
+<span class="text-secondary text-[13px] font-medium uppercase tracking-widest">セラピスト</span>
+<h3 class="text-[22px] font-semibold text-on-surface mt-1">伊藤 結衣</h3>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-surface-container-low text-on-secondary-container px-2 py-1 rounded text-[12px] font-medium">ヘッドスパ</span>
+<span class="bg-surface-container-low text-on-secondary-container px-2 py-1 rounded text-[12px] font-medium">リフレクソロジー</span>
+</div>
+<p class="text-secondary italic text-[14px] leading-relaxed mb-6 border-l-2 border-primary-container/20 pl-4">
+                        「至福のリラックスタイムを。極上のハンドテクニックで眠りの世界へ誘います。」
+                    </p>
+</div>
+<div class="mt-auto pt-6 border-t border-outline/5">
+<div class="flex justify-between items-center mb-6">
+<span class="text-on-surface-variant text-[13px]">指名料</span>
+<span class="text-[18px] font-bold text-on-surface">¥550 <span class="text-[12px] font-normal text-secondary"> (税込)</span></span>
+</div>
+<button class="w-full py-3 px-4 border border-primary text-primary font-semibold rounded-lg hover:bg-primary-container/5 transition-colors active:scale-95 duration-200 text-[15px]">
+                        このスタッフで予約
+                    </button>
+</div>
+</div>
+<!-- Staff Member 4 -->
+<div class="bg-surface-container-lowest border border-outline/10 rounded-xl p-6 shadow-[0_4px_20px_rgba(15,23,42,0.04)] transition-all hover:shadow-[0_8px_30px_rgba(15,23,42,0.06)] flex flex-col h-full">
+<div class="relative mb-6">
+<img alt="" class="w-full aspect-square object-cover rounded-[16px]" data-alt="male professional therapist smiling in a professional workspace bright airy office lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpWWq98V9l6XsqiKHsR5okvl5IvrkZhxsAV3OnL2Huz9b9HQNyUkmPoSaF5mB_3SyRKV3LKFKJfT-zuCXuxluTERPYCe3Z4RIQrijAwkJbdVEWQ9xlk0Wj2M8As17RY1IZ6nvvWadgbgjHyphkgjFkIeApiawaksGa0q3lOeLfIKCiuhZrzsyWBM3KQo8xUnsyorrLFLSFguEd9TOg9_LnNKcNDkyBUJ_KEsDSz5C17b_DAiGG0MlazQjDppHFRo5eLx53yAJ4gQ"/>
+</div>
+<div class="flex-grow">
+<div class="mb-2">
+<span class="text-secondary text-[13px] font-medium uppercase tracking-widest">セラピスト</span>
+<h3 class="text-[22px] font-semibold text-on-surface mt-1">山本 拓海</h3>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-surface-container-low text-on-secondary-container px-2 py-1 rounded text-[12px] font-medium">整体</span>
+<span class="bg-surface-container-low text-on-secondary-container px-2 py-1 rounded text-[12px] font-medium">タイ古式</span>
+</div>
+<p class="text-secondary italic text-[14px] leading-relaxed mb-6 border-l-2 border-primary-container/20 pl-4">
+                        「ダイナミックなストレッチと指圧を組み合わせ、頑固なコリを解きほぐします。」
+                    </p>
+</div>
+<div class="mt-auto pt-6 border-t border-outline/5">
+<div class="flex justify-between items-center mb-6">
+<span class="text-on-surface-variant text-[13px]">指名料</span>
+<span class="text-[18px] font-bold text-on-surface">¥0 <span class="text-[12px] font-normal text-secondary"> (税込)</span></span>
+</div>
+<button class="w-full py-3 px-4 border border-primary text-primary font-semibold rounded-lg hover:bg-primary-container/5 transition-colors active:scale-95 duration-200 text-[15px]">
+                        このスタッフで予約
+                    </button>
+</div>
+</div>
+<!-- Staff Member 5 -->
+<div class="bg-surface-container-lowest border border-outline/10 rounded-xl p-6 shadow-[0_4px_20px_rgba(15,23,42,0.04)] transition-all hover:shadow-[0_8px_30px_rgba(15,23,42,0.06)] flex flex-col h-full">
+<div class="relative mb-6">
+<img alt="" class="w-full aspect-square object-cover rounded-[16px]" data-alt="professional female therapist with gentle expression against a minimal studio background sophisticated lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2SqcOevCLKTLZSq_xGVJBQNOqmYsLiumJMYCHnqfaxWdKaPaTXQqwJMBEZ37YEO-1BY96s_d5sIkievLU1PN-TjOrw_PFzdnR8ANzXqqGatlRFtxlnTRr0W528Sz_2zWsQRqyaY7Rv-2a_bAuLq7FSSQeW_Z6w2xmHNyRnvccn7WpecJ9RqQ_NAcBt8I2neGa6IRchWkPHtdQpvsm4AEQ9c-p0YSABhjzVDLmfGfEEL8UP9VoMdfduW0cOoL-D12px4sx1jk2cA"/>
+</div>
+<div class="flex-grow">
+<div class="mb-2">
+<span class="text-secondary text-[13px] font-medium uppercase tracking-widest">セラピスト</span>
+<h3 class="text-[22px] font-semibold text-on-surface mt-1">小林 美咲</h3>
+</div>
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="bg-surface-container-low text-on-secondary-container px-2 py-1 rounded text-[12px] font-medium">ロミロミ</span>
+<span class="bg-surface-container-low text-on-secondary-container px-2 py-1 rounded text-[12px] font-medium">美脚ケア</span>
+</div>
+<p class="text-secondary italic text-[14px] leading-relaxed mb-6 border-l-2 border-primary-container/20 pl-4">
+                        「流れるようなリズムのオイルトリートメントで、心身のデトックスを。」
+                    </p>
+</div>
+<div class="mt-auto pt-6 border-t border-outline/5">
+<div class="flex justify-between items-center mb-6">
+<span class="text-on-surface-variant text-[13px]">指名料</span>
+<span class="text-[18px] font-bold text-on-surface">¥0 <span class="text-[12px] font-normal text-secondary"> (税込)</span></span>
+</div>
+<button class="w-full py-3 px-4 border border-primary text-primary font-semibold rounded-lg hover:bg-primary-container/5 transition-colors active:scale-95 duration-200 text-[15px]">
+                        このスタッフで予約
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Shell (Mobile Only) -->
+<footer class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 pb-safe bg-white dark:bg-slate-900 border-t border-slate-200/50 dark:border-slate-800/50 shadow-[0_-4px_20px_rgba(15,23,42,0.04)]">
+<div class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-500 transition-all active:scale-90 duration-200 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Inter'] text-[13px] font-medium">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 font-semibold active:scale-90 duration-200 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="group" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-['Inter'] text-[13px] font-medium">Staff</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-500 transition-all active:scale-90 duration-200 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-['Inter'] text-[13px] font-medium">Access</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-500 transition-all active:scale-90 duration-200 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Inter'] text-[13px] font-medium">My Page</span>
+</div>
+</footer>
+<!-- Spacing for bottom nav on mobile -->
+<div class="h-24 md:hidden"></div>
+</body></html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html lang="ja"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BLOOM - Step 6: Confirmation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#f7f9fb",
+              "outline-variant": "#c3c6d7",
+              "on-tertiary-container": "#f7edff",
+              "error": "#ba1a1a",
+              "tertiary-fixed": "#eaddff",
+              "inverse-on-surface": "#eff1f3",
+              "secondary-fixed": "#d3e4fe",
+              "inverse-primary": "#b4c5ff",
+              "secondary-fixed-dim": "#b7c8e1",
+              "on-primary-fixed": "#00174b",
+              "surface-container-highest": "#e0e3e5",
+              "primary-container": "#2563eb",
+              "tertiary": "#6a1edb",
+              "primary-fixed-dim": "#b4c5ff",
+              "primary": "#004ac6",
+              "inverse-surface": "#2d3133",
+              "on-secondary": "#ffffff",
+              "tertiary-fixed-dim": "#d2bbff",
+              "surface-container-high": "#e6e8ea",
+              "on-tertiary": "#ffffff",
+              "on-surface-variant": "#434655",
+              "error-container": "#ffdad6",
+              "on-error": "#ffffff",
+              "background": "#f7f9fb",
+              "on-background": "#191c1e",
+              "surface-container-low": "#f2f4f6",
+              "on-secondary-container": "#54647a",
+              "surface-variant": "#e0e3e5",
+              "surface-container": "#eceef0",
+              "surface-tint": "#0053db",
+              "secondary": "#505f76",
+              "on-tertiary-fixed": "#25005a",
+              "on-primary": "#ffffff",
+              "on-primary-container": "#eeefff",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed": "#0b1c30",
+              "tertiary-container": "#8343f4",
+              "primary-fixed": "#dbe1ff",
+              "on-tertiary-fixed-variant": "#5a00c6",
+              "on-error-container": "#93000a",
+              "on-surface": "#191c1e",
+              "outline": "#737686",
+              "surface-bright": "#f7f9fb",
+              "on-primary-fixed-variant": "#003ea8",
+              "on-secondary-fixed-variant": "#38485d",
+              "surface-dim": "#d8dadc",
+              "secondary-container": "#d0e1fb"
+            },
+            fontFamily: {
+              "headline": ["Inter", "Noto Sans JP"],
+              "body": ["Inter", "Noto Sans JP"],
+              "label": ["Inter", "Noto Sans JP"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: #f8fafc;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface antialiased">
+<!-- TopAppBar from JSON -->
+<header class="w-full top-0 sticky bg-white dark:bg-slate-900 border-b border-slate-200/50 dark:border-slate-800/50 z-50">
+<div class="flex items-center h-16 px-4 w-full max-w-2xl mx-auto justify-between">
+<div class="flex items-center gap-4">
+<button class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors active:scale-95 duration-200 p-2 rounded-full">
+<span class="material-symbols-outlined text-blue-600 dark:text-blue-400">arrow_back</span>
+</button>
+<h1 class="font-['Inter'] font-bold text-[22px] leading-[1.4] text-slate-900 dark:text-slate-100">Salon Relaxation</h1>
+</div>
+<div class="text-[13px] font-medium text-slate-500">Step 6 of 6</div>
+</div>
+</header>
+<main class="max-w-2xl mx-auto px-4 py-8 mb-32">
+<!-- Stepper: Architectural Ledger Style -->
+<div class="mb-10 px-2">
+<div class="flex items-center justify-between relative">
+<div class="absolute top-1/2 left-0 w-full h-[2px] bg-surface-container-high -translate-y-1/2 -z-10"></div>
+<!-- Step 1-5 (Completed) -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center text-[12px] font-bold">
+<span class="material-symbols-outlined text-sm">check</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center text-[12px] font-bold">
+<span class="material-symbols-outlined text-sm">check</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center text-[12px] font-bold">
+<span class="material-symbols-outlined text-sm">check</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center text-[12px] font-bold">
+<span class="material-symbols-outlined text-sm">check</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center text-[12px] font-bold">
+<span class="material-symbols-outlined text-sm">check</span>
+</div>
+</div>
+<!-- Step 6 (Active) -->
+<div class="flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-white border-2 border-primary-container text-primary-container flex items-center justify-center text-[14px] font-bold shadow-sm">
+                        6
+                    </div>
+</div>
+</div>
+<div class="flex justify-between mt-3 px-1">
+<span class="text-[10px] text-slate-400 font-medium">Menu</span>
+<span class="text-[10px] text-slate-400 font-medium ml-4">Staff</span>
+<span class="text-[10px] text-slate-400 font-medium ml-4">Date</span>
+<span class="text-[10px] text-slate-400 font-medium ml-4">Options</span>
+<span class="text-[10px] text-slate-400 font-medium ml-4">Details</span>
+<span class="text-[10px] text-primary font-bold">Confirm</span>
+</div>
+</div>
+<h2 class="text-[28px] font-bold text-slate-900 mb-2 leading-tight">ご予約内容の確認</h2>
+<p class="text-slate-500 mb-8 text-[15px]">以下の内容で予約を確定します。よろしければ「予約を確定する」ボタンを押してください。</p>
+<!-- Summary Card: Surface Lowest on Canvas -->
+<div class="bg-white rounded-xl border border-slate-200 overflow-hidden mb-6">
+<div class="p-6 space-y-8">
+<!-- Date & Time -->
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 bg-slate-50 rounded-lg flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-blue-600">calendar_today</span>
+</div>
+<div class="flex-grow">
+<p class="text-[13px] text-slate-500 font-medium uppercase tracking-wider mb-1">Date &amp; Time</p>
+<p class="text-[18px] font-semibold text-slate-900">2023年10月24日 (火)</p>
+<p class="text-[15px] text-slate-600">14:00 - 15:30 (90分)</p>
+</div>
+</div>
+<!-- Menu & Options -->
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 bg-slate-50 rounded-lg flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-blue-600">spa</span>
+</div>
+<div class="flex-grow">
+<p class="text-[13px] text-slate-500 font-medium uppercase tracking-wider mb-1">Menu &amp; Options</p>
+<p class="text-[18px] font-semibold text-slate-900">深層アロマトリートメント</p>
+<div class="mt-2 space-y-1">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+<span class="text-[15px] text-slate-600">高濃度酸素オイル変更</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+<span class="text-[15px] text-slate-600">延長 15分</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Staff -->
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 bg-slate-50 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+<img alt="Staff member" class="w-full h-full object-cover" data-alt="professional portrait of a friendly female therapist with a warm smile in a clean modern salon setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSAOlXhMvpPXmi6LkX7z1KsCWx5NXUDqtrYtYc7sGchT7oVE5aEwU6jM8rYuOg2Eek3j51P4UjIqFJoFbAMCMQTMAJdXyHoKo30QsPURDl_h56l1J_Auah7v-4hOtoKDh055fRIt-2IZFOL-EX9rx2rxML_hDUYBlqOEcXl5pIB9A019mkWAmkES327d41wPTRZeQ3qdjPxGCBC5WHJeLBmVFo0_6jGn4UYFR_juxzmihzX0vNAvV7E4UJ2Ag6-7EMePRhSdyS1g"/>
+</div>
+<div class="flex-grow">
+<p class="text-[13px] text-slate-500 font-medium uppercase tracking-wider mb-1">Staff</p>
+<p class="text-[18px] font-semibold text-slate-900">佐藤 真由美</p>
+<p class="text-[13px] text-slate-500">指名料あり</p>
+</div>
+</div>
+</div>
+<!-- Price Breakdown: Surface Container Low -->
+<div class="bg-slate-50 p-6 border-t border-slate-200">
+<div class="space-y-3 mb-6">
+<div class="flex justify-between text-[15px]">
+<span class="text-slate-600">メニュー料金</span>
+<span class="text-slate-900 font-medium">¥12,000</span>
+</div>
+<div class="flex justify-between text-[15px]">
+<span class="text-slate-600">オプション合計</span>
+<span class="text-slate-900 font-medium">¥3,500</span>
+</div>
+<div class="flex justify-between text-[15px]">
+<span class="text-slate-600">指名料</span>
+<span class="text-slate-900 font-medium">¥500</span>
+</div>
+</div>
+<div class="pt-4 border-t border-slate-200 flex justify-between items-end">
+<span class="text-[15px] font-bold text-slate-900">合計金額 (税込)</span>
+<div class="text-right">
+<span class="text-[28px] font-bold text-blue-600 leading-none">¥16,000</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Cancellation Policy Note -->
+<div class="bg-blue-50 rounded-lg p-4 mb-10 flex gap-3">
+<span class="material-symbols-outlined text-blue-600 flex-shrink-0">info</span>
+<div class="text-[13px] text-blue-800 leading-relaxed">
+<p class="font-bold mb-1">キャンセルポリシーについて</p>
+<p>前日までのキャンセルは無料です。当日のキャンセルは予約代金の50%、ご連絡なしのキャンセルは100%を申し受けます。</p>
+</div>
+</div>
+<!-- Primary CTA -->
+<button class="w-full bg-primary-container text-white font-bold py-5 rounded-lg text-[18px] shadow-lg hover:bg-primary transition-all active:scale-[0.98] duration-200">
+            予約を確定する
+        </button>
+<button class="w-full mt-4 text-slate-500 font-medium py-3 text-[15px] hover:text-slate-700 transition-colors">
+            内容を修正する
+        </button>
+</main>
+<!-- BottomNavBar from JSON (Suppressed on transactional focus but structure kept for design logic if needed) -->
+<!-- The prompt mandates a transactional focus, but the instructions say only render if top-level. This is a focused checkout, so suppressing main nav is best UX. -->
+</body></html>

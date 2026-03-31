@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html lang="ja"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#f7f9fb",
+              "outline-variant": "#c3c6d7",
+              "on-tertiary-container": "#f7edff",
+              "error": "#ba1a1a",
+              "tertiary-fixed": "#eaddff",
+              "inverse-on-surface": "#eff1f3",
+              "secondary-fixed": "#d3e4fe",
+              "inverse-primary": "#b4c5ff",
+              "secondary-fixed-dim": "#b7c8e1",
+              "on-primary-fixed": "#00174b",
+              "surface-container-highest": "#e0e3e5",
+              "primary-container": "#2563eb",
+              "tertiary": "#6a1edb",
+              "primary-fixed-dim": "#b4c5ff",
+              "primary": "#004ac6",
+              "inverse-surface": "#2d3133",
+              "on-secondary": "#ffffff",
+              "tertiary-fixed-dim": "#d2bbff",
+              "surface-container-high": "#e6e8ea",
+              "on-tertiary": "#ffffff",
+              "on-surface-variant": "#434655",
+              "error-container": "#ffdad6",
+              "on-error": "#ffffff",
+              "background": "#f7f9fb",
+              "on-background": "#191c1e",
+              "surface-container-low": "#f2f4f6",
+              "on-secondary-container": "#54647a",
+              "surface-variant": "#e0e3e5",
+              "surface-container": "#eceef0",
+              "surface-tint": "#0053db",
+              "secondary": "#505f76",
+              "on-tertiary-fixed": "#25005a",
+              "on-primary": "#ffffff",
+              "on-primary-container": "#eeefff",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed": "#0b1c30",
+              "tertiary-container": "#8343f4",
+              "primary-fixed": "#dbe1ff",
+              "on-tertiary-fixed-variant": "#5a00c6",
+              "on-error-container": "#93000a",
+              "on-surface": "#191c1e",
+              "outline": "#737686",
+              "surface-bright": "#f7f9fb",
+              "on-primary-fixed-variant": "#003ea8",
+              "on-secondary-fixed-variant": "#38485d",
+              "surface-dim": "#d8dadc",
+              "secondary-container": "#d0e1fb"
+            },
+            fontFamily: {
+              "headline": ["Inter", "Noto Sans JP"],
+              "body": ["Inter", "Noto Sans JP"],
+              "label": ["Inter", "Noto Sans JP"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body { font-family: 'Inter', 'Noto Sans JP', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased min-h-screen">
+<!-- Top Navigation -->
+<header class="w-full top-0 sticky z-50 bg-white dark:bg-slate-900 border-b border-slate-200/50 dark:border-slate-800/50">
+<div class="flex items-center h-16 px-4 w-full max-w-md mx-auto">
+<button class="material-symbols-outlined text-slate-500 hover:bg-slate-50 transition-colors p-2 rounded-lg active:scale-95 duration-200" data-icon="arrow_back">arrow_back</button>
+<h1 class="font-['Inter'] font-bold text-[22px] leading-[1.4] ml-2 text-slate-900 dark:text-slate-100">Salon Relaxation</h1>
+</div>
+</header>
+<main class="max-w-md mx-auto px-6 py-12 pb-32">
+<!-- Success State Section -->
+<section class="flex flex-col items-center text-center mb-10">
+<div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-[48px] text-green-600" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h2 class="text-[28px] font-bold text-on-surface leading-tight mb-2">ご予約が確定しました</h2>
+<p class="text-secondary text-[15px]">ご来店を心よりお待ちしております。</p>
+</section>
+<!-- Reservation Detail Card -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden shadow-[0_4px_20px_rgba(15,23,42,0.04)] mb-8">
+<div class="bg-surface-container-low px-6 py-3 border-b border-outline-variant/20 flex justify-between items-center">
+<span class="text-[13px] font-semibold text-secondary uppercase tracking-wider">Reservation ID</span>
+<span class="text-[14px] font-bold text-primary font-mono">#RH-20260405-001</span>
+</div>
+<div class="p-6 space-y-6">
+<!-- Data Grid -->
+<div class="grid grid-cols-1 gap-5">
+<div class="space-y-1">
+<p class="text-[13px] text-secondary">日時 / Date &amp; Time</p>
+<p class="text-[18px] font-semibold text-on-surface">2026年4月5日 (日) 14:00 - 15:30</p>
+</div>
+<div class="space-y-1">
+<p class="text-[13px] text-secondary">メニュー / Menu</p>
+<p class="text-[18px] font-semibold text-on-surface leading-snug">アロマリラクゼーション プレミアムコース (90分)</p>
+</div>
+<div class="space-y-1">
+<p class="text-[13px] text-secondary">担当スタッフ / Staff</p>
+<div class="flex items-center gap-3 mt-1">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="professional portrait of a salon therapist with a kind expression, soft studio lighting, neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfLwzMTpalj9J9WgVeEmAK-v6az0kGbv7T3BcBxFJxXcbZYM5s30wPllXTXOhh2XDGXCVmYzzW-uflBdVo2ZHdv8ly3pcon-Wtf2wh3_O4WEtfsAPMmdNeH_NbCM8OTlwxq9bRuFEtJnTPAuDix1_oIFMjgoTZk2ce9tWOIO3mgYpwNNluAbjYgubfla2RkqZAUAWn0PqUm0tLtJwPqMvFIz4mjoHWYxGn6M67IGdEikVwwMp5wCO6NFHQxKO9o3YEYQRTnFO9Yw"/>
+</div>
+<p class="text-[15px] font-medium text-on-surface">田中 優子</p>
+</div>
+</div>
+</div>
+<!-- Total Amount -->
+<div class="pt-6 border-t border-outline-variant/20 flex justify-between items-end">
+<p class="text-[15px] font-medium text-on-surface">合計金額 / Total</p>
+<div class="text-right">
+<span class="text-[14px] font-medium mr-1">¥</span>
+<span class="text-[28px] font-bold text-on-surface">12,800</span>
+<span class="text-[13px] text-secondary ml-1">(税込)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="space-y-4">
+<button class="w-full flex items-center justify-center gap-2 py-4 border border-outline text-on-surface font-semibold rounded-lg hover:bg-surface-container-low transition-all active:scale-[0.98] duration-200">
+<span class="material-symbols-outlined text-[20px]" data-icon="calendar_add_on">calendar_add_on</span>
+                Googleカレンダーに追加
+            </button>
+<div class="flex justify-center pt-4">
+<a class="text-[15px] text-secondary hover:text-primary transition-colors font-medium flex items-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform" data-icon="keyboard_backspace">keyboard_backspace</span>
+                    トップページに戻る
+                </a>
+</div>
+</div>
+<!-- Additional Info -->
+<div class="mt-12 p-6 bg-blue-50/50 rounded-xl border border-blue-100/50">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="info">info</span>
+<div class="space-y-2">
+<h4 class="text-[14px] font-bold text-on-primary-fixed-variant">ご案内</h4>
+<p class="text-[13px] text-on-secondary-fixed-variant leading-relaxed">
+                        予約確認メールを送信いたしました。キャンセル・変更は前日の18時まで承っております。当日のご来店の際は、10分前にお越しください。
+                    </p>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 pb-safe bg-white dark:bg-slate-900 shadow-[0_-4px_20px_rgba(15,23,42,0.04)] border-t border-slate-200/50 dark:border-slate-800/50">
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-500 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Inter'] text-[13px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-500 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-['Inter'] text-[13px] font-medium">Staff</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-blue-500 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-['Inter'] text-[13px] font-medium">Access</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 font-semibold hover:text-blue-500 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-['Inter'] text-[13px] font-medium">My Page</span>
+</a>
+</nav>
+</body></html>

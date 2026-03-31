@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#f2f4f6",
+              "on-secondary-fixed-variant": "#38485d",
+              "primary-fixed-dim": "#b4c5ff",
+              "surface-container-high": "#e6e8ea",
+              "tertiary": "#6a1edb",
+              "on-tertiary-container": "#f7edff",
+              "secondary-container": "#d0e1fb",
+              "primary-fixed": "#dbe1ff",
+              "secondary": "#505f76",
+              "on-background": "#191c1e",
+              "surface-dim": "#d8dadc",
+              "tertiary-container": "#8343f4",
+              "on-secondary": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "background": "#f7f9fb",
+              "secondary-fixed": "#d3e4fe",
+              "surface-container-lowest": "#ffffff",
+              "on-primary": "#ffffff",
+              "tertiary-fixed": "#eaddff",
+              "on-secondary-fixed": "#0b1c30",
+              "on-primary-fixed": "#00174b",
+              "surface-variant": "#e0e3e5",
+              "on-tertiary-fixed": "#25005a",
+              "surface-container": "#eceef0",
+              "on-error": "#ffffff",
+              "inverse-primary": "#b4c5ff",
+              "error": "#ba1a1a",
+              "surface-tint": "#0053db",
+              "on-primary-fixed-variant": "#003ea8",
+              "primary-container": "#2563eb",
+              "outline": "#737686",
+              "on-error-container": "#93000a",
+              "inverse-surface": "#2d3133",
+              "outline-variant": "#c3c6d7",
+              "primary": "#004ac6",
+              "on-tertiary-fixed-variant": "#5a00c6",
+              "on-surface": "#191c1e",
+              "surface-container-highest": "#e0e3e5",
+              "surface-bright": "#f7f9fb",
+              "surface": "#f7f9fb",
+              "inverse-on-surface": "#eff1f3",
+              "on-secondary-container": "#54647a",
+              "error-container": "#ffdad6",
+              "tertiary-fixed-dim": "#d2bbff",
+              "on-primary-container": "#eeefff",
+              "secondary-fixed-dim": "#b7c8e1",
+              "on-surface-variant": "#434655"
+            },
+            fontFamily: {
+              "headline": ["Inter", "Noto Sans JP"],
+              "body": ["Inter", "Noto Sans JP"],
+              "label": ["Inter", "Noto Sans JP"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-20">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between px-6 py-3 max-w-full mx-auto">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-blue-600 dark:text-blue-500" data-icon="spa">spa</span>
+<span class="text-lg font-bold text-slate-900 dark:text-slate-50 tracking-tight">BLOOM</span>
+</div>
+<button class="bg-primary-container text-on-primary-container px-4 py-1.5 rounded-lg font-sans text-sm font-semibold tracking-tight active:opacity-80 transition-opacity">
+                Book Now
+            </button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-20 px-4 max-w-md mx-auto">
+<!-- Page Header -->
+<div class="mb-8">
+<h1 class="text-[36px] font-bold text-on-surface leading-[1.2] tracking-tight mb-2">News &amp; Blog</h1>
+<p class="text-[15px] text-on-surface-variant leading-[1.6]">Updates, styling tips, and salon insights from our experts.</p>
+</div>
+<!-- Featured / Latest Post (Large Card) -->
+<div class="mb-8 group">
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/50 overflow-hidden shadow-none">
+<div class="aspect-[16/9] w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Interior of a modern high-end hair salon with warm ambient lighting, sleek black chairs, and large minimalist mirrors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB758Fnj7XFThr1-uepoqAfGHjJ-OQNxA0tKJarpuTnuuj01gEzHaIzr9iaQtoI0mA2VAbJKBpKWZcS4RjSr1HkC7z-Vwy5IhkS7b8ibCXyqEQ6Ng2Jnv-UC8w74S2Hz57KpUNl6YbASFqtPiVIsOEKzUI3c38bjOJe-3KDH_r5hqC9c1dJTd6YZbBdMc59voYFHOIYgbGSY7IjeXLip-eb608nDOHFIlflPskf0v7358dyLh5dH4Mr-k4FdBKGRI28JSkNuGmlRw"/>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-3 mb-3">
+<span class="px-3 py-1 bg-tertiary/10 text-tertiary text-[11px] font-bold uppercase tracking-wider rounded-full">News</span>
+<span class="text-[13px] text-on-surface-variant">2026.04.01</span>
+</div>
+<h2 class="text-[22px] font-semibold text-on-surface leading-[1.4] mb-3">Golden Week Holiday Hours &amp; Exclusive Spring Treatment Package</h2>
+<p class="text-[15px] text-on-surface-variant line-clamp-2 leading-[1.6]">We are excited to announce our special operating hours for the upcoming Golden Week and a limited-time botanical spa experience...</p>
+</div>
+</div>
+</div>
+<!-- Blog Grid (Mobile Stack) -->
+<div class="grid grid-cols-1 gap-6">
+<!-- Card 1 -->
+<div class="flex gap-4 items-start bg-transparent py-4 border-b border-surface-container-high last:border-0">
+<div class="w-24 h-24 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Close-up of professional stylist applying hair treatment products with precision in a bright studio environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDl8w7Lyb7_2gdR3scIALRjyPU-MV5Lfj1xchXqfLHlElGq7C7K2HfsDUgGKDv7vkMZ8X8x7iHHIYMlvZA9rDOo4dEc_1taXo5fcxKn99SeswuY6KTao2XWQCn62DJ1lAvhRs-Yd1e5Jez-wdIq-mPeifZEhFLLRVj0H1SGBxz65uKrdEUvccmIqXHpEvkMfwUYp_fl2vbOXjDSPjBpIH2pGmdFHTVaQJ57c3-61rEWHXVJydzm_UJxhM8S06WBQ1aCcZtCsK6VXw"/>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider rounded-full">Style Guide</span>
+<span class="text-[12px] text-on-surface-variant">2026.03.25</span>
+</div>
+<h3 class="text-[15px] font-semibold text-on-surface leading-[1.4] line-clamp-2">5 Essential Tips for Maintaining Your Summer Hair Color</h3>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="flex gap-4 items-start bg-transparent py-4 border-b border-surface-container-high last:border-0">
+<div class="w-24 h-24 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Close-up of various high-end organic beauty products in minimalist white packaging arranged on a marble surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHBfL0Q9IGvBLxw-mtNYrMKbzLBr_GDr_BF5QP06y067Wmj_IAMpD1bl3GD7d6Jh4rDywYpavoZ7XsyqDTOwySbl3HOP6eYYWHxXb7DXFRLco8Lb8bhx2CP2qfK_GyAQctmBNaVkzLYUoEdO13yX7R1JbbvC3YtFoCPAdWezeHuxHCh9N8mhkVfUiPF8sLLm9G3tki7YJiPAeDd8epVbtjvhzq4RC4LYOxyzt-oKws7WuiuiiZ-i2BsiD1iyVtWToCW1kvAqkxrw"/>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider rounded-full">Product</span>
+<span class="text-[12px] text-on-surface-variant">2026.03.18</span>
+</div>
+<h3 class="text-[15px] font-semibold text-on-surface leading-[1.4] line-clamp-2">Now In Stock: The Signature Serenity Botanical Oil Collection</h3>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="flex gap-4 items-start bg-transparent py-4 border-b border-surface-container-high last:border-0">
+<div class="w-24 h-24 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Stylist performing a scalp massage on a client in a dimly lit serene spa room with warm wood accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARlwVUBu9kc0ptfvHYWyLC7cU-hyoLSuWWZLqLMq5_W6PTDKT2wdYrFM5rFONPMVIIiwn86I5jTHx9GZBFid38OPlmzBJj0X8_OnyqpRdOd3iKkoWr6Bl1ixUvMGX2A4zk7MUSTU5NR09ZBm5DnKy85RpaF5a4B9jhyHEoT9lZXaxH8OoEXPfHxgya65SElhXuCu1lFfCR8fiE8kXzTNc76CY2rDNotGGSVXcB2L47vqtwG55nPG3lMh9Q2YIpqHCCUyGe6t5LMQ"/>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider rounded-full">Wellness</span>
+<span class="text-[12px] text-on-surface-variant">2026.03.10</span>
+</div>
+<h3 class="text-[15px] font-semibold text-on-surface leading-[1.4] line-clamp-2">Understanding the Connection Between Stress and Scalp Health</h3>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="flex gap-4 items-start bg-transparent py-4 border-b border-surface-container-high last:border-0">
+<div class="w-24 h-24 shrink-0 rounded-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Portrait of a smiling salon staff member in a clean professional uniform against a soft blurred background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDniJu3siC726zahBu5L8sY1ykjWhd0SoiGXQE3Ly0wffNX_qigxjMZuLYw_BcutSZ44njNdOG2cqJL5TIQWa9Y-xDvQH6EJRGJlsacBvzfcECmU0dUixVcVBkjatsiTCsVwjk7AQZRyRbT2pGiKmThJYHQXJ4EB9sbd0wntoa7eNHqRhlfGLra5RN04MtU-XhFMofXozxjI1eW8N6r0gJO3VC0Kc6C5ptLhdk-bwtNNQvOGiZUt1RHcIMONAkxlyVaQX4QeYkeHg"/>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider rounded-full">Staff</span>
+<span class="text-[12px] text-on-surface-variant">2026.03.02</span>
+</div>
+<h3 class="text-[15px] font-semibold text-on-surface leading-[1.4] line-clamp-2">Meet Our New Senior Creative Director: Elena Rossi</h3>
+</div>
+</div>
+</div>
+<!-- Pagination / Load More -->
+<div class="mt-12 mb-16 text-center">
+<button class="w-full py-4 border border-outline-variant text-on-surface-variant rounded-lg font-semibold text-[15px] hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                Load More Articles
+            </button>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-900">
+<div class="flex flex-col items-center justify-center gap-6 text-center px-6">
+<div class="text-sm font-bold text-slate-900 dark:text-slate-100">BLOOM Salon &amp; Spa</div>
+<div class="flex flex-wrap justify-center gap-4">
+<a class="text-[13px] text-slate-500 dark:text-slate-400 hover:text-slate-900 transition-colors" href="#">Privacy Policy</a>
+<a class="text-[13px] text-slate-500 dark:text-slate-400 hover:text-slate-900 transition-colors" href="#">Terms of Service</a>
+<a class="text-[13px] text-slate-500 dark:text-slate-400 hover:text-slate-900 transition-colors" href="#">Contact</a>
+<a class="text-[13px] text-slate-500 dark:text-slate-400 hover:text-slate-900 transition-colors" href="#">Location</a>
+</div>
+<p class="font-sans text-[13px] text-slate-500 dark:text-slate-400 max-w-[280px]">
+                © 2024 Serenity Salon &amp; Spa. Structured Intellectualism in Wellness.
+            </p>
+</div>
+</footer>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-slate-100 z-50 md:hidden">
+<div class="flex justify-around items-center py-3">
+<div class="flex flex-col items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="text-[10px] font-medium">Book</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-blue-600">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">edit_note</span>
+<span class="text-[10px] font-bold">Blog</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Account</span>
+</div>
+</div>
+</nav>
+</body></html>

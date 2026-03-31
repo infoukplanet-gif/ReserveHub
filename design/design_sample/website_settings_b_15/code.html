@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Website Settings - ServiceSuite</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-low": "#f2f4f6",
+              "outline-variant": "#c3c6d7",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "surface": "#f7f9fb",
+              "secondary": "#505f76",
+              "on-surface": "#191c1e",
+              "secondary-fixed-dim": "#b7c8e1",
+              "primary-fixed-dim": "#b4c5ff",
+              "surface-tint": "#0053db",
+              "secondary-fixed": "#d3e4fe",
+              "error-container": "#ffdad6",
+              "on-tertiary-container": "#f7edff",
+              "surface-container-highest": "#e0e3e5",
+              "primary-fixed": "#dbe1ff",
+              "on-tertiary": "#ffffff",
+              "outline": "#737686",
+              "tertiary-fixed": "#eaddff",
+              "secondary-container": "#d0e1fb",
+              "on-background": "#191c1e",
+              "error": "#ba1a1a",
+              "on-error": "#ffffff",
+              "inverse-on-surface": "#eff1f3",
+              "surface-dim": "#d8dadc",
+              "inverse-primary": "#b4c5ff",
+              "surface-bright": "#f7f9fb",
+              "tertiary-container": "#8343f4",
+              "surface-container-high": "#e6e8ea",
+              "on-primary-container": "#eeefff",
+              "background": "#f7f9fb",
+              "on-primary-fixed-variant": "#003ea8",
+              "surface-container": "#eceef0",
+              "on-secondary-fixed-variant": "#38485d",
+              "primary-container": "#2563eb",
+              "on-tertiary-fixed": "#25005a",
+              "on-surface-variant": "#434655",
+              "on-primary-fixed": "#00174b",
+              "tertiary-fixed-dim": "#d2bbff",
+              "on-tertiary-fixed-variant": "#5a00c6",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-fixed": "#0b1c30",
+              "on-secondary-container": "#54647a",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#2d3133",
+              "primary": "#004ac6",
+              "tertiary": "#6a1edb",
+              "surface-variant": "#e0e3e5"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .iphone-frame {
+            width: 320px;
+            height: 650px;
+            border: 12px solid #1e293b;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .iphone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 25px;
+            background: #1e293b;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            z-index: 20;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 border-r fixed left-0 top-0 bg-slate-50 flex flex-col py-6 px-4 z-50">
+<div class="mb-8 px-2">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-lg">grid_view</span>
+</div>
+<div>
+<h1 class="text-lg font-bold text-slate-900 leading-tight">ServiceSuite</h1>
+<p class="text-[11px] text-slate-500 uppercase tracking-wider font-semibold">Back-office Manager</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-inter text-[15px]">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-inter text-[15px]">Reservations</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200 transition-colors rounded-lg group border-r-2 border-transparent" href="#">
+<span class="material-symbols-outlined">patient_list</span>
+<span class="font-inter text-[15px]">CRM</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-blue-600 font-semibold border-r-2 border-blue-600 bg-blue-50/50 rounded-lg group" href="#">
+<span class="material-symbols-outlined">web</span>
+<span class="font-inter text-[15px]">Marketing</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">reorder</span>
+<span class="font-inter text-[15px]">Services</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-inter text-[15px]">Staff</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">confirmation_number</span>
+<span class="font-inter text-[15px]">Inventory</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-slate-200 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-inter text-[15px]">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200 transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-inter text-[15px]">Support</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-8 h-16 ml-64 bg-white sticky top-0 z-40 border-b border-slate-200">
+<div class="flex items-center gap-4">
+<span class="text-sm font-medium text-slate-500">Marketing /</span>
+<span class="text-sm font-bold text-slate-900">Website Editor</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-500 hover:text-blue-700 font-inter text-sm px-3 py-1.5 rounded transition-all active:scale-95">Discard</button>
+<button class="bg-primary-container text-white font-bold text-sm px-6 py-2 rounded-lg transition-all active:scale-95 shadow-sm">Save Changes</button>
+<div class="h-6 w-[1px] bg-slate-200 mx-2"></div>
+<button class="text-slate-500 hover:text-blue-600"><span class="material-symbols-outlined">notifications</span></button>
+<div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="professional male business owner headshot with clean background and confident expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD54JmpgiZirXByNW7GwaNOCcb29f8OsHquRxSDD3UAM_TjcYZwOMfiNquTX-Kfy3sl_Uhb22ABAY_BrXIIov8ft5Vjqve-P97lvImOV910GtzU6MyGhs6JovrACNGPRhBZRUvRN1SDEwpoDvctXV2Kj45PgsEODWl6Y2vX9jwiT84hNqT__KvD_gzIhLat1DgieUkPf_rU2hH7yVWk6aCuucQramo8SVB--X7u2iiBBVo1waCrGm2nTQc31QKDZt6gXu_2m9dlQQ"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area: Split View -->
+<main class="ml-64 min-h-[calc(100vh-64px)] bg-surface flex">
+<!-- Left Column: Settings Panel -->
+<section class="w-1/2 p-8 border-r border-slate-200 overflow-y-auto custom-scrollbar max-h-[calc(100vh-64px)]">
+<div class="max-w-xl mx-auto space-y-10">
+<!-- Template Selection -->
+<div>
+<h3 class="text-lg font-bold text-slate-900 mb-4">Template Style</h3>
+<div class="grid grid-cols-3 gap-4">
+<button class="border-2 border-primary bg-white p-3 rounded-xl text-left transition-all">
+<div class="aspect-video bg-slate-100 rounded-md mb-2 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400">format_paint</span>
+</div>
+<span class="text-sm font-semibold text-slate-900">Modern</span>
+</button>
+<button class="border border-slate-200 bg-white p-3 rounded-xl text-left hover:border-slate-300 transition-all">
+<div class="aspect-video bg-slate-100 rounded-md mb-2 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400">auto_awesome</span>
+</div>
+<span class="text-sm font-medium text-slate-500">Natural</span>
+</button>
+<button class="border border-slate-200 bg-white p-3 rounded-xl text-left hover:border-slate-300 transition-all">
+<div class="aspect-video bg-slate-100 rounded-md mb-2 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400">minimize</span>
+</div>
+<span class="text-sm font-medium text-slate-500">Simple</span>
+</button>
+</div>
+</div>
+<!-- Color Palette -->
+<div>
+<h3 class="text-lg font-bold text-slate-900 mb-4">Brand Colors</h3>
+<div class="flex gap-8">
+<div>
+<label class="block text-xs font-bold text-slate-500 uppercase mb-2">Primary Action</label>
+<div class="flex items-center gap-3 bg-white p-2 rounded-lg border border-slate-200 w-32">
+<div class="w-6 h-6 rounded bg-[#004ac6] border border-slate-100"></div>
+<span class="text-xs font-mono text-slate-600">#004AC6</span>
+</div>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-500 uppercase mb-2">Subtle Background</label>
+<div class="flex items-center gap-3 bg-white p-2 rounded-lg border border-slate-200 w-32">
+<div class="w-6 h-6 rounded bg-[#F7F9FB] border border-slate-100"></div>
+<span class="text-xs font-mono text-slate-600">#F7F9FB</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Assets Upload -->
+<div>
+<h3 class="text-lg font-bold text-slate-900 mb-4">Media Assets</h3>
+<div class="space-y-4">
+<div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-slate-50 rounded-lg flex items-center justify-center border border-dashed border-slate-300">
+<span class="material-symbols-outlined text-slate-400">upload_file</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-900">Brand Logo</p>
+<p class="text-xs text-slate-500">SVG, PNG up to 2MB</p>
+</div>
+</div>
+<button class="text-xs font-bold text-primary hover:underline">Upload</button>
+</div>
+<div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-slate-50 rounded-lg overflow-hidden border border-slate-200">
+<img class="w-full h-full object-cover" data-alt="modern minimalist interior of a high-end service boutique with warm wood accents and soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwncWJNGQ97Eck4UX2uEAYm_0WncrvJOm8QZIUwreV9Yq8arJBcBTPxj2WnX_MGUX6-qTmccXwlHUoIH8E8ux99ygjeA_UxmYGeorAWXRMk-Kib_jkhfRt3H9yXSlMArnMKapMnHjOdamExOjQgNYCccSWDW5jkdu4c7or1o91D2jcjqLE-lAcTzMtGpWiHx-o5fOxCKXDdnr1Op9SUJT8eqFWl4u_6DLS_VIqQwui5Uq8XtxJAvHL45rF9MzbG7YwRuvDGrA4dQ"/>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-900">Hero Image</p>
+<p class="text-xs text-slate-500">Current: Interior_v2.jpg</p>
+</div>
+</div>
+<button class="text-xs font-bold text-slate-400 hover:text-red-500">Replace</button>
+</div>
+</div>
+</div>
+<!-- Section Manager (Drag & Drop Mockup) -->
+<div>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-lg font-bold text-slate-900">Page Sections</h3>
+<button class="text-xs font-bold text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">add_circle</span> Add New
+                        </button>
+</div>
+<div class="space-y-2">
+<div class="bg-white p-3 rounded-lg border border-slate-200 flex items-center gap-3 cursor-move hover:shadow-sm transition-all group">
+<span class="material-symbols-outlined text-slate-300 group-hover:text-slate-400">drag_indicator</span>
+<span class="text-sm font-medium text-slate-700 flex-1">Hero / Features</span>
+<span class="material-symbols-outlined text-slate-300 text-sm">visibility</span>
+<span class="material-symbols-outlined text-slate-300 text-sm">settings</span>
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200 flex items-center gap-3 cursor-move hover:shadow-sm transition-all group">
+<span class="material-symbols-outlined text-slate-300 group-hover:text-slate-400">drag_indicator</span>
+<span class="text-sm font-medium text-slate-700 flex-1">Services Menu</span>
+<span class="material-symbols-outlined text-slate-300 text-sm">visibility</span>
+<span class="material-symbols-outlined text-slate-300 text-sm">settings</span>
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200 flex items-center gap-3 cursor-move hover:shadow-sm transition-all group">
+<span class="material-symbols-outlined text-slate-300 group-hover:text-slate-400">drag_indicator</span>
+<span class="text-sm font-medium text-slate-700 flex-1">Staff Profiles</span>
+<span class="material-symbols-outlined text-slate-300 text-sm">visibility</span>
+<span class="material-symbols-outlined text-slate-300 text-sm">settings</span>
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200 flex items-center gap-3 cursor-move hover:shadow-sm transition-all group">
+<span class="material-symbols-outlined text-slate-300 group-hover:text-slate-400">drag_indicator</span>
+<span class="text-sm font-medium text-slate-700 flex-1">Access &amp; Contact</span>
+<span class="material-symbols-outlined text-slate-300 text-sm">visibility</span>
+<span class="material-symbols-outlined text-slate-300 text-sm">settings</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Column: Live Preview -->
+<section class="w-1/2 flex items-center justify-center p-8 bg-slate-100 relative overflow-hidden">
+<!-- Decorative background pattern -->
+<div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: radial-gradient(#004ac6 1px, transparent 1px); background-size: 24px 24px;"></div>
+<div class="relative">
+<div class="iphone-frame">
+<div class="iphone-notch"></div>
+<!-- App Content Preview (BLOOM) -->
+<div class="h-full overflow-y-auto custom-scrollbar bg-white">
+<!-- Preview Navbar -->
+<div class="px-6 py-8 flex justify-between items-center">
+<div class="font-black text-xl tracking-tighter text-slate-900">BLOOM</div>
+<span class="material-symbols-outlined text-slate-900">menu</span>
+</div>
+<!-- Preview Hero -->
+<div class="px-6 mb-8">
+<div class="rounded-2xl overflow-hidden aspect-[4/5] relative">
+<img class="w-full h-full object-cover" data-alt="modern minimalist interior of a high-end service boutique with warm wood accents and soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7hulZVYFRBz5Ejp0UT9tLoszgLALyCR6leCWYDo2YfSDCq0XKlT_T7KDK4JgaE64gMEXKL3qVbKm-el6EzZVm-fnD3js_hVsSuwghseXpLgtp8r3x52i0iL4ORYVAmhHLtPC7C_-PRpwbGtwWb9LTPXWHeNSSF1g3ZbxExglLccNjpk8vxf3GMRg9kIh8WLNhTQgZ7Mun0obSoU2xiJ4t5F0F3pWwL0zjob6_7qdLGAEMDnZy523nWJwQ8yedJHd2seVbeWveJA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-6">
+<h2 class="text-2xl font-bold text-white leading-tight mb-2">Refined Care for Modern Living.</h2>
+<p class="text-white/80 text-xs mb-4">Book your signature session today at our downtown studio.</p>
+<button class="bg-primary text-white text-xs font-bold py-3 px-6 rounded-lg self-start">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Preview Services -->
+<div class="px-6 pb-20">
+<h3 class="text-sm font-bold text-slate-900 mb-4 uppercase tracking-widest">Our Services</h3>
+<div class="space-y-4">
+<div class="flex gap-4 items-center">
+<div class="w-16 h-16 bg-slate-100 rounded-xl flex-shrink-0"></div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="text-xs font-bold text-slate-900">Essential Therapy</span>
+<span class="text-xs font-bold text-primary">$85</span>
+</div>
+<p class="text-[10px] text-slate-500 line-clamp-2 leading-relaxed">A specialized foundational treatment designed to revitalize and restore balance.</p>
+</div>
+</div>
+<div class="flex gap-4 items-center">
+<div class="w-16 h-16 bg-slate-100 rounded-xl flex-shrink-0"></div>
+<div class="flex-1">
+<div class="flex justify-between mb-1">
+<span class="text-xs font-bold text-slate-900">Advanced Sculpting</span>
+<span class="text-xs font-bold text-primary">$120</span>
+</div>
+<p class="text-[10px] text-slate-500 line-clamp-2 leading-relaxed">High-performance techniques for visible, lasting results and complete rejuvenation.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Preview Label -->
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 bg-white px-4 py-1.5 rounded-full shadow-sm border border-slate-200 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+<span class="text-[11px] font-bold text-slate-600 uppercase tracking-widest">Live Preview</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Status / Utility Bar) -->
+<footer class="fixed bottom-0 right-0 w-[calc(100%-16rem)] h-14 bg-white border-t border-slate-200 z-50 flex justify-end items-center gap-4 px-8">
+<div class="flex items-center gap-2 text-slate-500 px-4 py-1.5 text-[13px]">
+<span class="material-symbols-outlined text-lg">edit_note</span>
+<span>Status: Draft</span>
+</div>
+<div class="flex items-center gap-2 text-slate-500 px-4 py-1.5 text-[13px] hover:bg-slate-100 cursor-pointer rounded-lg transition-all active:translate-y-0.5">
+<span class="material-symbols-outlined text-lg">history</span>
+<span>History</span>
+</div>
+<div class="flex items-center gap-2 text-slate-500 px-4 py-1.5 text-[13px] hover:bg-slate-100 cursor-pointer rounded-lg transition-all active:translate-y-0.5">
+<span class="material-symbols-outlined text-lg">visibility</span>
+<span>Preview</span>
+</div>
+<button class="flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-1.5 rounded-lg text-[13px] font-medium hover:bg-blue-100 transition-all active:translate-y-0.5">
+<span class="material-symbols-outlined text-lg">rocket_launch</span>
+<span>Publish</span>
+</button>
+</footer>
+</body></html>
