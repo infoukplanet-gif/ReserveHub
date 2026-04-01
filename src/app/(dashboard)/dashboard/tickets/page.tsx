@@ -46,7 +46,7 @@ export default function TicketsPage() {
         <div>
           <h1 className="text-xl font-bold text-slate-900">回数券管理</h1>
         </div>
-        <Button>+ 回数券を作成</Button>
+        <Button onClick={() => setEditingTemplate({ id: `new-${Date.now()}`, name: '', targetMenu: '', count: 10, price: 0, validMonths: 6, isOnSale: true, unitPrice: 0, normalPrice: 0 })}>+ 回数券を作成</Button>
       </div>
 
       <Tabs defaultValue="templates">
@@ -59,25 +59,25 @@ export default function TicketsPage() {
         <TabsContent value="templates" className="mt-4 space-y-3">
           {MOCK_TEMPLATES.map((t) => (
             <Card key={t.id} className="border-0 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onClick={() => setEditingTemplate(t)}>
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
+              <CardContent className="p-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-base">🎫</span>
                       <p className="text-sm font-semibold text-slate-900">{t.name}</p>
                       <Badge variant="secondary" className={t.isOnSale ? 'bg-green-50 text-green-700' : 'bg-slate-100 text-slate-500'}>
                         {t.isOnSale ? '販売中' : '販売停止'}
                       </Badge>
                     </div>
-                    <div className="mt-2 space-y-0.5 text-xs text-slate-500">
+                    <div className="mt-2.5 space-y-1 text-xs text-slate-500">
                       <p>対象: {t.targetMenu}</p>
                       <p>回数: {t.count}回 · 有効期限: 購入から{t.validMonths}ヶ月</p>
                     </div>
                   </div>
-                  <div className="text-right ml-4">
+                  <div className="text-right shrink-0">
                     <p className="text-lg font-bold text-slate-900">{formatPrice(t.price)}</p>
-                    <p className="text-[11px] text-slate-400">
-                      1回あたり {formatPrice(t.unitPrice)}
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      1回 {formatPrice(t.unitPrice)}
                       <span className="text-green-600 ml-1">
                         ({Math.round((1 - t.unitPrice / t.normalPrice) * 100)}%OFF)
                       </span>

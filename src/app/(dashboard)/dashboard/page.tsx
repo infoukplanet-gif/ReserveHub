@@ -21,7 +21,7 @@ const appointments = [
 
 const quickActions = [
   { label: 'スタッフ', icon: 'group', href: '/dashboard/staff' },
-  { label: '売上', icon: 'bar_chart', href: '/dashboard' },
+  { label: '売上', icon: 'bar_chart', href: '/dashboard/sales' },
   { label: 'お知らせ', icon: 'campaign', href: '/dashboard/blog' },
   { label: '設定', icon: 'settings', href: '/dashboard/settings' },
 ]

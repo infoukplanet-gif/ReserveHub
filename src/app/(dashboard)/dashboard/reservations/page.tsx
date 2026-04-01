@@ -8,6 +8,8 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Separator } from '@/components/ui/separator'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
+import { toast } from 'sonner'
 
 // 仮データ（API接続後に置き換え）
 const STAFF = [
@@ -64,6 +66,7 @@ export default function ReservationsPage() {
   const [view, setView] = useState<'day' | 'list'>('day')
   const [selectedStaff, setSelectedStaff] = useState('all')
   const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null)
+  const [showManualBooking, setShowManualBooking] = useState(false)
   const [currentDate] = useState(new Date('2026-04-05'))
 
   const dateStr = currentDate.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' })
@@ -81,7 +84,7 @@ export default function ReservationsPage() {
         <div>
           <h1 className="text-xl font-bold text-slate-900">予約管理</h1>
         </div>
-        <Button>+ 手動予約</Button>
+        <Button onClick={() => setShowManualBooking(true)}>+ 手動予約</Button>
       </div>
 
       {/* Controls */}
@@ -321,6 +324,72 @@ export default function ReservationsPage() {
               </div>
             </>
           )}
+        </SheetContent>
+      </Sheet>
+
+      {/* Manual Booking Sheet */}
+      <Sheet open={showManualBooking} onOpenChange={setShowManualBooking}>
+        <SheetContent className="w-full sm:w-[480px] overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>手動予約</SheetTitle>
+          </SheetHeader>
+          <div className="space-y-5 mt-6">
+            <div className="space-y-2">
+              <label className="text-xs text-slate-400 font-medium">顧客名 *</label>
+              <Input placeholder="山田 太郎" />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs text-slate-400 font-medium">電話番号 *</label>
+              <Input placeholder="090-1234-5678" />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs text-slate-400 font-medium">メールアドレス</label>
+              <Input placeholder="yamada@example.com" />
+            </div>
+            <Separator />
+            <div className="space-y-2">
+              <label className="text-xs text-slate-400 font-medium">メニュー *</label>
+              <Select>
+                <SelectTrigger><SelectValue placeholder="メニューを選択" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">ボディケア60分 ¥8,000〜</SelectItem>
+                  <SelectItem value="2">ボディケア90分 ¥11,000〜</SelectItem>
+                  <SelectItem value="3">フェイシャル45分 ¥6,000〜</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs text-slate-400 font-medium">担当スタッフ</label>
+              <Select>
+                <SelectTrigger><SelectValue placeholder="指名なし" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">指名なし</SelectItem>
+                  <SelectItem value="staff-1">山田 花子（指名料 ¥500）</SelectItem>
+                  <SelectItem value="staff-2">佐藤 健太</SelectItem>
+                  <SelectItem value="staff-3">鈴木 美咲（指名料 ¥500）</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <label className="text-xs text-slate-400 font-medium">日付 *</label>
+                <Input type="date" defaultValue="2026-04-05" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs text-slate-400 font-medium">時間 *</label>
+                <Input type="time" defaultValue="10:00" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs text-slate-400 font-medium">メモ</label>
+              <Input placeholder="電話予約、常連様" />
+            </div>
+            <Separator />
+            <div className="flex gap-2">
+              <Button variant="outline" className="flex-1" onClick={() => setShowManualBooking(false)}>キャンセル</Button>
+              <Button className="flex-1" onClick={() => { toast('予約を作成しました'); setShowManualBooking(false) }}>予約を作成</Button>
+            </div>
+          </div>
         </SheetContent>
       </Sheet>
     </div>
