@@ -239,8 +239,8 @@ export default function MenuEditPage() {
         <CardHeader>
           <CardTitle>基本情報</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
+        <CardContent className="space-y-6">
+          <div className="space-y-2">
             <Label>メニュー名 *</Label>
             <Input
               value={menu.name}
@@ -248,7 +248,7 @@ export default function MenuEditPage() {
               placeholder="例: ボディケア60分コース"
             />
           </div>
-          <div>
+          <div className="space-y-2">
             <Label>説明</Label>
             <Textarea
               value={menu.description || ''}
@@ -257,7 +257,7 @@ export default function MenuEditPage() {
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div>
+            <div className="space-y-2">
               <Label>所要時間（分） *</Label>
               <Input
                 type="number"
@@ -265,7 +265,7 @@ export default function MenuEditPage() {
                 onChange={(e) => setMenu((prev) => ({ ...prev, durationMinutes: parseInt(e.target.value) || 0 }))}
               />
             </div>
-            <div>
+            <div className="space-y-2">
               <Label>バッファ時間（分）</Label>
               <Input
                 type="number"
@@ -291,14 +291,14 @@ export default function MenuEditPage() {
           <CardTitle>料金設定</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div>
+          <div className="space-y-2">
             <Label>ベース料金 *</Label>
             <Input
               type="number"
               value={menu.basePrice}
               onChange={(e) => setMenu((prev) => ({ ...prev, basePrice: parseInt(e.target.value) || 0 }))}
             />
-            <p className="text-xs text-slate-400 mt-1">他のルールに該当しない場合この料金が適用されます</p>
+            <p className="text-xs text-slate-400">他のルールに該当しない場合この料金が適用されます</p>
           </div>
 
           <Separator />
@@ -357,8 +357,8 @@ export default function MenuEditPage() {
           {!isNew && (
             <div className="border rounded-xl p-4 border-dashed">
               <h4 className="text-sm font-medium text-slate-700 mb-3">+ ルールを追加</h4>
-              <div className="space-y-3">
-                <div>
+              <div className="space-y-5">
+                <div className="space-y-2">
                   <Label>ラベル</Label>
                   <Input
                     value={newRule.label || ''}
@@ -366,9 +366,9 @@ export default function MenuEditPage() {
                     placeholder="例: 休日料金、平日ナイト割"
                   />
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Label>曜日</Label>
-                  <div className="flex gap-1.5 mt-1">
+                  <div className="flex gap-1.5">
                     {DAYS.map((d) => (
                       <button
                         key={d.value}
@@ -385,8 +385,8 @@ export default function MenuEditPage() {
                     ))}
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
                     <Label>開始時刻（空欄=終日）</Label>
                     <Input
                       type="time"
@@ -394,7 +394,7 @@ export default function MenuEditPage() {
                       onChange={(e) => setNewRule((prev) => ({ ...prev, timeFrom: e.target.value || null }))}
                     />
                   </div>
-                  <div>
+                  <div className="space-y-2">
                     <Label>終了時刻</Label>
                     <Input
                       type="time"
@@ -403,7 +403,7 @@ export default function MenuEditPage() {
                     />
                   </div>
                 </div>
-                <div>
+                <div className="space-y-2">
                   <Label>料金</Label>
                   <Input
                     type="number"
