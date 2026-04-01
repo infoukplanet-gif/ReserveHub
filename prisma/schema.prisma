@@ -1,0 +1,518 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ==========================================
+// テナント（事業者）
+// ==========================================
+
+model Tenant {
+  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                 String   @db.VarChar(100)
+  slug                 String   @unique @db.VarChar(50)
+  email                String   @db.VarChar(255)
+  phone                String?  @db.VarChar(20)
+  postalCode           String?  @map("postal_code") @db.VarChar(10)
+  address              String?  @db.Text
+  latitude             Decimal? @db.Decimal(10, 7)
+  longitude            Decimal? @db.Decimal(10, 7)
+  logoUrl              String?  @map("logo_url") @db.Text
+  description          String?  @db.Text
+  plan                 String   @default("free") @db.VarChar(20)
+  planExpiresAt        DateTime? @map("plan_expires_at") @db.Timestamptz()
+  timezone             String   @default("Asia/Tokyo") @db.VarChar(50)
+  bookingBufferMinutes Int      @default(0) @map("booking_buffer_minutes")
+  cancelDeadlineHours  Int      @default(24) @map("cancel_deadline_hours")
+  bookingDeadlineHours Int      @default(1) @map("booking_deadline_hours")
+  maxFutureDays        Int      @default(60) @map("max_future_days")
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt            DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  staff            Staff[]
+  menuCategories   MenuCategory[]
+  menus            Menu[]
+  customers        Customer[]
+  customerTags     CustomerTag[]
+  carteTemplates   CarteTemplate[]
+  ticketTemplates  TicketTemplate[]
+  purchasedTickets PurchasedTicket[]
+  reservations     Reservation[]
+  businessHours    BusinessHour[]
+  specialDates     SpecialDate[]
+  hpSetting        HpSetting?
+  hpPages          HpPage[]
+  blogPosts        BlogPost[]
+  notificationLogs NotificationLog[]
+
+  @@map("tenants")
+}
+
+// ==========================================
+// スタッフ
+// ==========================================
+
+model Staff {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId       String   @map("tenant_id") @db.Uuid
+  userId         String?  @map("user_id") @db.Uuid
+  name           String   @db.VarChar(100)
+  email          String?  @db.VarChar(255)
+  phone          String?  @db.VarChar(20)
+  role           String   @default("staff") @db.VarChar(20)
+  avatarUrl      String?  @map("avatar_url") @db.Text
+  bio            String?  @db.Text
+  nominationFee  Int      @default(0) @map("nomination_fee")
+  isActive       Boolean  @default(true) @map("is_active")
+  displayOrder   Int      @default(0) @map("display_order")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  tenant       Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  staffMenus   StaffMenu[]
+  reservations Reservation[]
+  carteRecords CarteRecord[]
+
+  @@index([tenantId])
+  @@map("staff")
+}
+
+// ==========================================
+// メニュー
+// ==========================================
+
+model MenuCategory {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId     String   @map("tenant_id") @db.Uuid
+  name         String   @db.VarChar(100)
+  displayOrder Int      @default(0) @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  menus  Menu[]
+
+  @@map("menu_categories")
+}
+
+model Menu {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId        String   @map("tenant_id") @db.Uuid
+  categoryId      String?  @map("category_id") @db.Uuid
+  name            String   @db.VarChar(200)
+  description     String?  @db.Text
+  durationMinutes Int      @map("duration_minutes")
+  bufferMinutes   Int      @default(0) @map("buffer_minutes")
+  basePrice       Int      @map("base_price")
+  imageUrl        String?  @map("image_url") @db.Text
+  isActive        Boolean  @default(true) @map("is_active")
+  displayOrder    Int      @default(0) @map("display_order")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  tenant              Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  category            MenuCategory?       @relation(fields: [categoryId], references: [id])
+  pricingRules        PricingRule[]
+  menuOptions         MenuOption[]
+  staffMenus          StaffMenu[]
+  reservations        Reservation[]
+  ticketTemplateMenus TicketTemplateMenu[]
+
+  @@index([tenantId])
+  @@index([categoryId])
+  @@map("menus")
+}
+
+model PricingRule {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  menuId    String   @map("menu_id") @db.Uuid
+  ruleType  String   @map("rule_type") @db.VarChar(20)
+  dayOfWeek Int[]    @map("day_of_week")
+  timeFrom  String?  @map("time_from") @db.VarChar(5)
+  timeTo    String?  @map("time_to") @db.VarChar(5)
+  price     Int
+  label     String?  @db.VarChar(50)
+  priority  Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  menu Menu @relation(fields: [menuId], references: [id], onDelete: Cascade)
+
+  @@index([menuId])
+  @@map("pricing_rules")
+}
+
+model MenuOption {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  menuId          String   @map("menu_id") @db.Uuid
+  name            String   @db.VarChar(200)
+  price           Int
+  durationMinutes Int      @default(0) @map("duration_minutes")
+  isRequired      Boolean  @default(false) @map("is_required")
+  maxSelections   Int      @default(1) @map("max_selections")
+  displayOrder    Int      @default(0) @map("display_order")
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  menu               Menu                @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  reservationOptions ReservationOption[]
+
+  @@index([menuId])
+  @@map("menu_options")
+}
+
+model StaffMenu {
+  staffId String @map("staff_id") @db.Uuid
+  menuId  String @map("menu_id") @db.Uuid
+
+  staff Staff @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  menu  Menu  @relation(fields: [menuId], references: [id], onDelete: Cascade)
+
+  @@id([staffId, menuId])
+  @@map("staff_menus")
+}
+
+// ==========================================
+// 顧客
+// ==========================================
+
+model Customer {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId     String    @map("tenant_id") @db.Uuid
+  userId       String?   @map("user_id") @db.Uuid
+  name         String    @db.VarChar(100)
+  nameKana     String?   @map("name_kana") @db.VarChar(100)
+  email        String?   @db.VarChar(255)
+  phone        String?   @db.VarChar(20)
+  birthDate    DateTime? @map("birth_date") @db.Date
+  gender       String?   @db.VarChar(10)
+  memo         String?   @db.Text
+  totalVisits  Int       @default(0) @map("total_visits")
+  totalRevenue Int       @default(0) @map("total_revenue")
+  lastVisitAt  DateTime? @map("last_visit_at") @db.Timestamptz()
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  tenant           Tenant                  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tagAssignments   CustomerTagAssignment[]
+  carteRecords     CarteRecord[]
+  purchasedTickets PurchasedTicket[]
+  reservations     Reservation[]
+
+  @@index([tenantId])
+  @@index([email])
+  @@index([phone])
+  @@map("customers")
+}
+
+model CustomerTag {
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId String @map("tenant_id") @db.Uuid
+  name     String @db.VarChar(50)
+  color    String @default("#3B82F6") @db.VarChar(7)
+
+  tenant      Tenant                  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  assignments CustomerTagAssignment[]
+
+  @@map("customer_tags")
+}
+
+model CustomerTagAssignment {
+  customerId String @map("customer_id") @db.Uuid
+  tagId      String @map("tag_id") @db.Uuid
+
+  customer Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  tag      CustomerTag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([customerId, tagId])
+  @@map("customer_tag_assignments")
+}
+
+// ==========================================
+// カルテ
+// ==========================================
+
+model CarteTemplate {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String   @map("tenant_id") @db.Uuid
+  name      String   @db.VarChar(100)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  tenant  Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  fields  CarteField[]
+  records CarteRecord[]
+
+  @@map("carte_templates")
+}
+
+model CarteField {
+  id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  templateId   String  @map("template_id") @db.Uuid
+  name         String  @db.VarChar(100)
+  fieldType    String  @map("field_type") @db.VarChar(20)
+  options      Json?
+  isRequired   Boolean @default(false) @map("is_required")
+  displayOrder Int     @default(0) @map("display_order")
+
+  template CarteTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@map("carte_fields")
+}
+
+model CarteRecord {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  customerId    String   @map("customer_id") @db.Uuid
+  reservationId String?  @map("reservation_id") @db.Uuid
+  templateId    String   @map("template_id") @db.Uuid
+  staffId       String?  @map("staff_id") @db.Uuid
+  data          Json
+  memo          String?  @db.Text
+  recordedAt    DateTime @default(now()) @map("recorded_at") @db.Timestamptz()
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  customer    Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  reservation Reservation?  @relation(fields: [reservationId], references: [id])
+  template    CarteTemplate @relation(fields: [templateId], references: [id])
+  staff       Staff?        @relation(fields: [staffId], references: [id])
+
+  @@index([customerId])
+  @@index([reservationId])
+  @@map("carte_records")
+}
+
+// ==========================================
+// 回数券
+// ==========================================
+
+model TicketTemplate {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId    String   @map("tenant_id") @db.Uuid
+  name        String   @db.VarChar(200)
+  totalCount  Int      @map("total_count")
+  price       Int
+  validMonths Int      @map("valid_months")
+  isOnSale    Boolean  @default(true) @map("is_on_sale")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  tenant           Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  targetMenus      TicketTemplateMenu[]
+  purchasedTickets PurchasedTicket[]
+
+  @@map("ticket_templates")
+}
+
+model TicketTemplateMenu {
+  ticketTemplateId String @map("ticket_template_id") @db.Uuid
+  menuId           String @map("menu_id") @db.Uuid
+
+  ticketTemplate TicketTemplate @relation(fields: [ticketTemplateId], references: [id], onDelete: Cascade)
+  menu           Menu           @relation(fields: [menuId], references: [id], onDelete: Cascade)
+
+  @@id([ticketTemplateId, menuId])
+  @@map("ticket_template_menus")
+}
+
+model PurchasedTicket {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId         String   @map("tenant_id") @db.Uuid
+  customerId       String   @map("customer_id") @db.Uuid
+  ticketTemplateId String   @map("ticket_template_id") @db.Uuid
+  remainingCount   Int      @map("remaining_count")
+  purchasedAt      DateTime @default(now()) @map("purchased_at") @db.Timestamptz()
+  expiresAt        DateTime @map("expires_at") @db.Timestamptz()
+  status           String   @default("active") @db.VarChar(20)
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  tenant         Tenant                      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer       Customer                    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  ticketTemplate TicketTemplate              @relation(fields: [ticketTemplateId], references: [id])
+  ticketUsages   ReservationTicketUsage[]
+
+  @@index([customerId])
+  @@index([tenantId])
+  @@index([status])
+  @@map("purchased_tickets")
+}
+
+// ==========================================
+// 予約
+// ==========================================
+
+model Reservation {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId       String   @map("tenant_id") @db.Uuid
+  customerId     String   @map("customer_id") @db.Uuid
+  staffId        String?  @map("staff_id") @db.Uuid
+  menuId         String   @map("menu_id") @db.Uuid
+  startsAt       DateTime @map("starts_at") @db.Timestamptz()
+  endsAt         DateTime @map("ends_at") @db.Timestamptz()
+  menuPrice      Int      @map("menu_price")
+  optionPrice    Int      @default(0) @map("option_price")
+  nominationFee  Int      @default(0) @map("nomination_fee")
+  totalPrice     Int      @map("total_price")
+  status         String   @default("confirmed") @db.VarChar(20)
+  cancelReason   String?  @map("cancel_reason") @db.Text
+  memo           String?  @db.Text
+  source         String   @default("web") @db.VarChar(20)
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  tenant       Tenant                    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer     Customer                  @relation(fields: [customerId], references: [id])
+  staff        Staff?                    @relation(fields: [staffId], references: [id])
+  menu         Menu                      @relation(fields: [menuId], references: [id])
+  options      ReservationOption[]
+  ticketUsages ReservationTicketUsage[]
+  carteRecords CarteRecord[]
+
+  @@index([tenantId, startsAt])
+  @@index([customerId])
+  @@index([staffId, startsAt])
+  @@index([status])
+  @@map("reservations")
+}
+
+model ReservationOption {
+  id            String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reservationId String @map("reservation_id") @db.Uuid
+  menuOptionId  String @map("menu_option_id") @db.Uuid
+  price         Int
+
+  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  menuOption  MenuOption  @relation(fields: [menuOptionId], references: [id])
+
+  @@map("reservation_options")
+}
+
+model ReservationTicketUsage {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reservationId     String   @map("reservation_id") @db.Uuid
+  purchasedTicketId String   @map("purchased_ticket_id") @db.Uuid
+  usedAt            DateTime @default(now()) @map("used_at") @db.Timestamptz()
+
+  reservation     Reservation     @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  purchasedTicket PurchasedTicket @relation(fields: [purchasedTicketId], references: [id])
+
+  @@map("reservation_ticket_usages")
+}
+
+// ==========================================
+// 営業時間
+// ==========================================
+
+model BusinessHour {
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String  @map("tenant_id") @db.Uuid
+  dayOfWeek Int     @map("day_of_week")
+  openTime  String  @map("open_time") @db.VarChar(5)
+  closeTime String  @map("close_time") @db.VarChar(5)
+  isClosed  Boolean @default(false) @map("is_closed")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, dayOfWeek])
+  @@map("business_hours")
+}
+
+model SpecialDate {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String   @map("tenant_id") @db.Uuid
+  date      DateTime @db.Date
+  isClosed  Boolean  @default(true) @map("is_closed")
+  openTime  String?  @map("open_time") @db.VarChar(5)
+  closeTime String?  @map("close_time") @db.VarChar(5)
+  label     String?  @db.VarChar(100)
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, date])
+  @@map("special_dates")
+}
+
+// ==========================================
+// ホームページ
+// ==========================================
+
+model HpSetting {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId        String   @unique @map("tenant_id") @db.Uuid
+  template        String   @default("simple") @db.VarChar(50)
+  primaryColor    String   @default("#2563EB") @map("primary_color") @db.VarChar(7)
+  secondaryColor  String   @default("#1D4ED8") @map("secondary_color") @db.VarChar(7)
+  heroImageUrl    String?  @map("hero_image_url") @db.Text
+  heroTitle       String?  @map("hero_title") @db.VarChar(200)
+  heroSubtitle    String?  @map("hero_subtitle") @db.Text
+  customDomain    String?  @map("custom_domain") @db.VarChar(255)
+  metaTitle       String?  @map("meta_title") @db.VarChar(100)
+  metaDescription String?  @map("meta_description") @db.VarChar(300)
+  ogImageUrl      String?  @map("og_image_url") @db.Text
+  gaTrackingId    String?  @map("ga_tracking_id") @db.VarChar(20)
+  customCss       String?  @map("custom_css") @db.Text
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("hp_settings")
+}
+
+model HpPage {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId     String   @map("tenant_id") @db.Uuid
+  slug         String   @db.VarChar(50)
+  title        String   @db.VarChar(200)
+  content      Json
+  isPublished  Boolean  @default(true) @map("is_published")
+  displayOrder Int      @default(0) @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, slug])
+  @@map("hp_pages")
+}
+
+model BlogPost {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId     String    @map("tenant_id") @db.Uuid
+  title        String    @db.VarChar(200)
+  slug         String    @db.VarChar(200)
+  content      String    @db.Text
+  thumbnailUrl String?   @map("thumbnail_url") @db.Text
+  category     String?   @db.VarChar(50)
+  isPublished  Boolean   @default(false) @map("is_published")
+  publishedAt  DateTime? @map("published_at") @db.Timestamptz()
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, isPublished, publishedAt])
+  @@map("blog_posts")
+}
+
+// ==========================================
+// 通知ログ
+// ==========================================
+
+model NotificationLog {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId      String   @map("tenant_id") @db.Uuid
+  customerId    String?  @map("customer_id") @db.Uuid
+  reservationId String?  @map("reservation_id") @db.Uuid
+  type          String   @db.VarChar(30)
+  channel       String   @db.VarChar(20)
+  status        String   @default("sent") @db.VarChar(20)
+  sentAt        DateTime @default(now()) @map("sent_at") @db.Timestamptz()
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("notification_logs")
+}
