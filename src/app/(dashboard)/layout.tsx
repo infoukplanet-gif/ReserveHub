@@ -1,0 +1,134 @@
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { useState } from 'react'
+
+const navItems = [
+  { href: '/dashboard', label: 'ダッシュボード', icon: 'dashboard' },
+  { href: '/dashboard/reservations', label: '予約管理', icon: 'calendar_month' },
+  { href: '/dashboard/menus', label: 'メニュー管理', icon: 'restaurant_menu' },
+  { href: '/dashboard/staff', label: 'スタッフ管理', icon: 'group' },
+  { href: '/dashboard/customers', label: '顧客管理', icon: 'person' },
+  { href: '/dashboard/tickets', label: '回数券管理', icon: 'confirmation_number' },
+  { href: '/dashboard/homepage', label: 'ホームページ', icon: 'language' },
+  { href: '/dashboard/blog', label: 'ブログ', icon: 'edit_note' },
+]
+
+const settingsItems = [
+  { href: '/dashboard/settings', label: '営業時間', icon: 'schedule' },
+  { href: '/dashboard/settings/general', label: '基本情報', icon: 'info' },
+  { href: '/dashboard/settings/booking', label: '予約設定', icon: 'tune' },
+  { href: '/dashboard/settings/carte', label: 'カルテ設定', icon: 'medical_information' },
+]
+
+function SidebarContent({ pathname }: { pathname: string }) {
+  return (
+    <div className="flex h-full flex-col">
+      <div className="flex h-14 items-center border-b px-4">
+        <Link href="/dashboard" className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white text-sm font-bold">
+            R
+          </div>
+          <span className="font-semibold text-slate-900">ReserveHub</span>
+        </Link>
+      </div>
+
+      <nav className="flex-1 space-y-1 p-3">
+        {navItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={cn(
+              'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
+              pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
+                ? 'bg-blue-50 text-blue-600 font-semibold'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+            )}
+          >
+            <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+            {item.label}
+          </Link>
+        ))}
+
+        <div className="my-3 border-t" />
+
+        <p className="px-3 py-1 text-xs font-medium text-slate-400 uppercase tracking-wider">設定</p>
+        {settingsItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={cn(
+              'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
+              pathname === item.href
+                ? 'bg-blue-50 text-blue-600 font-semibold'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+            )}
+          >
+            <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+            {item.label}
+          </Link>
+        ))}
+      </nav>
+
+      <div className="border-t p-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-200 text-sm font-medium text-slate-600">
+            大
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-slate-900 truncate">大野 勇樹</p>
+            <p className="text-xs text-slate-500">オーナー</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname()
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet"
+      />
+      <div className="flex h-screen bg-slate-50">
+        {/* Desktop Sidebar */}
+        <aside className="hidden lg:flex lg:w-60 lg:flex-col lg:border-r lg:bg-white">
+          <SidebarContent pathname={pathname} />
+        </aside>
+
+        {/* Mobile Header + Sheet */}
+        <div className="flex flex-1 flex-col overflow-hidden">
+          <header className="flex h-14 items-center gap-3 border-b bg-white px-4 lg:hidden">
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger>
+                <span className="material-symbols-outlined text-slate-600">menu</span>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-60 p-0">
+                <SidebarContent pathname={pathname} />
+              </SheetContent>
+            </Sheet>
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white text-sm font-bold">
+              R
+            </div>
+            <span className="font-semibold text-slate-900">ReserveHub</span>
+          </header>
+
+          <main className="flex-1 overflow-y-auto">
+            <div className="mx-auto max-w-[1200px] p-4 lg:p-8">
+              {children}
+            </div>
+          </main>
+        </div>
+      </div>
+    </>
+  )
+}
