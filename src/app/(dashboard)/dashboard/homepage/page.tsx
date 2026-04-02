@@ -175,7 +175,7 @@ export default function HomepagePage() {
           {s.heroType === 'image' && (
             <div className="space-y-2">
               <Label className="text-xs">ヒーロー画像</Label>
-              <ImageUpload value={s.heroImageUrl} onChange={v => update('heroImageUrl', v)} folder="hero" height="h-40" />
+              <ImageUpload value={s.heroImageUrl} onChange={v => update('heroImageUrl', v)} folder="hero" height="h-40" recommendedSize="1920×600px" maxWidth={1920} maxHeight={600} />
             </div>
           )}
 
