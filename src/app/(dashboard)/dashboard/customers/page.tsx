@@ -7,6 +7,11 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Progress } from '@/components/ui/progress'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { Separator } from '@/components/ui/separator'
+import { toast } from 'sonner'
 
 type Customer = {
   id: string
@@ -40,6 +45,8 @@ export default function CustomersPage() {
   const [tagFilter, setTagFilter] = useState('all')
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [detail, setDetail] = useState<Customer | null>(null)
+  const [showCarteForm, setShowCarteForm] = useState(false)
+  const [carteMemo, setCarteMemo] = useState('')
 
   useEffect(() => {
     const params = new URLSearchParams()
@@ -120,6 +127,7 @@ export default function CustomersPage() {
                 {c.memo && <p className="text-sm text-slate-700">{c.memo}</p>}
               </CardContent></Card>
             ))}
+            <Button variant="outline" className="w-full" onClick={() => setShowCarteForm(true)}>+ カルテを記録する</Button>
           </TabsContent>
           <TabsContent value="tickets" className="mt-4 space-y-3">
             {(!detail.purchasedTickets || detail.purchasedTickets.length === 0) ? (
@@ -133,6 +141,37 @@ export default function CustomersPage() {
             ))}
           </TabsContent>
         </Tabs>
+
+        {/* カルテ記録Sheet */}
+        <Sheet open={showCarteForm} onOpenChange={setShowCarteForm}>
+          <SheetContent className="w-full sm:w-[480px] overflow-y-auto px-6">
+            <SheetHeader><SheetTitle>カルテを記録</SheetTitle></SheetHeader>
+            <div className="space-y-5 mt-6">
+              <div className="text-sm text-slate-500">顧客: {detail?.name}</div>
+              <div className="space-y-2">
+                <Label className="text-xs">メモ・施術内容</Label>
+                <Textarea value={carteMemo} onChange={e => setCarteMemo(e.target.value)} rows={6} placeholder="主訴、施術内容、次回への申し送りなど" />
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" className="flex-1" onClick={() => setShowCarteForm(false)}>キャンセル</Button>
+                <Button className="flex-1" onClick={async () => {
+                  if (!detail) return
+                  const res = await fetch(`/api/customers/${detail.id}/cartes`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ templateId: null, memo: carteMemo }),
+                  })
+                  if (res.ok) {
+                    toast.success('カルテを記録しました')
+                    setShowCarteForm(false); setCarteMemo('')
+                    // リロード
+                    const r = await fetch(`/api/customers/${detail.id}`).then(r => r.json())
+                    setDetail(r.data)
+                  } else toast.error('保存に失敗しました')
+                }}>保存する</Button>
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
     )
   }

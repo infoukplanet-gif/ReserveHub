@@ -26,7 +26,10 @@ export default function StaffPage() {
 
   const save = async () => {
     if (!editing?.name) { toast.error('名前を入力してください'); return }
-    const res = await fetch('/api/staff', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(editing) })
+    const isNew = !editing.id
+    const url = isNew ? '/api/staff' : `/api/staff/${editing.id}`
+    const method = isNew ? 'POST' : 'PATCH'
+    const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(editing) })
     if (res.ok) { toast.success('保存しました'); setEditing(null); load() } else toast.error('保存に失敗しました')
   }
 

@@ -455,22 +455,46 @@ export default function MenuEditPage() {
         <CardHeader>
           <CardTitle>オプション</CardTitle>
         </CardHeader>
-        <CardContent>
-          {menu.menuOptions.length === 0 ? (
-            <p className="text-sm text-slate-400">オプションはまだありません</p>
-          ) : (
+        <CardContent className="space-y-4">
+          {menu.menuOptions.length > 0 && (
             <div className="space-y-2">
               {menu.menuOptions.map((opt) => (
                 <div key={opt.id} className="flex items-center justify-between py-2 border-b last:border-0">
                   <div>
                     <p className="text-sm font-medium text-slate-900">{opt.name}</p>
-                    <p className="text-xs text-slate-500">
-                      +{opt.durationMinutes}分
-                    </p>
+                    <p className="text-xs text-slate-500">+{opt.durationMinutes}分</p>
                   </div>
                   <p className="text-sm font-semibold text-slate-900">+{formatPrice(opt.price)}</p>
                 </div>
               ))}
+            </div>
+          )}
+          {!isNew && (
+            <div className="border rounded-xl p-4 border-dashed space-y-3">
+              <h4 className="text-sm font-medium text-slate-700">+ オプションを追加</h4>
+              <div className="space-y-2"><Label>オプション名</Label><Input id="opt-name" placeholder="例: ヘッドスパ追加" /></div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2"><Label>追加料金</Label><Input id="opt-price" type="number" placeholder="1500" /></div>
+                <div className="space-y-2"><Label>追加時間（分）</Label><Input id="opt-duration" type="number" placeholder="15" /></div>
+              </div>
+              <Button variant="outline" onClick={async () => {
+                const name = (document.getElementById('opt-name') as HTMLInputElement).value
+                const price = parseInt((document.getElementById('opt-price') as HTMLInputElement).value) || 0
+                const dur = parseInt((document.getElementById('opt-duration') as HTMLInputElement).value) || 0
+                if (!name) { toast.error('オプション名を入力してください'); return }
+                const res = await fetch(`/api/menus/${id}/options`, {
+                  method: 'POST', headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ name, price, durationMinutes: dur }),
+                })
+                if (res.ok) {
+                  const data = await res.json()
+                  setMenu(prev => ({ ...prev, menuOptions: [...prev.menuOptions, data.data] }))
+                  ;(document.getElementById('opt-name') as HTMLInputElement).value = ''
+                  ;(document.getElementById('opt-price') as HTMLInputElement).value = ''
+                  ;(document.getElementById('opt-duration') as HTMLInputElement).value = ''
+                  toast.success('オプションを追加しました')
+                }
+              }}>追加する</Button>
             </div>
           )}
         </CardContent>

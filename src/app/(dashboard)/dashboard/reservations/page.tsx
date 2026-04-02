@@ -162,21 +162,45 @@ export default function ReservationsPage() {
 
       {/* Manual Booking Sheet */}
       <Sheet open={showManualBooking} onOpenChange={setShowManualBooking}>
-        <SheetContent className="w-full sm:w-[480px] overflow-y-auto">
+        <SheetContent className="w-full sm:w-[480px] overflow-y-auto px-6">
           <SheetHeader><SheetTitle>手動予約</SheetTitle></SheetHeader>
           <div className="space-y-5 mt-6">
-            <div className="space-y-2"><label className="text-xs text-slate-400">顧客名 *</label><Input placeholder="山田 太郎" /></div>
-            <div className="space-y-2"><label className="text-xs text-slate-400">電話番号 *</label><Input placeholder="090-1234-5678" /></div>
-            <div className="space-y-2"><label className="text-xs text-slate-400">メールアドレス</label><Input placeholder="yamada@example.com" /></div>
+            <div className="space-y-2"><label className="text-xs text-slate-400">顧客名 *</label><Input id="mb-name" placeholder="山田 太郎" /></div>
+            <div className="space-y-2"><label className="text-xs text-slate-400">電話番号 *</label><Input id="mb-phone" placeholder="090-1234-5678" /></div>
+            <div className="space-y-2"><label className="text-xs text-slate-400">メールアドレス *</label><Input id="mb-email" placeholder="yamada@example.com" /></div>
             <Separator />
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2"><label className="text-xs text-slate-400">日付 *</label><Input type="date" /></div>
-              <div className="space-y-2"><label className="text-xs text-slate-400">時間 *</label><Input type="time" /></div>
+            <div className="space-y-2"><label className="text-xs text-slate-400">メニュー *</label>
+              <Select><SelectTrigger id="mb-menu"><SelectValue placeholder="メニューを選択" /></SelectTrigger><SelectContent>
+                <SelectItem value="first">最初のメニュー</SelectItem>
+              </SelectContent></Select>
             </div>
-            <div className="space-y-2"><label className="text-xs text-slate-400">メモ</label><Input placeholder="電話予約" /></div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2"><label className="text-xs text-slate-400">日付 *</label><Input id="mb-date" type="date" defaultValue={currentDate.toISOString().split('T')[0]} /></div>
+              <div className="space-y-2"><label className="text-xs text-slate-400">時間 *</label><Input id="mb-time" type="time" defaultValue="10:00" /></div>
+            </div>
+            <div className="space-y-2"><label className="text-xs text-slate-400">メモ</label><Input id="mb-memo" placeholder="電話予約" /></div>
             <div className="flex gap-2">
               <Button variant="outline" className="flex-1" onClick={() => setShowManualBooking(false)}>キャンセル</Button>
-              <Button className="flex-1" onClick={() => { toast.success('予約を作成しました'); setShowManualBooking(false) }}>予約を作成</Button>
+              <Button className="flex-1" onClick={async () => {
+                const name = (document.getElementById('mb-name') as HTMLInputElement).value
+                const phone = (document.getElementById('mb-phone') as HTMLInputElement).value
+                const email = (document.getElementById('mb-email') as HTMLInputElement).value
+                const date = (document.getElementById('mb-date') as HTMLInputElement).value
+                const time = (document.getElementById('mb-time') as HTMLInputElement).value
+                const memo = (document.getElementById('mb-memo') as HTMLInputElement).value
+                if (!name || !phone || !email || !date || !time) { toast.error('必須項目を入力してください'); return }
+                const startsAt = new Date(`${date}T${time}:00`).toISOString()
+                // 最初のメニューを使用（暫定）
+                const menusRes = await fetch('/api/menus').then(r => r.json())
+                const firstMenu = menusRes.data?.[0]
+                if (!firstMenu) { toast.error('メニューがありません'); return }
+                const res = await fetch('/api/reservations', {
+                  method: 'POST', headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ menuId: firstMenu.id, startsAt, optionIds: [], customer: { name, phone, email }, memo }),
+                })
+                if (res.ok) { toast.success('予約を作成しました'); setShowManualBooking(false); setLoading(true); setCurrentDate(new Date(date)) }
+                else { const d = await res.json(); toast.error(d.error || '作成に失敗しました') }
+              }}>予約を作成</Button>
             </div>
           </div>
         </SheetContent>
