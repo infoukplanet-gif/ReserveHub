@@ -161,7 +161,43 @@ AgentsとSkillsの更新判断に使用。
 - 認証ガードはmiddlewareでcookieの有無をチェック（簡易版。本番ではsupabase.auth.getUser()でサーバー側検証すべき）
 
 ### 残タスク（優先順位順）
-- [ ] メール通知（Resend: 予約確認、リマインド、キャンセル）
+- [x] メール通知（Resend: 予約確認、リマインド、キャンセル）
+- [x] 不足API（カルテ記録、回数券販売、スタッフ編集削除）
+- [x] RLSポリシー準備
+- [x] パスワードリセット画面
+- [x] HP大改修（ナビ/ヒーロー/セクション/Map/アニメ/フッター/SEO/カスタムコード）
+
+---
+
+## 2026-04-02（3回目）— メール通知・不足API・HP大改修
+
+### 完了
+- メール通知4種（Resend: 予約確認、リマインド、キャンセル、スタッフ通知）+ 遅延初期化
+- Vercel Cron（毎日リマインドメール送信）
+- 不足API: カルテ記録作成、回数券販売、スタッフ編集/削除
+- パスワードリセット画面
+- RLSポリシーSQL（26テーブル）
+- HP大改修:
+  - DB: hp_settingsに15カラム追加（nav_type, hero_type, hero_images, animation_level等）
+  - 管理画面: 8タブUI（ナビ/ヒーロー/セクション/マップ/アニメ/フッター/SEO/コード）
+  - 公開ページ: 全設定SSR反映、Google Map埋め込み（スタイル対応）、JSON-LD構造化データ（AIO対応）、動的OGP
+  - ImageUploadコンポーネント組み込み（ヒーロー、セクション背景、OGP）
+
+### 技術的知見
+- Resendは遅延初期化必須（getResend()パターン）。APIキーなしでnew Resend()するとビルド時エラー
+- Vercel CronはPOSTエンドポイント + authorization headerで認証。vercel.jsonのcrons配列で設定
+- Slider（shadcn）のonValueChangeの型は`number | number[]`。`(v as number[])[0]`でキャスト必要
+- Google Map Embedはiframeで簡単に埋め込み可能（APIキー不要）。grayscale/invertのCSSフィルタでスタイル変更
+
+### 残タスク
+- [ ] E2Eテスト（Playwright）
+- [ ] LP・利用規約・料金ページ
+- [ ] 独自ドメイン
+- [ ] Supabase Storageのバケット作成（uploadsバケット）
+- [ ] 不足UIのフロント接続（カルテ記録フォーム、回数券販売フォーム等）
+- [ ] Stripe決済連携（P1）
+- [ ] LINE連携（P1）
+- [ ] 営業開始リサーチ（SelectType調査、体験レッスン）
 - [ ] 不足UI（オプション追加フォーム、カルテ記録作成、回数券販売、顧客タグ追加削除、特別日追加、メニュー削除確認、ブログ削除、手動予約のAPI接続）
 - [ ] RLSポリシー設定（テナント分離をDB層で保証）
 - [ ] パスワードリセット画面
