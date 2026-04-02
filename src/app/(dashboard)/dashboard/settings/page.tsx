@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -32,14 +32,35 @@ const SPECIAL_DATES = [
 
 export default function SettingsPage() {
   const [hours, setHours] = useState(DEFAULT_HOURS)
-  const [shopName, setShopName] = useState('リラクゼーションサロン BLOOM')
-  const [phone, setPhone] = useState('03-1234-5678')
-  const [email, setEmail] = useState('info@bloom-salon.com')
-  const [postal, setPostal] = useState('150-0001')
-  const [address, setAddress] = useState('東京都渋谷区神宮前1-2-3 ABCビル 3F')
+  const [shopName, setShopName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [email, setEmail] = useState('')
+  const [postal, setPostal] = useState('')
+  const [address, setAddress] = useState('')
   const [bookingDeadline, setBookingDeadline] = useState(1)
   const [cancelDeadline, setCancelDeadline] = useState(24)
   const [maxFutureDays, setMaxFutureDays] = useState(60)
+
+  useEffect(() => {
+    fetch('/api/settings').then(r => r.json()).then(r => {
+      const d = r.data
+      if (d?.tenant) {
+        setShopName(d.tenant.name || '')
+        setPhone(d.tenant.phone || '')
+        setEmail(d.tenant.email || '')
+        setPostal(d.tenant.postalCode || '')
+        setAddress(d.tenant.address || '')
+        setBookingDeadline(d.tenant.bookingDeadlineHours || 1)
+        setCancelDeadline(d.tenant.cancelDeadlineHours || 24)
+        setMaxFutureDays(d.tenant.maxFutureDays || 60)
+      }
+      if (d?.businessHours?.length > 0) {
+        setHours(d.businessHours.map((bh: { dayOfWeek: number; openTime: string; closeTime: string; isClosed: boolean }) => ({
+          day: bh.dayOfWeek, open: bh.openTime, close: bh.closeTime, closed: bh.isClosed,
+        })))
+      }
+    })
+  }, [])
 
   const toggleClosed = (day: number) => {
     setHours(prev => prev.map(h => h.day === day ? { ...h, closed: !h.closed } : h))
@@ -107,7 +128,12 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-          <Button onClick={() => toast.success('保存しました')}>保存する</Button>
+          <Button onClick={async () => {
+            await fetch('/api/settings', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+              businessHours: hours.map(h => ({ dayOfWeek: h.day, openTime: h.open, closeTime: h.close, isClosed: h.closed }))
+            })})
+            toast.success('営業時間を保存しました')
+          }}>保存する</Button>
         </TabsContent>
 
         {/* 基本情報 */}
