@@ -1,0 +1,16 @@
+-- AlterTable
+ALTER TABLE "hp_settings" ADD COLUMN     "animation_level" VARCHAR(20) NOT NULL DEFAULT 'subtle',
+ADD COLUMN     "custom_head_html" TEXT,
+ADD COLUMN     "footer_layout" VARCHAR(10) NOT NULL DEFAULT '1col',
+ADD COLUMN     "footer_sns" JSONB,
+ADD COLUMN     "hero_images" JSONB,
+ADD COLUMN     "hero_overlay_color" VARCHAR(50) DEFAULT 'rgba(0,0,0,0.5)',
+ADD COLUMN     "hero_overlay_opacity" DECIMAL(3,2) DEFAULT 0.5,
+ADD COLUMN     "hero_text_align" VARCHAR(10) NOT NULL DEFAULT 'center',
+ADD COLUMN     "hero_type" VARCHAR(20) NOT NULL DEFAULT 'image',
+ADD COLUMN     "hero_video_url" TEXT,
+ADD COLUMN     "map_style" VARCHAR(20) NOT NULL DEFAULT 'default',
+ADD COLUMN     "map_zoom" INTEGER NOT NULL DEFAULT 15,
+ADD COLUMN     "nav_type" VARCHAR(20) NOT NULL DEFAULT 'header',
+ADD COLUMN     "section_config" JSONB,
+ADD COLUMN     "show_powered_by" BOOLEAN NOT NULL DEFAULT true;

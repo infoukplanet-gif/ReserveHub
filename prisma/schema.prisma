@@ -442,15 +442,48 @@ model HpSetting {
   template        String   @default("simple") @db.VarChar(50)
   primaryColor    String   @default("#2563EB") @map("primary_color") @db.VarChar(7)
   secondaryColor  String   @default("#1D4ED8") @map("secondary_color") @db.VarChar(7)
+
+  // ナビゲーション
+  navType         String   @default("header") @map("nav_type") @db.VarChar(20)  // header|hamburger|footer|side
+
+  // ヒーロー
+  heroType        String   @default("image") @map("hero_type") @db.VarChar(20)  // image|slideshow|video|text
   heroImageUrl    String?  @map("hero_image_url") @db.Text
+  heroImages      Json?    @map("hero_images")                                    // スライドショー用URL配列
+  heroVideoUrl    String?  @map("hero_video_url") @db.Text
   heroTitle       String?  @map("hero_title") @db.VarChar(200)
   heroSubtitle    String?  @map("hero_subtitle") @db.Text
+  heroOverlayColor   String?  @default("rgba(0,0,0,0.5)") @map("hero_overlay_color") @db.VarChar(50)
+  heroOverlayOpacity Decimal? @default(0.5) @map("hero_overlay_opacity") @db.Decimal(3, 2)
+  heroTextAlign   String   @default("center") @map("hero_text_align") @db.VarChar(10) // left|center|right
+
+  // アニメーション
+  animationLevel  String   @default("subtle") @map("animation_level") @db.VarChar(20) // none|subtle|standard
+
+  // Google Map
+  mapStyle        String   @default("default") @map("map_style") @db.VarChar(20) // default|mono|dark
+  mapZoom         Int      @default(15) @map("map_zoom")
+
+  // フッター
+  footerLayout    String   @default("1col") @map("footer_layout") @db.VarChar(10) // 1col|2col|3col
+  footerSns       Json?    @map("footer_sns")  // [{type: 'instagram', url: '...'}, ...]
+  showPoweredBy   Boolean  @default(true) @map("show_powered_by")
+
+  // セクション設定（JSONで柔軟に）
+  sectionConfig   Json?    @map("section_config")
+  // 例: { features: { columns: 3, cardStyle: 'border', bgColor: '#fff' }, menus: { count: 4, style: 'grid' } }
+
+  // SEO・ドメイン
   customDomain    String?  @map("custom_domain") @db.VarChar(255)
   metaTitle       String?  @map("meta_title") @db.VarChar(100)
   metaDescription String?  @map("meta_description") @db.VarChar(300)
   ogImageUrl      String?  @map("og_image_url") @db.Text
+
+  // カスタムコード（プロプラン）
   gaTrackingId    String?  @map("ga_tracking_id") @db.VarChar(20)
   customCss       String?  @map("custom_css") @db.Text
+  customHeadHtml  String?  @map("custom_head_html") @db.Text
+
   createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
 
