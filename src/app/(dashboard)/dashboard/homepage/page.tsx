@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -30,13 +30,38 @@ const SECTIONS = [
 export default function HomepagePage() {
   const [template, setTemplate] = useState('simple')
   const [primaryColor, setPrimaryColor] = useState('#2563EB')
-  const [heroTitle, setHeroTitle] = useState('あなたの体をリセットする60分')
-  const [heroSubtitle, setHeroSubtitle] = useState('完全個室・完全予約制のリラクゼーションサロン')
-  const [metaTitle, setMetaTitle] = useState('BLOOM | 渋谷のリラクゼーションサロン')
-  const [metaDesc, setMetaDesc] = useState('原宿駅徒歩3分。完全個室のリラクゼーションサロン。')
+  const [heroTitle, setHeroTitle] = useState('')
+  const [heroSubtitle, setHeroSubtitle] = useState('')
+  const [metaTitle, setMetaTitle] = useState('')
+  const [metaDesc, setMetaDesc] = useState('')
   const [customDomain, setCustomDomain] = useState('')
   const [sections, setSections] = useState(SECTIONS)
   const [editingSection, setEditingSection] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch('/api/homepage').then(r => r.json()).then(r => {
+      const d = r.data
+      if (d) {
+        setTemplate(d.template || 'simple')
+        setPrimaryColor(d.primaryColor || '#2563EB')
+        setHeroTitle(d.heroTitle || '')
+        setHeroSubtitle(d.heroSubtitle || '')
+        setMetaTitle(d.metaTitle || '')
+        setMetaDesc(d.metaDescription || '')
+        setCustomDomain(d.customDomain || '')
+      }
+    })
+  }, [])
+
+  const handlePublish = async () => {
+    const res = await fetch('/api/homepage', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ template, primaryColor, heroTitle, heroSubtitle, metaTitle, metaDescription: metaDesc, customDomain }),
+    })
+    if (res.ok) toast.success('ホームページ設定を保存しました')
+    else toast.error('保存に失敗しました')
+  }
 
   const toggleSection = (id: string) => {
     setSections(prev => prev.map(s => s.id === id ? { ...s, enabled: !s.enabled } : s))
@@ -51,7 +76,7 @@ export default function HomepagePage() {
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm">プレビュー</Button>
-          <Button size="sm">公開する</Button>
+          <Button size="sm" onClick={handlePublish}>公開する</Button>
         </div>
       </div>
 

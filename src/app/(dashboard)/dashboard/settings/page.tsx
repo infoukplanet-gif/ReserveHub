@@ -183,7 +183,12 @@ export default function SettingsPage() {
               </div>
             </CardContent>
           </Card>
-          <Button onClick={() => toast.success('保存しました')}>保存する</Button>
+          <Button onClick={async () => {
+            await fetch('/api/settings', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+              tenant: { name: shopName, phone, email, postalCode: postal, address }
+            })})
+            toast.success('基本情報を保存しました')
+          }}>保存する</Button>
         </TabsContent>
 
         {/* 予約設定 */}
@@ -233,7 +238,12 @@ export default function SettingsPage() {
               </div>
             </CardContent>
           </Card>
-          <Button onClick={() => toast.success('保存しました')}>保存する</Button>
+          <Button onClick={async () => {
+            await fetch('/api/settings', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+              tenant: { bookingDeadlineHours: bookingDeadline, cancelDeadlineHours: cancelDeadline, maxFutureDays }
+            })})
+            toast.success('予約設定を保存しました')
+          }}>保存する</Button>
         </TabsContent>
 
         {/* カルテ設定 */}
