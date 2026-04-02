@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { Separator } from '@/components/ui/separator'
+import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
 
 const TEMPLATES = [
@@ -35,6 +36,7 @@ export default function HomepagePage() {
   const [metaDesc, setMetaDesc] = useState('原宿駅徒歩3分。完全個室のリラクゼーションサロン。')
   const [customDomain, setCustomDomain] = useState('')
   const [sections, setSections] = useState(SECTIONS)
+  const [editingSection, setEditingSection] = useState<string | null>(null)
 
   const toggleSection = (id: string) => {
     setSections(prev => prev.map(s => s.id === id ? { ...s, enabled: !s.enabled } : s))
@@ -125,17 +127,142 @@ export default function HomepagePage() {
           <Card className="border-0 shadow-sm">
             <CardContent className="p-5 space-y-4">
               <h2 className="text-sm font-semibold text-slate-900">セクション管理</h2>
-              <p className="text-xs text-slate-400">表示/非表示を切り替え。ドラッグで並び替え。</p>
+              <p className="text-xs text-slate-400">表示/非表示を切り替え。編集ボタンで詳細設定。</p>
               <div className="space-y-2">
                 {sections.map((s) => (
-                  <div key={s.id} className="flex items-center justify-between py-2 px-3 rounded-lg bg-slate-50">
+                  <div key={s.id} className="flex items-center justify-between py-2.5 px-3 rounded-lg bg-slate-50">
                     <div className="flex items-center gap-3">
                       <span className="material-symbols-outlined text-[16px] text-slate-300 cursor-grab">drag_indicator</span>
                       <span className="text-sm text-slate-700">{s.name}</span>
                     </div>
-                    <Switch checked={s.enabled} onCheckedChange={() => toggleSection(s.id)} />
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setEditingSection(s.id)}
+                        className="text-xs text-blue-600 hover:underline"
+                      >
+                        編集
+                      </button>
+                      <Switch checked={s.enabled} onCheckedChange={() => toggleSection(s.id)} />
+                    </div>
                   </div>
                 ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Section Detail Edit */}
+          {editingSection && (
+            <Card className="border-2 border-blue-200 shadow-sm">
+              <CardContent className="p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-sm font-semibold text-slate-900">
+                    「{sections.find(s => s.id === editingSection)?.name}」セクション編集
+                  </h2>
+                  <button onClick={() => setEditingSection(null)} className="text-xs text-slate-400 hover:text-slate-700">閉じる</button>
+                </div>
+
+                {editingSection === 'features' && (
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="border rounded-lg p-3 space-y-2">
+                        <p className="text-xs font-medium text-slate-500">特徴 {i}</p>
+                        <div className="space-y-2">
+                          <Label className="text-xs">アイコン名</Label>
+                          <Input placeholder="例: spa, self_improvement" defaultValue={i === 1 ? 'meeting_room' : i === 2 ? 'verified' : 'train'} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-xs">タイトル</Label>
+                          <Input defaultValue={i === 1 ? '完全個室' : i === 2 ? '国家資格保有' : '駅徒歩3分'} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-xs">説明文</Label>
+                          <Input defaultValue={i === 1 ? 'プライベート空間でリラックス' : i === 2 ? '全スタッフが国家資格を保有' : '原宿駅から徒歩3分'} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {editingSection === 'menus' && (
+                  <div className="space-y-3">
+                    <p className="text-xs text-slate-400">メニュー管理で登録したメニューが自動表示されます。</p>
+                    <div className="space-y-2">
+                      <Label className="text-xs">表示件数</Label>
+                      <Input type="number" defaultValue={3} className="w-20" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-xs">見出しテキスト</Label>
+                      <Input defaultValue="メニュー・料金" />
+                    </div>
+                  </div>
+                )}
+
+                {editingSection === 'staff' && (
+                  <div className="space-y-3">
+                    <p className="text-xs text-slate-400">スタッフ管理で登録したスタッフが自動表示されます。</p>
+                    <div className="space-y-2">
+                      <Label className="text-xs">見出しテキスト</Label>
+                      <Input defaultValue="スタッフ紹介" />
+                    </div>
+                  </div>
+                )}
+
+                {editingSection === 'access' && (
+                  <div className="space-y-3">
+                    <p className="text-xs text-slate-400">基本情報設定の住所が自動反映されます。</p>
+                    <div className="space-y-2">
+                      <Label className="text-xs">見出しテキスト</Label>
+                      <Input defaultValue="アクセス" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-xs">補足テキスト（アクセス方法など）</Label>
+                      <Textarea defaultValue="JR原宿駅 徒歩3分 / 東京メトロ明治神宮前駅 徒歩1分" rows={2} />
+                    </div>
+                  </div>
+                )}
+
+                {editingSection === 'blog' && (
+                  <div className="space-y-3">
+                    <p className="text-xs text-slate-400">ブログ管理で公開した記事が自動表示されます。</p>
+                    <div className="space-y-2">
+                      <Label className="text-xs">表示件数</Label>
+                      <Input type="number" defaultValue={5} className="w-20" />
+                    </div>
+                  </div>
+                )}
+
+                <Button size="sm" onClick={() => { toast.success('セクションを保存しました'); setEditingSection(null) }}>
+                  保存する
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* HTML Direct Edit — 上級者向け */}
+          <Card className="border-0 shadow-sm">
+            <CardContent className="p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-sm font-semibold text-slate-900">カスタムHTML/CSS</h2>
+                  <p className="text-xs text-slate-400 mt-0.5">上級者向け。ページに直接HTMLを挿入できます。</p>
+                </div>
+                <Badge variant="secondary" className="text-[10px]">プロプラン</Badge>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs">カスタムHTML（&lt;head&gt;内に挿入）</Label>
+                <textarea
+                  className="w-full h-24 rounded-lg border border-slate-200 bg-slate-900 text-green-400 text-xs font-mono p-3 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none resize-none"
+                  placeholder="<!-- Google Tag Manager など -->"
+                  defaultValue=""
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs">カスタムCSS</Label>
+                <textarea
+                  className="w-full h-24 rounded-lg border border-slate-200 bg-slate-900 text-green-400 text-xs font-mono p-3 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none resize-none"
+                  placeholder=".hero-section { ... }"
+                  defaultValue=""
+                />
               </div>
             </CardContent>
           </Card>
