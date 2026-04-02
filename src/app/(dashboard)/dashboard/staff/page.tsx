@@ -51,7 +51,7 @@ export default function StaffPage() {
         ))}</div>
       )}
       <Sheet open={!!editing} onOpenChange={() => setEditing(null)}>
-        <SheetContent className="w-full sm:w-[480px] overflow-y-auto">
+        <SheetContent className="w-full sm:w-[480px] overflow-y-auto px-6">
           {editing && (<><SheetHeader><SheetTitle>{editing.id ? 'スタッフ編集' : 'スタッフを追加'}</SheetTitle></SheetHeader>
             <div className="space-y-5 mt-6">
               <div className="space-y-2"><Label>表示名 *</Label><Input value={editing.name || ''} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} /></div>
