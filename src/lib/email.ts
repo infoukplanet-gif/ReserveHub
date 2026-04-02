@@ -1,6 +1,11 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend | null = null
+function getResend(): Resend | null {
+  if (!process.env.RESEND_API_KEY) return null
+  if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY)
+  return _resend
+}
 const FROM = process.env.RESEND_FROM_EMAIL || 'ReserveHub <noreply@resend.dev>'
 
 type ReservationEmail = {
@@ -30,7 +35,7 @@ function formatPrice(p: number) {
 export async function sendBookingConfirmation(data: ReservationEmail) {
   const { customerName, customerEmail, tenantName, menuName, staffName, startsAt, totalPrice, options } = data
 
-  await resend.emails.send({
+  await getResend()?.emails.send({
     from: FROM,
     to: customerEmail,
     subject: `【${tenantName}】ご予約の確認`,
@@ -60,7 +65,7 @@ export async function sendBookingConfirmation(data: ReservationEmail) {
 export async function sendReminder(data: ReservationEmail) {
   const { customerName, customerEmail, tenantName, menuName, staffName, startsAt } = data
 
-  await resend.emails.send({
+  await getResend()?.emails.send({
     from: FROM,
     to: customerEmail,
     subject: `【${tenantName}】明日のご予約リマインド`,
@@ -85,7 +90,7 @@ export async function sendReminder(data: ReservationEmail) {
 
 /** キャンセル通知メール */
 export async function sendCancellationNotice(data: Pick<ReservationEmail, 'customerEmail' | 'customerName' | 'tenantName' | 'menuName' | 'startsAt'>) {
-  await resend.emails.send({
+  await getResend()?.emails.send({
     from: FROM,
     to: data.customerEmail,
     subject: `【${data.tenantName}】ご予約のキャンセル`,
@@ -103,7 +108,7 @@ export async function sendCancellationNotice(data: Pick<ReservationEmail, 'custo
 
 /** スタッフへの新規予約通知 */
 export async function sendStaffNotification(staffEmail: string, data: ReservationEmail) {
-  await resend.emails.send({
+  await getResend()?.emails.send({
     from: FROM,
     to: staffEmail,
     subject: `【新規予約】${data.customerName}様 ${formatDate(data.startsAt)} ${formatTime(data.startsAt)}`,
