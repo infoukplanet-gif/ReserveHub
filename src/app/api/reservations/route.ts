@@ -6,6 +6,7 @@ import { createReservationSchema } from '@/lib/validators/reservation'
 import { ApiError, handleApiError } from '@/lib/api-error'
 import { calculatePrice, calculateDuration } from '@/lib/pricing'
 import type { PricingRule, MenuOption } from '@/generated/prisma/client'
+import { sendBookingConfirmation, sendStaffNotification } from '@/lib/email'
 
 
 export async function GET(req: NextRequest) {
@@ -216,6 +217,24 @@ export async function POST(req: NextRequest) {
 
       return res
     })
+
+    // メール送信（非同期、エラーでも予約は成功）
+    const tenant = await prisma.tenant.findFirst({ where: { id: tenantId } })
+    const emailData = {
+      customerName: customer.name,
+      customerEmail: customer.email,
+      tenantName: tenant?.name || 'ReserveHub',
+      menuName: menu.name,
+      staffName: staffId ? (await prisma.staff.findFirst({ where: { id: staffId } }))?.name || null : null,
+      startsAt: bookingDate,
+      totalPrice: priceBreakdown.totalPrice,
+      options: selectedOptions.map((o: MenuOption) => o.name),
+    }
+    sendBookingConfirmation(emailData).catch(console.error)
+    if (staffId) {
+      const staffRecord = await prisma.staff.findFirst({ where: { id: staffId } })
+      if (staffRecord?.email) sendStaffNotification(staffRecord.email, emailData).catch(console.error)
+    }
 
     return NextResponse.json({ data: reservation }, { status: 201 })
   } catch (error) {
