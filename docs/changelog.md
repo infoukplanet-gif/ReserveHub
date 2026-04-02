@@ -128,9 +128,55 @@ AgentsとSkillsの更新判断に使用。
 4. **スタッフ新規追加**: 「+」ボタンからSheet
 
 ### 次回TODO（優先順位順）
-- [ ] ブログをTiptapブロックエディタに（note風）
-- [ ] HP設定セクション詳細編集
-- [ ] HTML直接編集モード
-- [ ] Supabase Auth実装
-- [ ] API×フロントエンド接続
-- [ ] デプロイ（Vercel）
+- [x] ブログをTiptapブロックエディタに（note風）
+- [x] HP設定セクション詳細編集
+- [x] HTML直接編集モード
+- [x] Supabase Auth実装
+- [x] API×フロントエンド接続
+- [x] デプロイ（Vercel）
+
+---
+
+## 2026-04-02 — API全接続・認証・HP公開ページ・デプロイ完了
+
+### 完了した作業
+- [x] 全不足API作成（顧客、回数券、ブログ、設定、HP設定、売上集計、テナント作成、ダッシュボード）計13エンドポイント
+- [x] 全14画面の仮データをAPI接続に置換（仮データゼロ）
+- [x] ダッシュボード統計を実データから集計
+- [x] 認証基盤: getAuthenticatedTenantId()で全16APIのテナント認証化
+- [x] 認証ガード: /dashboard未認証→/loginリダイレクト
+- [x] ログアウト機能（API + サイドバーボタン）
+- [x] 予約フロー（顧客向け）をAPI接続（メニュー/スタッフ/空き枠/予約作成を実データ化）
+- [x] 画像アップロード共通コンポーネント（Supabase Storage）
+- [x] HP公開サブページ SSR: /[slug]/menu, /[slug]/staff, /[slug]/blog, /[slug]/blog/[id]
+- [x] Vercelデプロイ（本番: https://reserve-app-mu.vercel.app）
+- [x] seedデータ投入（BLOOM salon）
+- [x] ビルドエラー修正（Prisma v7 PG adapter、useSearchParams SSG、force-dynamic）
+
+### 技術的知見
+- Prisma v7はPrismaClientにadapterが必須。@prisma/adapter-pg + pgを使う
+- 全APIルートに`export const dynamic = 'force-dynamic'`が必要（SSGでDB接続エラー回避）
+- useSearchParams()はSSGページで使えない。window.location.searchで代替するか、Suspenseで囲む
+- Vercelデプロイは環境変数（DATABASE_URL等）がないとビルド失敗する。Settings → Environment Variablesで事前設定
+- 認証ガードはmiddlewareでcookieの有無をチェック（簡易版。本番ではsupabase.auth.getUser()でサーバー側検証すべき）
+
+### 残タスク（優先順位順）
+- [ ] メール通知（Resend: 予約確認、リマインド、キャンセル）
+- [ ] 不足UI（オプション追加フォーム、カルテ記録作成、回数券販売、顧客タグ追加削除、特別日追加、メニュー削除確認、ブログ削除、手動予約のAPI接続）
+- [ ] RLSポリシー設定（テナント分離をDB層で保証）
+- [ ] パスワードリセット画面
+- [ ] HP: ヒーロースライドショー、セクション画像アップロード、Google Map API連携
+- [ ] HP: OGP動的生成、sitemap.xml、robots.txt
+- [ ] E2Eテスト（Playwright）
+- [ ] エラーモニタリング（Sentry）
+- [ ] LP・利用規約・料金ページ
+- [ ] 独自ドメイン設定
+- [ ] Stripe決済連携（P1）
+- [ ] LINE連携（P1）
+- [ ] SelectType競合調査、体験レッスンリサーチ
+
+### 開発ルール追加
+- APIルートは必ず`export const dynamic = 'force-dynamic'`を先頭に
+- getTenantId()は使わない。getAuthenticatedTenantId()を使う（@/lib/auth）
+- 画像アップロードはImageUploadコンポーネント（@/components/shared/ImageUpload）を使う
+- HP公開ページはSSR（Server Component）で実装。クライアントコンポーネントにしない
