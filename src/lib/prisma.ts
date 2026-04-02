@@ -1,13 +1,17 @@
 import { PrismaClient } from '@/generated/prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
+import pg from 'pg'
 
 const globalForPrisma = globalThis as unknown as {
   prisma: InstanceType<typeof PrismaClient> | undefined
 }
 
 function createPrismaClient() {
-  // Prisma v7: PrismaClient は datasourceUrl を prisma.config.ts から取得
+  const connectionString = process.env.DATABASE_URL
+  const pool = new pg.Pool({ connectionString })
+  const adapter = new PrismaPg(pool)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return new (PrismaClient as any)()
+  return new PrismaClient({ adapter } as any)
 }
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient()
