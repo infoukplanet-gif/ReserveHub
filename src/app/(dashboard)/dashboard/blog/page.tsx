@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -18,17 +18,38 @@ type BlogPost = {
   content: string
 }
 
-const MOCK_POSTS: BlogPost[] = [
-  { id: '1', title: 'GW期間の営業時間について', category: 'お知らせ', isPublished: true, publishedAt: '2026/04/01', content: '<p>いつもBLOOMをご利用いただきありがとうございます。</p><h2>GW期間の営業時間</h2><p>4/29〜5/5は特別営業となります。</p>' },
-  { id: '2', title: '春のキャンペーン情報', category: 'キャンペーン', isPublished: false, publishedAt: null, content: '<p>春限定のキャンペーンを実施します。</p>' },
-  { id: '3', title: '新メニュー追加のお知らせ', category: 'お知らせ', isPublished: true, publishedAt: '2026/03/15', content: '<p>新しいメニュー「プレミアム全身120分コース」を追加しました。</p>' },
-]
-
 const CATEGORIES = ['お知らせ', 'キャンペーン', 'コラム']
 
 export default function BlogPage() {
-  const [posts] = useState(MOCK_POSTS)
+  const [posts, setPosts] = useState<BlogPost[]>([])
+  const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState<BlogPost | null>(null)
+
+  const loadPosts = () => {
+    fetch('/api/blog').then(r => r.json()).then(r => { setPosts(r.data || []); setLoading(false) }).catch(() => setLoading(false))
+  }
+
+  useEffect(() => { loadPosts() }, [])
+
+  const saveDraft = async () => {
+    if (!editing) return
+    const isNew = editing.id.startsWith('new')
+    const url = isNew ? '/api/blog' : `/api/blog/${editing.id}`
+    const method = isNew ? 'POST' : 'PATCH'
+    const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(editing) })
+    if (res.ok) { toast.success('保存しました'); setEditing(null); loadPosts() }
+    else toast.error('保存に失敗しました')
+  }
+
+  const publish = async () => {
+    if (!editing) return
+    const isNew = editing.id.startsWith('new')
+    const url = isNew ? '/api/blog' : `/api/blog/${editing.id}`
+    const method = isNew ? 'POST' : 'PATCH'
+    const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...editing, isPublished: true }) })
+    if (res.ok) { toast.success('公開しました'); setEditing(null); loadPosts() }
+    else toast.error('公開に失敗しました')
+  }
 
   const openNew = () => {
     setEditing({ id: `new-${Date.now()}`, title: '', category: 'お知らせ', isPublished: false, publishedAt: null, content: '' })
@@ -79,10 +100,10 @@ export default function BlogPage() {
           ← 閉じる
         </button>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => { toast.success('下書き保存しました'); setEditing(null) }}>
+          <Button variant="outline" size="sm" onClick={saveDraft}>
             下書き保存
           </Button>
-          <Button size="sm" onClick={() => { toast.success('公開しました'); setEditing(null) }}>
+          <Button size="sm" onClick={publish}>
             公開に進む
           </Button>
         </div>

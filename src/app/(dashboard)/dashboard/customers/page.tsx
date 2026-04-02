@@ -1,23 +1,28 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { Separator } from '@/components/ui/separator'
 import { Progress } from '@/components/ui/progress'
 
-const MOCK_CUSTOMERS = [
-  { id: '1', name: '山田 太郎', kana: 'ヤマダ タロウ', email: 'yamada@example.com', phone: '090-1234-5678', visits: 24, revenue: 192000, lastVisit: '2026/3/28', tags: ['VIP', '回数券保有'], cartes: [
-    { date: '2026/3/28', staff: '山田 花子', chief: '肩こりがひどい', parts: ['肩', '首'], painLevel: 7, content: '肩甲骨周りを重点的に施術', next: '腰も重点的に' },
-    { date: '2026/3/14', staff: '佐藤 健太', chief: '定期メンテナンス', parts: ['肩', '背中'], painLevel: 4, content: '全体的にほぐし', next: '' },
-  ], tickets: [{ name: '60分コース10回券', remaining: 5, total: 10, expires: '2026/7/15' }] },
-  { id: '2', name: '佐藤 花子', kana: 'サトウ ハナコ', email: 'sato@example.com', phone: '080-2345-6789', visits: 12, revenue: 96000, lastVisit: '2026/3/25', tags: ['回数券保有'], cartes: [], tickets: [{ name: '60分コース10回券', remaining: 2, total: 10, expires: '2026/4/15' }] },
-  { id: '3', name: '田中 一郎', kana: 'タナカ イチロウ', email: 'tanaka@example.com', phone: '070-3456-7890', visits: 3, revenue: 24000, lastVisit: '2026/3/20', tags: ['新規'], cartes: [], tickets: [] },
-  { id: '4', name: '鈴木 美咲', kana: 'スズキ ミサキ', email: 'suzuki@example.com', phone: '090-4567-8901', visits: 8, revenue: 52000, lastVisit: '2026/2/14', tags: ['離脱リスク'], cartes: [], tickets: [] },
-]
+type Customer = {
+  id: string
+  name: string
+  nameKana: string | null
+  email: string | null
+  phone: string | null
+  totalVisits: number
+  totalRevenue: number
+  lastVisitAt: string | null
+  memo: string | null
+  tagAssignments: { tag: { name: string; color: string } }[]
+  reservations?: { id: string; startsAt: string; menu: { name: string }; staff: { name: string } | null; totalPrice: number; status: string }[]
+  carteRecords?: { id: string; recordedAt: string; data: Record<string, unknown>; memo: string | null; staff: { name: string } | null }[]
+  purchasedTickets?: { id: string; remainingCount: number; expiresAt: string; status: string; ticketTemplate: { name: string; totalCount: number } }[]
+}
 
 const tagColors: Record<string, string> = {
   'VIP': 'bg-violet-50 text-violet-700',
@@ -26,157 +31,106 @@ const tagColors: Record<string, string> = {
   '離脱リスク': 'bg-amber-50 text-amber-700',
 }
 
-function formatPrice(price: number) {
-  return `¥${price.toLocaleString()}`
-}
+function formatPrice(p: number) { return `¥${p.toLocaleString()}` }
 
 export default function CustomersPage() {
+  const [customers, setCustomers] = useState<Customer[]>([])
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
-  const [selectedId, setSelectedId] = useState<string | null>(null)
   const [tagFilter, setTagFilter] = useState('all')
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [detail, setDetail] = useState<Customer | null>(null)
 
-  const allTags = Array.from(new Set(MOCK_CUSTOMERS.flatMap((c) => c.tags)))
-  const filtered = MOCK_CUSTOMERS.filter((c) => {
-    const matchSearch = !search || c.name.includes(search) || c.phone.includes(search) || c.email.includes(search)
-    const matchTag = tagFilter === 'all' || c.tags.includes(tagFilter)
-    return matchSearch && matchTag
-  })
-  const selected = MOCK_CUSTOMERS.find((c) => c.id === selectedId)
+  useEffect(() => {
+    const params = new URLSearchParams()
+    if (search) params.set('search', search)
+    if (tagFilter !== 'all') params.set('tag', tagFilter)
+    fetch(`/api/customers?${params}`)
+      .then(r => r.json())
+      .then(r => { setCustomers(r.data || []); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [search, tagFilter])
 
-  if (selected) {
+  useEffect(() => {
+    if (!selectedId) { setDetail(null); return }
+    fetch(`/api/customers/${selectedId}`)
+      .then(r => r.json())
+      .then(r => setDetail(r.data))
+  }, [selectedId])
+
+  const allTags = Array.from(new Set(customers.flatMap(c => c.tagAssignments.map(ta => ta.tag.name))))
+
+  if (detail) {
     return (
       <div className="space-y-6">
         <Button variant="ghost" size="sm" onClick={() => setSelectedId(null)}>← 顧客一覧</Button>
-
-        {/* Customer Header */}
         <div className="flex items-center gap-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-xl font-bold text-blue-600">
-            {selected.name[0]}
-          </div>
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-xl font-bold text-blue-600">{detail.name[0]}</div>
           <div>
-            <h1 className="text-xl font-bold text-slate-900">{selected.name}</h1>
-            <p className="text-xs text-slate-400">{selected.kana}</p>
+            <h1 className="text-xl font-bold text-slate-900">{detail.name}</h1>
+            <p className="text-xs text-slate-400">{detail.nameKana}</p>
             <div className="flex gap-1.5 mt-1">
-              {selected.tags.map((tag) => (
-                <span key={tag} className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${tagColors[tag] || 'bg-slate-100 text-slate-600'}`}>
-                  {tag}
-                </span>
+              {detail.tagAssignments.map(ta => (
+                <span key={ta.tag.name} className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${tagColors[ta.tag.name] || 'bg-slate-100 text-slate-600'}`}>{ta.tag.name}</span>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Contact */}
-        <Card className="border-0 shadow-sm">
-          <CardContent className="p-4 space-y-2 text-sm">
-            <div className="flex items-center gap-2 text-slate-600">
-              <span className="material-symbols-outlined text-[16px] text-slate-400">mail</span>
-              {selected.email}
-            </div>
-            <div className="flex items-center gap-2 text-slate-600">
-              <span className="material-symbols-outlined text-[16px] text-slate-400">phone</span>
-              {selected.phone}
-            </div>
-          </CardContent>
-        </Card>
+        <Card className="border-0 shadow-sm"><CardContent className="p-4 space-y-2 text-sm">
+          {detail.email && <div className="flex items-center gap-2 text-slate-600"><span className="material-symbols-outlined text-[16px] text-slate-400">mail</span>{detail.email}</div>}
+          {detail.phone && <div className="flex items-center gap-2 text-slate-600"><span className="material-symbols-outlined text-[16px] text-slate-400">phone</span>{detail.phone}</div>}
+        </CardContent></Card>
 
-        {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
           <Card className="border-0 shadow-sm"><CardContent className="p-4 text-center">
-            <p className="text-xl font-bold text-slate-900">{selected.visits}回</p>
-            <p className="text-[11px] text-slate-400">来店回数</p>
+            <p className="text-xl font-bold text-slate-900">{detail.totalVisits}回</p><p className="text-[11px] text-slate-400">来店回数</p>
           </CardContent></Card>
           <Card className="border-0 shadow-sm"><CardContent className="p-4 text-center">
-            <p className="text-xl font-bold text-slate-900">{formatPrice(selected.revenue)}</p>
-            <p className="text-[11px] text-slate-400">累計売上</p>
+            <p className="text-xl font-bold text-slate-900">{formatPrice(detail.totalRevenue)}</p><p className="text-[11px] text-slate-400">累計売上</p>
           </CardContent></Card>
           <Card className="border-0 shadow-sm"><CardContent className="p-4 text-center">
-            <p className="text-xl font-bold text-slate-900">{selected.lastVisit}</p>
-            <p className="text-[11px] text-slate-400">最終来店</p>
+            <p className="text-xl font-bold text-slate-900">{detail.lastVisitAt ? new Date(detail.lastVisitAt).toLocaleDateString('ja-JP') : '-'}</p><p className="text-[11px] text-slate-400">最終来店</p>
           </CardContent></Card>
         </div>
 
-        {/* Tabs */}
-        <Tabs defaultValue="carte">
-          <TabsList>
-            <TabsTrigger value="history">来店履歴</TabsTrigger>
-            <TabsTrigger value="carte">カルテ</TabsTrigger>
-            <TabsTrigger value="tickets">回数券</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="carte" className="mt-4 space-y-3">
-            {selected.cartes.length === 0 ? (
-              <Card className="border-0 shadow-sm"><CardContent className="py-8 text-center">
-                <span className="material-symbols-outlined text-4xl text-slate-300">medical_information</span>
-                <p className="text-sm text-slate-400 mt-2">カルテがまだありません</p>
-              </CardContent></Card>
-            ) : (
-              selected.cartes.map((carte, i) => (
-                <Card key={i} className="border-0 shadow-sm">
-                  <CardContent className="p-4 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <p className="text-xs font-semibold text-slate-900">{carte.date}</p>
-                      <p className="text-xs text-slate-400">担当: {carte.staff}</p>
-                    </div>
-                    <div className="space-y-2 text-sm">
-                      <div>
-                        <span className="text-xs text-slate-400">主訴:</span>
-                        <span className="ml-2 text-slate-900">{carte.chief}</span>
-                      </div>
-                      <div className="flex gap-1.5">
-                        {carte.parts.map((p) => (
-                          <Badge key={p} variant="secondary" className="text-[10px]">{p}</Badge>
-                        ))}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-slate-400">痛み:</span>
-                        <Progress value={carte.painLevel * 10} className="flex-1 h-2" />
-                        <span className="text-xs font-medium text-slate-600">{carte.painLevel}/10</span>
-                      </div>
-                      <div>
-                        <span className="text-xs text-slate-400">施術:</span>
-                        <span className="ml-2 text-slate-700">{carte.content}</span>
-                      </div>
-                      {carte.next && (
-                        <div>
-                          <span className="text-xs text-slate-400">次回:</span>
-                          <span className="ml-2 text-slate-700">{carte.next}</span>
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
-            )}
-            <Button variant="outline" className="w-full">+ カルテを記録する</Button>
-          </TabsContent>
-
-          <TabsContent value="tickets" className="mt-4 space-y-3">
-            {selected.tickets.length === 0 ? (
-              <Card className="border-0 shadow-sm"><CardContent className="py-8 text-center">
-                <span className="material-symbols-outlined text-4xl text-slate-300">confirmation_number</span>
-                <p className="text-sm text-slate-400 mt-2">回数券がありません</p>
-              </CardContent></Card>
-            ) : (
-              selected.tickets.map((ticket, i) => (
-                <Card key={i} className="border-0 shadow-sm">
-                  <CardContent className="p-4 space-y-3">
-                    <p className="text-sm font-semibold text-slate-900">🎫 {ticket.name}</p>
-                    <div className="flex items-center gap-2">
-                      <Progress value={(ticket.remaining / ticket.total) * 100} className="flex-1 h-2" />
-                      <span className="text-xs font-medium text-slate-600">{ticket.remaining}/{ticket.total}回</span>
-                    </div>
-                    <p className="text-xs text-slate-400">有効期限: {ticket.expires}</p>
-                  </CardContent>
-                </Card>
-              ))
-            )}
-          </TabsContent>
-
+        <Tabs defaultValue="history">
+          <TabsList><TabsTrigger value="history">来店履歴</TabsTrigger><TabsTrigger value="carte">カルテ</TabsTrigger><TabsTrigger value="tickets">回数券</TabsTrigger></TabsList>
           <TabsContent value="history" className="mt-4">
-            <Card className="border-0 shadow-sm"><CardContent className="py-8 text-center">
-              <p className="text-sm text-slate-400">来店履歴はAPI接続後に表示されます</p>
+            <Card className="border-0 shadow-sm"><CardContent className="p-0">
+              <div className="divide-y divide-slate-100">
+                {(!detail.reservations || detail.reservations.length === 0) ? (
+                  <div className="py-8 text-center text-sm text-slate-400">来店履歴がありません</div>
+                ) : detail.reservations.map(r => (
+                  <div key={r.id} className="flex items-center gap-3 px-4 py-3">
+                    <span className="text-xs text-slate-400 w-20">{new Date(r.startsAt).toLocaleDateString('ja-JP')}</span>
+                    <div className="flex-1"><p className="text-sm text-slate-900">{r.menu.name}</p><p className="text-[11px] text-slate-400">{r.staff?.name || '指名なし'}</p></div>
+                    <span className="text-sm font-semibold text-slate-900">{formatPrice(r.totalPrice)}</span>
+                  </div>
+                ))}
+              </div>
             </CardContent></Card>
+          </TabsContent>
+          <TabsContent value="carte" className="mt-4 space-y-3">
+            {(!detail.carteRecords || detail.carteRecords.length === 0) ? (
+              <Card className="border-0 shadow-sm"><CardContent className="py-8 text-center"><p className="text-sm text-slate-400">カルテがありません</p></CardContent></Card>
+            ) : detail.carteRecords.map(c => (
+              <Card key={c.id} className="border-0 shadow-sm"><CardContent className="p-4">
+                <div className="flex justify-between mb-2"><span className="text-xs font-semibold">{new Date(c.recordedAt).toLocaleDateString('ja-JP')}</span><span className="text-xs text-slate-400">{c.staff?.name}</span></div>
+                {c.memo && <p className="text-sm text-slate-700">{c.memo}</p>}
+              </CardContent></Card>
+            ))}
+          </TabsContent>
+          <TabsContent value="tickets" className="mt-4 space-y-3">
+            {(!detail.purchasedTickets || detail.purchasedTickets.length === 0) ? (
+              <Card className="border-0 shadow-sm"><CardContent className="py-8 text-center"><p className="text-sm text-slate-400">回数券がありません</p></CardContent></Card>
+            ) : detail.purchasedTickets.map(t => (
+              <Card key={t.id} className="border-0 shadow-sm"><CardContent className="p-4 space-y-2">
+                <p className="text-sm font-semibold">🎫 {t.ticketTemplate.name}</p>
+                <div className="flex items-center gap-2"><Progress value={(t.remainingCount / t.ticketTemplate.totalCount) * 100} className="flex-1 h-2" /><span className="text-xs font-medium text-slate-600">{t.remainingCount}/{t.ticketTemplate.totalCount}回</span></div>
+                <p className="text-xs text-slate-400">有効期限: {new Date(t.expiresAt).toLocaleDateString('ja-JP')}</p>
+              </CardContent></Card>
+            ))}
           </TabsContent>
         </Tabs>
       </div>
@@ -186,60 +140,35 @@ export default function CustomersPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-slate-900">顧客管理</h1>
-          <p className="text-xs text-slate-400 mt-0.5">{MOCK_CUSTOMERS.length}名</p>
-        </div>
-        <Button variant="outline" size="sm">CSVエクスポート</Button>
+        <div><h1 className="text-xl font-bold text-slate-900">顧客管理</h1><p className="text-xs text-slate-400 mt-0.5">{customers.length}名</p></div>
       </div>
-
-      {/* Search */}
-      <Input
-        placeholder="名前、メール、電話で検索..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-
-      {/* Tag Filter */}
+      <Input placeholder="名前、メール、電話で検索..." value={search} onChange={(e) => setSearch(e.target.value)} />
       <div className="flex gap-1.5 overflow-x-auto pb-1">
-        <button onClick={() => setTagFilter('all')} className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${tagFilter === 'all' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
-          すべて
-        </button>
-        {allTags.map((tag) => (
-          <button key={tag} onClick={() => setTagFilter(tag)} className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${tagFilter === tag ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
-            {tag}
-          </button>
+        <button onClick={() => setTagFilter('all')} className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${tagFilter === 'all' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}`}>すべて</button>
+        {allTags.map(tag => (
+          <button key={tag} onClick={() => setTagFilter(tag)} className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${tagFilter === tag ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-600'}`}>{tag}</button>
         ))}
       </div>
-
-      {/* Customer List */}
-      <Card className="border-0 shadow-sm">
-        <CardContent className="p-0">
-          <div className="divide-y divide-slate-100">
-            {filtered.map((c) => (
-              <button key={c.id} onClick={() => setSelectedId(c.id)} className="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-slate-50 transition-colors">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-50 text-xs font-semibold text-blue-600 shrink-0">
-                  {c.name[0]}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-slate-900">{c.name}</p>
-                  <p className="text-[11px] text-slate-400">{c.phone} · 来店{c.visits}回 · {formatPrice(c.revenue)}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  <p className="text-[11px] text-slate-400">{c.lastVisit}</p>
-                  <div className="flex gap-1">
-                    {c.tags.map((tag) => (
-                      <span key={tag} className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-medium ${tagColors[tag] || 'bg-slate-100 text-slate-600'}`}>
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {loading ? (
+        <div className="space-y-2">{[1,2,3].map(i => <div key={i} className="h-16 bg-slate-100 rounded-lg animate-pulse" />)}</div>
+      ) : (
+        <Card className="border-0 shadow-sm"><CardContent className="p-0"><div className="divide-y divide-slate-100">
+          {customers.map(c => (
+            <button key={c.id} onClick={() => setSelectedId(c.id)} className="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-slate-50 transition-colors">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-50 text-xs font-semibold text-blue-600 shrink-0">{c.name[0]}</div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-slate-900">{c.name}</p>
+                <p className="text-[11px] text-slate-400">{c.phone} · 来店{c.totalVisits}回 · {formatPrice(c.totalRevenue)}</p>
+              </div>
+              <div className="flex gap-1 shrink-0">
+                {c.tagAssignments.map(ta => (
+                  <span key={ta.tag.name} className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-medium ${tagColors[ta.tag.name] || 'bg-slate-100 text-slate-600'}`}>{ta.tag.name}</span>
+                ))}
+              </div>
+            </button>
+          ))}
+        </div></CardContent></Card>
+      )}
     </div>
   )
 }
