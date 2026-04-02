@@ -1,8 +1,18 @@
-import { type NextRequest } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from '@/lib/supabase/middleware'
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request)
+  const response = await updateSession(request)
+
+  // 認証ガード: /dashboard/* は認証必須
+  if (request.nextUrl.pathname.startsWith('/dashboard')) {
+    const supabaseAuth = request.cookies.getAll().some(c => c.name.includes('auth-token'))
+    if (!supabaseAuth) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+  }
+
+  return response
 }
 
 export const config = {

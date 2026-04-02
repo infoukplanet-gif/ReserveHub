@@ -1,17 +1,13 @@
 export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getAuthenticatedTenantId } from '@/lib/auth'
 import { ApiError, handleApiError } from '@/lib/api-error'
 
-async function getTenantId(): Promise<string> {
-  const tenant = await prisma.tenant.findFirst()
-  if (!tenant) throw new ApiError(401, 'NO_TENANT', 'テナントが見つかりません')
-  return tenant.id
-}
 
 export async function GET(req: NextRequest) {
   try {
-    const tenantId = await getTenantId()
+    const tenantId = await getAuthenticatedTenantId()
     const { searchParams } = new URL(req.url)
     const search = searchParams.get('search') || ''
     const tag = searchParams.get('tag')

@@ -1,18 +1,14 @@
 export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getAuthenticatedTenantId } from '@/lib/auth'
 import { createStaffSchema } from '@/lib/validators/staff'
 import { ApiError, handleApiError } from '@/lib/api-error'
 
-async function getTenantId(): Promise<string> {
-  const tenant = await prisma.tenant.findFirst()
-  if (!tenant) throw new ApiError(401, 'NO_TENANT', 'テナントが見つかりません')
-  return tenant.id
-}
 
 export async function GET() {
   try {
-    const tenantId = await getTenantId()
+    const tenantId = await getAuthenticatedTenantId()
 
     const staffList = await prisma.staff.findMany({
       where: { tenantId },
@@ -31,7 +27,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const tenantId = await getTenantId()
+    const tenantId = await getAuthenticatedTenantId()
     const body = await req.json()
     const parsed = createStaffSchema.safeParse(body)
 

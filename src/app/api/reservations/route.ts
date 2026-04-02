@@ -1,20 +1,16 @@
 export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getAuthenticatedTenantId } from '@/lib/auth'
 import { createReservationSchema } from '@/lib/validators/reservation'
 import { ApiError, handleApiError } from '@/lib/api-error'
 import { calculatePrice, calculateDuration } from '@/lib/pricing'
 import type { PricingRule, MenuOption } from '@/generated/prisma/client'
 
-async function getTenantId(): Promise<string> {
-  const tenant = await prisma.tenant.findFirst()
-  if (!tenant) throw new ApiError(401, 'NO_TENANT', 'テナントが見つかりません')
-  return tenant.id
-}
 
 export async function GET(req: NextRequest) {
   try {
-    const tenantId = await getTenantId()
+    const tenantId = await getAuthenticatedTenantId()
     const { searchParams } = new URL(req.url)
     const from = searchParams.get('from')
     const to = searchParams.get('to')
@@ -54,7 +50,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const tenantId = await getTenantId()
+    const tenantId = await getAuthenticatedTenantId()
     const body = await req.json()
     const parsed = createReservationSchema.safeParse(body)
 

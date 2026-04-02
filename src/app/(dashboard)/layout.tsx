@@ -85,6 +85,15 @@ function SidebarContent({ pathname }: { pathname: string }) {
             <p className="text-sm font-medium text-slate-900 truncate">大野 勇樹</p>
             <p className="text-xs text-slate-500">オーナー</p>
           </div>
+          <button
+            onClick={async () => {
+              await fetch('/api/auth/logout', { method: 'POST' })
+              window.location.href = '/login'
+            }}
+            className="text-xs text-slate-400 hover:text-slate-600"
+          >
+            ログアウト
+          </button>
         </div>
       </div>
     </div>

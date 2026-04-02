@@ -1,18 +1,14 @@
 export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getAuthenticatedTenantId } from '@/lib/auth'
 import { ApiError, handleApiError } from '@/lib/api-error'
 
-async function getTenantId(): Promise<string> {
-  const tenant = await prisma.tenant.findFirst()
-  if (!tenant) throw new ApiError(401, 'NO_TENANT', 'テナントが見つかりません')
-  return tenant.id
-}
 
 // テンプレート一覧
 export async function GET() {
   try {
-    const tenantId = await getTenantId()
+    const tenantId = await getAuthenticatedTenantId()
     const templates = await prisma.ticketTemplate.findMany({
       where: { tenantId },
       include: { targetMenus: { include: { menu: true } } },
@@ -33,7 +29,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const tenantId = await getTenantId()
+    const tenantId = await getAuthenticatedTenantId()
     const body = await req.json()
 
     const template = await prisma.ticketTemplate.create({
