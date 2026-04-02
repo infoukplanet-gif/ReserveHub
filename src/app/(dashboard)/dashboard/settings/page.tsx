@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -48,7 +49,7 @@ export default function SettingsPage() {
     <div className="space-y-6 pb-6">
       <h1 className="text-xl font-bold text-slate-900">設定</h1>
 
-      <Tabs defaultValue="hours">
+      <Tabs defaultValue={useSearchParams().get('tab') || 'hours'}>
         <TabsList>
           <TabsTrigger value="hours">営業時間</TabsTrigger>
           <TabsTrigger value="general">基本情報</TabsTrigger>

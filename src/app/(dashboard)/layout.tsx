@@ -14,15 +14,16 @@ const navItems = [
   { href: '/dashboard/staff', label: 'スタッフ管理', icon: 'group' },
   { href: '/dashboard/customers', label: '顧客管理', icon: 'person' },
   { href: '/dashboard/tickets', label: '回数券管理', icon: 'confirmation_number' },
+  { href: '/dashboard/sales', label: '売上レポート', icon: 'bar_chart' },
   { href: '/dashboard/homepage', label: 'ホームページ', icon: 'language' },
   { href: '/dashboard/blog', label: 'ブログ', icon: 'edit_note' },
 ]
 
 const settingsItems = [
-  { href: '/dashboard/settings', label: '営業時間', icon: 'schedule' },
-  { href: '/dashboard/settings/general', label: '基本情報', icon: 'info' },
-  { href: '/dashboard/settings/booking', label: '予約設定', icon: 'tune' },
-  { href: '/dashboard/settings/carte', label: 'カルテ設定', icon: 'medical_information' },
+  { href: '/dashboard/settings?tab=hours', label: '営業時間', icon: 'schedule' },
+  { href: '/dashboard/settings?tab=general', label: '基本情報', icon: 'info' },
+  { href: '/dashboard/settings?tab=booking', label: '予約設定', icon: 'tune' },
+  { href: '/dashboard/settings?tab=carte', label: 'カルテ設定', icon: 'medical_information' },
 ]
 
 function SidebarContent({ pathname }: { pathname: string }) {
@@ -57,21 +58,22 @@ function SidebarContent({ pathname }: { pathname: string }) {
         <div className="my-3 border-t" />
 
         <p className="px-3 py-1 text-xs font-medium text-slate-400 uppercase tracking-wider">設定</p>
-        {settingsItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={cn(
-              'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
-              pathname === item.href
-                ? 'bg-blue-50 text-blue-600 font-semibold'
-                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-            )}
-          >
-            <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
-            {item.label}
-          </Link>
-        ))}
+        {settingsItems.map((item) => {
+          const isActive = pathname.startsWith('/dashboard/settings') && item.href.includes(pathname === '/dashboard/settings' ? (item.href.includes('hours') ? 'hours' : '') : '')
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
+                'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              )}
+            >
+              <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+              {item.label}
+            </Link>
+          )
+        })}
       </nav>
 
       <div className="border-t p-4">
