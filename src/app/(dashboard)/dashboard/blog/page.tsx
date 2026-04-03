@@ -82,6 +82,15 @@ export default function BlogPage() {
                   <Badge variant="secondary" className={`text-[10px] ${post.isPublished ? 'bg-green-50 text-green-700' : 'bg-slate-100 text-slate-500'}`}>
                     {post.isPublished ? '公開中' : '下書き'}
                   </Badge>
+                  <button onClick={async (e) => {
+                    e.stopPropagation()
+                    if (!confirm(`「${post.title}」を削除しますか？`)) return
+                    const res = await fetch(`/api/blog/${post.id}`, { method: 'DELETE' })
+                    if (res.ok) { toast.success('削除しました'); loadPosts() }
+                    else toast.error('削除に失敗しました')
+                  }} className="text-slate-300 hover:text-red-500 ml-1">
+                    <span className="material-symbols-outlined text-[16px]">delete</span>
+                  </button>
                 </button>
               ))}
             </div>

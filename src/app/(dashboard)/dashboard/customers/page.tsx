@@ -76,10 +76,29 @@ export default function CustomersPage() {
           <div>
             <h1 className="text-xl font-bold text-slate-900">{detail.name}</h1>
             <p className="text-xs text-slate-400">{detail.nameKana}</p>
-            <div className="flex gap-1.5 mt-1">
+            <div className="flex gap-1.5 mt-1 flex-wrap">
               {detail.tagAssignments.map(ta => (
-                <span key={ta.tag.name} className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${tagColors[ta.tag.name] || 'bg-slate-100 text-slate-600'}`}>{ta.tag.name}</span>
+                <span key={ta.tag.name} className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium ${tagColors[ta.tag.name] || 'bg-slate-100 text-slate-600'}`}>
+                  {ta.tag.name}
+                  <button onClick={async () => {
+                    await fetch(`/api/customers/${detail.id}/tags?tagName=${encodeURIComponent(ta.tag.name)}`, { method: 'DELETE' })
+                    const r = await fetch(`/api/customers/${detail.id}`).then(r => r.json())
+                    setDetail(r.data)
+                    toast.success('タグを削除しました')
+                  }} className="hover:text-red-500">×</button>
+                </span>
               ))}
+              <button onClick={async () => {
+                const tagName = window.prompt('タグ名を入力')
+                if (!tagName) return
+                await fetch(`/api/customers/${detail.id}/tags`, {
+                  method: 'POST', headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ tagName }),
+                })
+                const r = await fetch(`/api/customers/${detail.id}`).then(r => r.json())
+                setDetail(r.data)
+                toast.success('タグを追加しました')
+              }} className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium bg-slate-100 text-slate-500 hover:bg-slate-200">+ タグ追加</button>
             </div>
           </div>
         </div>

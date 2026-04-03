@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { toast } from 'sonner'
 
 type Menu = {
   id: string
@@ -35,16 +37,19 @@ function getPriceRange(basePrice: number, rules: { price: number }[]) {
 export default function MenusPage() {
   const [menus, setMenus] = useState<Menu[]>([])
   const [loading, setLoading] = useState(true)
+
+  const loadMenus = () => {
+    fetch('/api/menus').then(r => r.json()).then(d => { setMenus(d.data || []); setLoading(false) }).catch(() => setLoading(false))
+  }
+
+  const deleteMenu = async (id: string) => {
+    const res = await fetch(`/api/menus/${id}`, { method: 'DELETE' })
+    if (res.ok) { toast.success('メニューを削除しました'); loadMenus() }
+    else toast.error('削除に失敗しました')
+  }
   const [activeTab, setActiveTab] = useState('all')
 
-  useEffect(() => {
-    fetch('/api/menus')
-      .then((res) => res.json())
-      .then((data) => {
-        setMenus(data.data || [])
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
+  useEffect(() => { loadMenus()
   }, [])
 
   const categories = Array.from(new Set(menus.map((m) => m.category?.name).filter(Boolean)))
@@ -133,6 +138,17 @@ export default function MenusPage() {
                         </p>
                       )}
                     </div>
+                  </div>
+                  <div className="mt-2 flex justify-end">
+                    <AlertDialog>
+                      <AlertDialogTrigger>
+                        <span onClick={e => e.preventDefault()} className="text-xs text-slate-400 hover:text-red-500 cursor-pointer">削除</span>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader><AlertDialogTitle>メニューを削除しますか？</AlertDialogTitle><AlertDialogDescription>「{menu.name}」を削除します。この操作は取り消せません。</AlertDialogDescription></AlertDialogHeader>
+                        <AlertDialogFooter><AlertDialogCancel>キャンセル</AlertDialogCancel><AlertDialogAction onClick={() => deleteMenu(menu.id)} className="bg-red-600 hover:bg-red-700">削除する</AlertDialogAction></AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </CardContent>
               </Card>
