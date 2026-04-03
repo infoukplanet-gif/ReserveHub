@@ -24,15 +24,46 @@ export default function RegisterPage() {
     if (form.password.length < 8) { toast.error('パスワードは8文字以上です'); return }
     setLoading(true)
 
-    const { error } = await supabase.auth.signUp({
+    const { error: signUpError } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
       options: { data: { full_name: form.name, shop_name: form.shopName } },
     })
 
-    if (error) { toast.error(error.message); setLoading(false); return }
-    toast.success('アカウントを作成しました。メールを確認してください。')
-    router.push('/login')
+    if (signUpError) { toast.error(signUpError.message); setLoading(false); return }
+
+    // メール確認不要の場合（開発環境など）、そのままサインインしてテナント作成
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: form.email,
+      password: form.password,
+    })
+
+    if (signInError) {
+      // サインイン失敗 = メール確認が必要
+      toast.success('アカウントを作成しました。メールを確認してください。')
+      setLoading(false)
+      router.push('/login')
+      return
+    }
+
+    // サインイン成功 → テナント作成APIを呼ぶ
+    try {
+      const res = await fetch('/api/tenants', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: form.shopName }),
+      })
+      if (!res.ok) {
+        const body = await res.json() as { error?: string }
+        throw new Error(body.error || 'テナント作成に失敗しました')
+      }
+      toast.success('アカウントを作成しました')
+      router.push('/dashboard')
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'テナント作成に失敗しました'
+      toast.error(message)
+      setLoading(false)
+    }
   }
 
   const handleGoogleLogin = async () => {

@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
@@ -24,17 +25,28 @@ const statusConfig: Record<string, { label: string; className: string }> = {
   expired: { label: '期限切れ', className: 'bg-red-50 text-red-700' },
 }
 
+type CustomerItem = { id: string; name: string }
+
 export default function TicketsPage() {
   const [templates, setTemplates] = useState<Template[]>([])
   const [purchased, setPurchased] = useState<Purchased[]>([])
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState<Partial<Template> | null>(null)
+  const [showPurchase, setShowPurchase] = useState(false)
+  const [purchaseTemplateId, setPurchaseTemplateId] = useState('')
+  const [purchaseCustomerId, setPurchaseCustomerId] = useState('')
+  const [customers, setCustomers] = useState<CustomerItem[]>([])
 
-  useEffect(() => {
+  const loadData = () => {
     fetch('/api/tickets')
       .then(r => r.json())
       .then(r => { setTemplates(r.data?.templates || []); setPurchased(r.data?.purchased || []); setLoading(false) })
       .catch(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    loadData()
+    fetch('/api/customers').then(r => r.json()).then(r => setCustomers(r.data || []))
   }, [])
 
   const openNew = () => setEditing({ name: '', totalCount: 10, price: 0, validMonths: 6, isOnSale: true })
@@ -43,7 +55,10 @@ export default function TicketsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold text-slate-900">回数券管理</h1>
-        <Button onClick={openNew}>+ 回数券を作成</Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setShowPurchase(true)}>回数券を販売</Button>
+          <Button onClick={openNew}>+ 回数券を作成</Button>
+        </div>
       </div>
 
       <Tabs defaultValue="templates">
@@ -133,6 +148,57 @@ export default function TicketsPage() {
               </div>
             </>
           )}
+        </SheetContent>
+      </Sheet>
+
+      {/* Purchase Sheet */}
+      <Sheet open={showPurchase} onOpenChange={setShowPurchase}>
+        <SheetContent className="w-full sm:w-[480px] overflow-y-auto px-6">
+          <SheetHeader><SheetTitle>回数券を販売</SheetTitle></SheetHeader>
+          <div className="space-y-5 mt-6">
+            <div className="space-y-2">
+              <Label>回数券テンプレート *</Label>
+              <Select value={purchaseTemplateId} onValueChange={(v) => { if (v) setPurchaseTemplateId(v) }}>
+                <SelectTrigger><SelectValue placeholder="回数券を選択" /></SelectTrigger>
+                <SelectContent>
+                  {templates.filter(t => t.isOnSale).map(t => (
+                    <SelectItem key={t.id} value={t.id}>{t.name}（{t.totalCount}回・{formatPrice(t.price)}）</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>顧客 *</Label>
+              <Select value={purchaseCustomerId} onValueChange={(v) => { if (v) setPurchaseCustomerId(v) }}>
+                <SelectTrigger><SelectValue placeholder="顧客を選択" /></SelectTrigger>
+                <SelectContent>
+                  {customers.map(c => (
+                    <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+              <p className="text-xs text-amber-700">回数券はメニュー本体のみ消化されます。オプション・指名料は別途精算です。</p>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" className="flex-1" onClick={() => setShowPurchase(false)}>キャンセル</Button>
+              <Button className="flex-1" onClick={async () => {
+                if (!purchaseTemplateId || !purchaseCustomerId) { toast.error('必須項目を選択してください'); return }
+                const res = await fetch('/api/tickets/purchase', {
+                  method: 'POST', headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ ticketTemplateId: purchaseTemplateId, customerId: purchaseCustomerId }),
+                })
+                if (res.ok) {
+                  toast.success('回数券を販売しました')
+                  setShowPurchase(false)
+                  setPurchaseTemplateId('')
+                  setPurchaseCustomerId('')
+                  loadData()
+                } else { const d = await res.json(); toast.error(d.error || '販売に失敗しました') }
+              }}>販売する</Button>
+            </div>
+          </div>
         </SheetContent>
       </Sheet>
     </div>

@@ -40,15 +40,32 @@ function formatTime(iso: string) {
   return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`
 }
 
+type MenuListItem = { id: string; name: string; durationMinutes: number; basePrice: number }
+type StaffListItem = { id: string; name: string }
+
 export default function ReservationsPage() {
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [loading, setLoading] = useState(true)
   const [view, setView] = useState<'day' | 'list'>('list')
   const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null)
   const [showManualBooking, setShowManualBooking] = useState(false)
+  const [menuList, setMenuList] = useState<MenuListItem[]>([])
+  const [staffListData, setStaffListData] = useState<StaffListItem[]>([])
+  const [mbMenuId, setMbMenuId] = useState('')
+  const [mbStaffId, setMbStaffId] = useState('')
   const [currentDate, setCurrentDate] = useState(() => {
     const d = new Date(); d.setHours(0,0,0,0); return d
   })
+
+  useEffect(() => {
+    Promise.all([
+      fetch('/api/menus').then(r => r.json()),
+      fetch('/api/staff').then(r => r.json()),
+    ]).then(([menusRes, staffRes]) => {
+      setMenuList(menusRes.data || [])
+      setStaffListData(staffRes.data || [])
+    })
+  }, [])
 
   const dateStr = currentDate.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' })
 
@@ -170,8 +187,14 @@ export default function ReservationsPage() {
             <div className="space-y-2"><label className="text-xs text-slate-400">メールアドレス *</label><Input id="mb-email" placeholder="yamada@example.com" /></div>
             <Separator />
             <div className="space-y-2"><label className="text-xs text-slate-400">メニュー *</label>
-              <Select><SelectTrigger id="mb-menu"><SelectValue placeholder="メニューを選択" /></SelectTrigger><SelectContent>
-                <SelectItem value="first">最初のメニュー</SelectItem>
+              <Select value={mbMenuId} onValueChange={(v) => { if (v) setMbMenuId(v) }}><SelectTrigger><SelectValue placeholder="メニューを選択" /></SelectTrigger><SelectContent>
+                {menuList.map(m => <SelectItem key={m.id} value={m.id}>{m.name}（{m.durationMinutes}分・¥{m.basePrice.toLocaleString()}）</SelectItem>)}
+              </SelectContent></Select>
+            </div>
+            <div className="space-y-2"><label className="text-xs text-slate-400">担当スタッフ</label>
+              <Select value={mbStaffId} onValueChange={(v) => { if (v) setMbStaffId(v) }}><SelectTrigger><SelectValue placeholder="指名なし" /></SelectTrigger><SelectContent>
+                <SelectItem value="none">指名なし</SelectItem>
+                {staffListData.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
               </SelectContent></Select>
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -188,15 +211,11 @@ export default function ReservationsPage() {
                 const date = (document.getElementById('mb-date') as HTMLInputElement).value
                 const time = (document.getElementById('mb-time') as HTMLInputElement).value
                 const memo = (document.getElementById('mb-memo') as HTMLInputElement).value
-                if (!name || !phone || !email || !date || !time) { toast.error('必須項目を入力してください'); return }
+                if (!name || !phone || !email || !date || !time || !mbMenuId) { toast.error('必須項目を入力してください'); return }
                 const startsAt = new Date(`${date}T${time}:00`).toISOString()
-                // 最初のメニューを使用（暫定）
-                const menusRes = await fetch('/api/menus').then(r => r.json())
-                const firstMenu = menusRes.data?.[0]
-                if (!firstMenu) { toast.error('メニューがありません'); return }
                 const res = await fetch('/api/reservations', {
                   method: 'POST', headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ menuId: firstMenu.id, startsAt, optionIds: [], customer: { name, phone, email }, memo }),
+                  body: JSON.stringify({ menuId: mbMenuId, staffId: mbStaffId && mbStaffId !== 'none' ? mbStaffId : undefined, startsAt, optionIds: [], customer: { name, phone, email }, memo, source: 'manual' }),
                 })
                 if (res.ok) { toast.success('予約を作成しました'); setShowManualBooking(false); setLoading(true); setCurrentDate(new Date(date)) }
                 else { const d = await res.json(); toast.error(d.error || '作成に失敗しました') }

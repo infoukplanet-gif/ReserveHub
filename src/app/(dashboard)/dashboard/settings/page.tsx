@@ -23,14 +23,13 @@ const DEFAULT_HOURS = [
   { day: 6, open: '10:00', close: '18:00', closed: false },
 ]
 
-const SPECIAL_DATES = [
-  { date: '2026-04-29', type: 'closed', label: 'GW休業' },
-  { date: '2026-04-30', type: 'closed', label: 'GW休業' },
-  { date: '2026-05-05', type: 'special', open: '10:00', close: '16:00', label: 'GW特別営業' },
-]
+type SpecialDateItem = { id?: string; date: string; isClosed: boolean; openTime: string; closeTime: string; label: string }
 
 export default function SettingsPage() {
   const [hours, setHours] = useState(DEFAULT_HOURS)
+  const [specialDates, setSpecialDates] = useState<SpecialDateItem[]>([])
+  const [showAddSpecial, setShowAddSpecial] = useState(false)
+  const [newSpecial, setNewSpecial] = useState<SpecialDateItem>({ date: '', isClosed: true, openTime: '10:00', closeTime: '18:00', label: '' })
   const [shopName, setShopName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
@@ -56,6 +55,11 @@ export default function SettingsPage() {
       if (d?.businessHours?.length > 0) {
         setHours(d.businessHours.map((bh: { dayOfWeek: number; openTime: string; closeTime: string; isClosed: boolean }) => ({
           day: bh.dayOfWeek, open: bh.openTime, close: bh.closeTime, closed: bh.isClosed,
+        })))
+      }
+      if (d?.specialDates) {
+        setSpecialDates(d.specialDates.map((sd: { id: string; date: string; isClosed: boolean; openTime: string | null; closeTime: string | null; label: string | null }) => ({
+          id: sd.id, date: sd.date.split('T')[0], isClosed: sd.isClosed, openTime: sd.openTime || '10:00', closeTime: sd.closeTime || '18:00', label: sd.label || '',
         })))
       }
     })
@@ -106,24 +110,66 @@ export default function SettingsPage() {
             <CardContent className="p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-sm font-semibold text-slate-900">特別日設定</h2>
-                <Button variant="outline" size="sm">+ 特別日を追加</Button>
+                <Button variant="outline" size="sm" onClick={() => setShowAddSpecial(true)}>+ 特別日を追加</Button>
               </div>
               <div className="space-y-2">
-                {SPECIAL_DATES.map((sd, i) => (
-                  <div key={i} className="flex items-center justify-between py-2 px-3 rounded-lg bg-slate-50">
+                {specialDates.map((sd) => (
+                  <div key={sd.id || sd.date} className="flex items-center justify-between py-2 px-3 rounded-lg bg-slate-50">
                     <div className="flex items-center gap-3">
                       <span className="text-xs font-mono text-slate-500">{sd.date}</span>
-                      <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${sd.type === 'closed' ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600'}`}>
-                        {sd.type === 'closed' ? '休業' : '特別営業'}
+                      <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium ${sd.isClosed ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600'}`}>
+                        {sd.isClosed ? '休業' : `特別営業 ${sd.openTime}〜${sd.closeTime}`}
                       </span>
                       <span className="text-xs text-slate-600">{sd.label}</span>
                     </div>
-                    <button className="text-slate-400 hover:text-red-500">
+                    <button className="text-slate-400 hover:text-red-500" onClick={async () => {
+                      if (!sd.id) return
+                      await fetch(`/api/settings/special-dates?id=${sd.id}`, { method: 'DELETE' })
+                      setSpecialDates(prev => prev.filter(s => s.id !== sd.id))
+                      toast.success('削除しました')
+                    }}>
                       <span className="material-symbols-outlined text-[18px]">delete</span>
                     </button>
                   </div>
                 ))}
+                {specialDates.length === 0 && <p className="text-xs text-slate-400 py-2">特別日が設定されていません</p>}
               </div>
+              {showAddSpecial && (
+                <div className="border rounded-xl p-4 border-dashed space-y-3">
+                  <h4 className="text-sm font-medium text-slate-700">特別日を追加</h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-2"><Label className="text-xs">日付 *</Label><Input type="date" value={newSpecial.date} onChange={e => setNewSpecial(p => ({ ...p, date: e.target.value }))} /></div>
+                    <div className="space-y-2"><Label className="text-xs">ラベル</Label><Input value={newSpecial.label} onChange={e => setNewSpecial(p => ({ ...p, label: e.target.value }))} placeholder="例: GW休業" /></div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Switch checked={newSpecial.isClosed} onCheckedChange={v => setNewSpecial(p => ({ ...p, isClosed: v }))} />
+                    <Label className="text-xs">{newSpecial.isClosed ? '休業' : '特別営業'}</Label>
+                  </div>
+                  {!newSpecial.isClosed && (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-2"><Label className="text-xs">開店</Label><Input type="time" value={newSpecial.openTime} onChange={e => setNewSpecial(p => ({ ...p, openTime: e.target.value }))} /></div>
+                      <div className="space-y-2"><Label className="text-xs">閉店</Label><Input type="time" value={newSpecial.closeTime} onChange={e => setNewSpecial(p => ({ ...p, closeTime: e.target.value }))} /></div>
+                    </div>
+                  )}
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" onClick={() => setShowAddSpecial(false)}>キャンセル</Button>
+                    <Button size="sm" onClick={async () => {
+                      if (!newSpecial.date) { toast.error('日付を入力してください'); return }
+                      const res = await fetch('/api/settings/special-dates', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newSpecial),
+                      })
+                      if (res.ok) {
+                        const data = await res.json()
+                        setSpecialDates(prev => [...prev, { ...newSpecial, id: data.data.id }])
+                        setNewSpecial({ date: '', isClosed: true, openTime: '10:00', closeTime: '18:00', label: '' })
+                        setShowAddSpecial(false)
+                        toast.success('特別日を追加しました')
+                      } else toast.error('追加に失敗しました')
+                    }}>追加する</Button>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
 
