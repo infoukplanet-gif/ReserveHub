@@ -14,7 +14,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     const body = await req.json()
 
     const customer = await prisma.customer.findFirst({ where: { id: customerId, tenantId } })
-    if (!customer) throw new ApiError(404, 'NOT_FOUND', '顧客が見つかりません')
+    if (!customer) throw new ApiError(404, 'NOT_FOUND', '患者が見つかりません')
 
     // タグを取得 or 作成
     let tag = await prisma.customerTag.findFirst({ where: { tenantId, name: body.tagName } })

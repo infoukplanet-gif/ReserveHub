@@ -23,7 +23,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     }
 
     const menu = await prisma.menu.findFirst({ where: { id: menuId, tenantId } })
-    if (!menu) throw new ApiError(404, 'NOT_FOUND', 'メニューが見つかりません')
+    if (!menu) throw new ApiError(404, 'NOT_FOUND', '施術メニューが見つかりません')
 
     const option = await prisma.menuOption.create({
       data: {

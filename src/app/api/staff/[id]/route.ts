@@ -13,7 +13,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     const body = await req.json()
 
     const existing = await prisma.staff.findFirst({ where: { id, tenantId } })
-    if (!existing) throw new ApiError(404, 'NOT_FOUND', 'スタッフが見つかりません')
+    if (!existing) throw new ApiError(404, 'NOT_FOUND', '施術者が見つかりません')
 
     const staff = await prisma.staff.update({
       where: { id },
@@ -39,7 +39,7 @@ export async function DELETE(req: NextRequest, { params }: Params) {
     const { id } = await params
 
     const existing = await prisma.staff.findFirst({ where: { id, tenantId } })
-    if (!existing) throw new ApiError(404, 'NOT_FOUND', 'スタッフが見つかりません')
+    if (!existing) throw new ApiError(404, 'NOT_FOUND', '施術者が見つかりません')
 
     await prisma.staff.delete({ where: { id } })
     return NextResponse.json({ success: true })

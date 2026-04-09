@@ -28,7 +28,7 @@ type DashboardData = {
 }
 
 const quickActions = [
-  { label: 'スタッフ', icon: 'group', href: '/dashboard/staff' },
+  { label: '施術者', icon: 'group', href: '/dashboard/staff' },
   { label: '売上', icon: 'bar_chart', href: '/dashboard/sales' },
   { label: 'お知らせ', icon: 'campaign', href: '/dashboard/blog' },
   { label: '設定', icon: 'settings', href: '/dashboard/settings' },
@@ -57,9 +57,9 @@ export default function DashboardPage() {
   }, [])
 
   const stats = data ? [
-    { label: '本日の予約', value: `${data.todayBookings}`, icon: 'calendar_today' },
+    { label: '本日の来院', value: `${data.todayBookings}`, icon: 'calendar_today' },
     { label: '今月の売上', value: formatPrice(data.monthlyRevenue), icon: 'payments' },
-    { label: '新規顧客', value: `${data.newCustomers}`, icon: 'person_add' },
+    { label: '新規患者', value: `${data.newCustomers}`, icon: 'person_add' },
     { label: 'リピート率', value: `${data.repeatRate}%`, icon: 'replay' },
   ] : []
 
@@ -68,7 +68,7 @@ export default function DashboardPage() {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-xl font-bold text-slate-900">ダッシュボード</h1>
-          <p className="text-xs text-slate-400 mt-0.5">ReserveHub · サロンのパフォーマンスを管理</p>
+          <p className="text-xs text-slate-400 mt-0.5">ReserveHub · 院のパフォーマンスを管理</p>
         </div>
         <div className="hidden sm:flex items-center gap-1">
           {quickActions.map((action) => (
@@ -120,14 +120,14 @@ export default function DashboardPage() {
 
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-sm font-semibold text-slate-900">本日の予約</h2>
+              <h2 className="text-sm font-semibold text-slate-900">本日の来院予約</h2>
               <Link href="/dashboard/reservations" className="text-xs text-blue-600 font-medium hover:underline">カレンダーを見る</Link>
             </div>
             <Card className="border-0 shadow-sm">
               <CardContent className="p-0">
                 <div className="divide-y divide-slate-100">
                   {data?.upcomingReservations.length === 0 && (
-                    <div className="px-4 py-8 text-center text-sm text-slate-400">本日の予約はありません</div>
+                    <div className="px-4 py-8 text-center text-sm text-slate-400">本日の来院予約はありません</div>
                   )}
                   {data?.upcomingReservations.map((r) => (
                     <div key={r.id} className="flex items-center gap-3 px-4 py-3">
@@ -172,9 +172,9 @@ export default function DashboardPage() {
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t flex items-center justify-around py-2 lg:hidden">
         {[
           { icon: 'dashboard', label: 'ホーム', href: '/dashboard', active: true },
-          { icon: 'calendar_month', label: '予約', href: '/dashboard/reservations', active: false },
-          { icon: 'restaurant_menu', label: 'メニュー', href: '/dashboard/menus', active: false },
-          { icon: 'person', label: '顧客', href: '/dashboard/customers', active: false },
+          { icon: 'calendar_month', label: '来院予約', href: '/dashboard/reservations', active: false },
+          { icon: 'spa', label: '施術', href: '/dashboard/menus', active: false },
+          { icon: 'person', label: '患者', href: '/dashboard/customers', active: false },
         ].map((item) => (
           <Link key={item.label} href={item.href}>
             <div className="flex flex-col items-center gap-0.5">

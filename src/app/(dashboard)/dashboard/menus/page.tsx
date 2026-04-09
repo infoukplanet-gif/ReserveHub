@@ -44,7 +44,7 @@ export default function MenusPage() {
 
   const deleteMenu = async (id: string) => {
     const res = await fetch(`/api/menus/${id}`, { method: 'DELETE' })
-    if (res.ok) { toast.success('メニューを削除しました'); loadMenus() }
+    if (res.ok) { toast.success('施術メニューを削除しました'); loadMenus() }
     else toast.error('削除に失敗しました')
   }
   const [activeTab, setActiveTab] = useState('all')
@@ -61,11 +61,11 @@ export default function MenusPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">メニュー管理</h1>
-          <p className="text-sm text-slate-500 mt-1">サービスメニューの管理</p>
+          <h1 className="text-2xl font-bold text-slate-900">施術メニュー</h1>
+          <p className="text-sm text-slate-500 mt-1">施術メニューの管理</p>
         </div>
         <Link href="/dashboard/menus/new">
-          <Button>+ メニューを追加</Button>
+          <Button>+ 施術メニューを追加</Button>
         </Link>
       </div>
 
@@ -98,10 +98,10 @@ export default function MenusPage() {
       ) : filteredMenus.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <span className="material-symbols-outlined text-5xl text-slate-300">restaurant_menu</span>
-            <p className="text-slate-500 mt-3">メニューがまだありません</p>
+            <span className="material-symbols-outlined text-5xl text-slate-300">spa</span>
+            <p className="text-slate-500 mt-3">施術メニューがまだありません</p>
             <Link href="/dashboard/menus/new">
-              <Button variant="outline" className="mt-4">+ メニューを追加</Button>
+              <Button variant="outline" className="mt-4">+ 施術メニューを追加</Button>
             </Link>
           </CardContent>
         </Card>
@@ -125,7 +125,7 @@ export default function MenusPage() {
                       <div className="flex items-center gap-4 mt-2 text-sm text-slate-500">
                         <span>{menu.durationMinutes}分{menu.bufferMinutes > 0 ? ` (+${menu.bufferMinutes}分)` : ''}</span>
                         <span>オプション: {menu.menuOptions.length}個</span>
-                        <span>スタッフ: {menu._count.staffMenus}名</span>
+                        <span>施術者: {menu._count.staffMenus}名</span>
                       </div>
                     </div>
                     <div className="text-right ml-4">
@@ -145,7 +145,7 @@ export default function MenusPage() {
                         <span onClick={e => e.preventDefault()} className="text-xs text-slate-400 hover:text-red-500 cursor-pointer">削除</span>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
-                        <AlertDialogHeader><AlertDialogTitle>メニューを削除しますか？</AlertDialogTitle><AlertDialogDescription>「{menu.name}」を削除します。この操作は取り消せません。</AlertDialogDescription></AlertDialogHeader>
+                        <AlertDialogHeader><AlertDialogTitle>施術メニューを削除しますか？</AlertDialogTitle><AlertDialogDescription>「{menu.name}」を削除します。この操作は取り消せません。</AlertDialogDescription></AlertDialogHeader>
                         <AlertDialogFooter><AlertDialogCancel>キャンセル</AlertDialogCancel><AlertDialogAction onClick={() => deleteMenu(menu.id)} className="bg-red-600 hover:bg-red-700">削除する</AlertDialogAction></AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>

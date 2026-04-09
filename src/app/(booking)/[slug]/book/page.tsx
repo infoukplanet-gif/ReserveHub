@@ -22,7 +22,7 @@ function getPriceRange(base: number, rules: { price: number }[]) {
   return min === max ? formatPrice(min) : `${formatPrice(min)}〜${formatPrice(max)}`
 }
 
-const STEPS = ['メニュー', 'オプション', 'スタッフ', '日時', '情報', '確認']
+const STEPS = ['施術', 'オプション', '施術者', '日時', '情報', '確認']
 
 export default function BookingPage() {
   const { slug } = useParams()
@@ -103,7 +103,7 @@ export default function BookingPage() {
         }),
       })
       if (res.ok) { setCompleted(true) }
-      else { const data = await res.json(); toast.error(data.error || '予約に失敗しました') }
+      else { const data = await res.json(); toast.error(data.error || '来院予約に失敗しました') }
     } catch { toast.error('通信エラーが発生しました') }
     finally { setSubmitting(false) }
   }
@@ -113,7 +113,7 @@ export default function BookingPage() {
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <Card className="w-full max-w-md border-0 shadow-sm"><CardContent className="p-8 text-center space-y-4">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100 mx-auto"><span className="material-symbols-outlined text-3xl text-green-600">check</span></div>
-          <h1 className="text-xl font-bold text-slate-900">ご予約が確定しました</h1>
+          <h1 className="text-xl font-bold text-slate-900">ご来院予約が確定しました</h1>
           <p className="text-sm text-slate-500">確認メールを {customerInfo.email} に送信しました。</p>
         </CardContent></Card>
       </div>
@@ -127,7 +127,7 @@ export default function BookingPage() {
       <header className="bg-white border-b sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 h-14 flex items-center gap-3">
           {step > 0 && <button onClick={() => setStep(step - 1)}><span className="material-symbols-outlined text-[20px] text-slate-500">arrow_back</span></button>}
-          <span className="font-semibold text-slate-900">予約</span>
+          <span className="font-semibold text-slate-900">来院予約</span>
         </div>
       </header>
 
@@ -143,7 +143,7 @@ export default function BookingPage() {
         </div>
 
         {/* Step 1: Menu */}
-        {step === 0 && <div className="space-y-3"><h2 className="text-lg font-semibold text-slate-900">メニューを選ぶ</h2>
+        {step === 0 && <div className="space-y-3"><h2 className="text-lg font-semibold text-slate-900">施術メニューを選ぶ</h2>
           {menus.map(m => (
             <button key={m.id} onClick={() => setSelectedMenu(m.id)} className="w-full text-left">
               <Card className={`border transition-all ${selectedMenu === m.id ? 'border-blue-600 bg-blue-50/50' : 'hover:border-slate-300'}`}><CardContent className="p-4">
@@ -165,8 +165,8 @@ export default function BookingPage() {
         </div>}
 
         {/* Step 3: Staff */}
-        {step === 2 && <div className="space-y-3"><h2 className="text-lg font-semibold text-slate-900">スタッフを選ぶ</h2>
-          <button onClick={() => setSelectedStaff('none')} className="w-full text-left"><Card className={`border transition-all ${selectedStaff === 'none' ? 'border-blue-600 bg-blue-50/50' : ''}`}><CardContent className="p-4"><p className="text-sm font-medium">指名なし</p><p className="text-xs text-slate-400">空いているスタッフが担当</p></CardContent></Card></button>
+        {step === 2 && <div className="space-y-3"><h2 className="text-lg font-semibold text-slate-900">施術者を選ぶ</h2>
+          <button onClick={() => setSelectedStaff('none')} className="w-full text-left"><Card className={`border transition-all ${selectedStaff === 'none' ? 'border-blue-600 bg-blue-50/50' : ''}`}><CardContent className="p-4"><p className="text-sm font-medium">指名なし</p><p className="text-xs text-slate-400">空いている施術者が担当</p></CardContent></Card></button>
           {staffList.map(s => (
             <button key={s.id} onClick={() => setSelectedStaff(s.id)} className="w-full text-left"><Card className={`border transition-all ${selectedStaff === s.id ? 'border-blue-600 bg-blue-50/50' : ''}`}><CardContent className="p-4 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-600 shrink-0">{s.name[0]}</div>
@@ -205,14 +205,14 @@ export default function BookingPage() {
         </div>}
 
         {/* Step 6: Confirm */}
-        {step === 5 && <div className="space-y-4"><h2 className="text-lg font-semibold text-slate-900">予約内容の確認</h2>
+        {step === 5 && <div className="space-y-4"><h2 className="text-lg font-semibold text-slate-900">ご来院予約内容の確認</h2>
           <Card><CardContent className="p-4 space-y-3 text-sm">
-            <div><span className="text-slate-400">メニュー:</span> <span className="text-slate-900">{menu?.name}</span></div>
+            <div><span className="text-slate-400">施術:</span> <span className="text-slate-900">{menu?.name}</span></div>
             {options.length > 0 && <div><span className="text-slate-400">オプション:</span> {options.map(o => o.name).join(', ')}</div>}
-            {staff && staff.id !== 'none' && <div><span className="text-slate-400">担当:</span> {staff.name}</div>}
+            {staff && staff.id !== 'none' && <div><span className="text-slate-400">担当施術者:</span> {staff.name}</div>}
             {selectedTime && <div><span className="text-slate-400">日時:</span> {new Date(selectedTime).toLocaleString('ja-JP')}</div>}
             <Separator />
-            <div className="flex justify-between"><span className="text-slate-500">メニュー</span><span>{formatPrice(menuPrice)}</span></div>
+            <div className="flex justify-between"><span className="text-slate-500">施術料</span><span>{formatPrice(menuPrice)}</span></div>
             {optionTotal > 0 && <div className="flex justify-between"><span className="text-slate-500">オプション</span><span>+{formatPrice(optionTotal)}</span></div>}
             {nominationFee > 0 && <div className="flex justify-between"><span className="text-slate-500">指名料</span><span>+{formatPrice(nominationFee)}</span></div>}
             <Separator />
@@ -228,7 +228,7 @@ export default function BookingPage() {
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           {step >= 1 && <div><p className="text-xs text-slate-400">合計</p><p className="text-lg font-bold">{formatPrice(totalPrice)}</p></div>}
           <Button className={step < 1 ? 'w-full' : 'ml-auto'} disabled={!canProceed() || submitting} onClick={() => { step === 5 ? handleSubmit() : setStep(step + 1) }}>
-            {step === 5 ? (submitting ? '予約中...' : '予約を確定する') : '次へ進む'}
+            {step === 5 ? (submitting ? '予約中...' : '来院予約を確定する') : '次へ進む'}
           </Button>
         </div>
       </div>

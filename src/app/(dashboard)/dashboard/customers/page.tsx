@@ -70,7 +70,7 @@ export default function CustomersPage() {
   if (detail) {
     return (
       <div className="space-y-6">
-        <Button variant="ghost" size="sm" onClick={() => setSelectedId(null)}>← 顧客一覧</Button>
+        <Button variant="ghost" size="sm" onClick={() => setSelectedId(null)}>← 患者一覧</Button>
         <div className="flex items-center gap-4">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-xl font-bold text-blue-600">{detail.name[0]}</div>
           <div>
@@ -110,23 +110,23 @@ export default function CustomersPage() {
 
         <div className="grid grid-cols-3 gap-3">
           <Card className="border-0 shadow-sm"><CardContent className="p-4 text-center">
-            <p className="text-xl font-bold text-slate-900">{detail.totalVisits}回</p><p className="text-[11px] text-slate-400">来店回数</p>
+            <p className="text-xl font-bold text-slate-900">{detail.totalVisits}回</p><p className="text-[11px] text-slate-400">来院回数</p>
           </CardContent></Card>
           <Card className="border-0 shadow-sm"><CardContent className="p-4 text-center">
             <p className="text-xl font-bold text-slate-900">{formatPrice(detail.totalRevenue)}</p><p className="text-[11px] text-slate-400">累計売上</p>
           </CardContent></Card>
           <Card className="border-0 shadow-sm"><CardContent className="p-4 text-center">
-            <p className="text-xl font-bold text-slate-900">{detail.lastVisitAt ? new Date(detail.lastVisitAt).toLocaleDateString('ja-JP') : '-'}</p><p className="text-[11px] text-slate-400">最終来店</p>
+            <p className="text-xl font-bold text-slate-900">{detail.lastVisitAt ? new Date(detail.lastVisitAt).toLocaleDateString('ja-JP') : '-'}</p><p className="text-[11px] text-slate-400">最終来院</p>
           </CardContent></Card>
         </div>
 
         <Tabs defaultValue="history">
-          <TabsList><TabsTrigger value="history">来店履歴</TabsTrigger><TabsTrigger value="carte">カルテ</TabsTrigger><TabsTrigger value="tickets">回数券</TabsTrigger></TabsList>
+          <TabsList><TabsTrigger value="history">来院履歴</TabsTrigger><TabsTrigger value="carte">カルテ</TabsTrigger><TabsTrigger value="tickets">回数券</TabsTrigger></TabsList>
           <TabsContent value="history" className="mt-4">
             <Card className="border-0 shadow-sm"><CardContent className="p-0">
               <div className="divide-y divide-slate-100">
                 {(!detail.reservations || detail.reservations.length === 0) ? (
-                  <div className="py-8 text-center text-sm text-slate-400">来店履歴がありません</div>
+                  <div className="py-8 text-center text-sm text-slate-400">来院履歴がありません</div>
                 ) : detail.reservations.map(r => (
                   <div key={r.id} className="flex items-center gap-3 px-4 py-3">
                     <span className="text-xs text-slate-400 w-20">{new Date(r.startsAt).toLocaleDateString('ja-JP')}</span>
@@ -166,7 +166,7 @@ export default function CustomersPage() {
           <SheetContent className="w-full sm:w-[480px] overflow-y-auto px-6">
             <SheetHeader><SheetTitle>カルテを記録</SheetTitle></SheetHeader>
             <div className="space-y-5 mt-6">
-              <div className="text-sm text-slate-500">顧客: {detail?.name}</div>
+              <div className="text-sm text-slate-500">患者: {detail?.name}</div>
               <div className="space-y-2">
                 <Label className="text-xs">メモ・施術内容</Label>
                 <Textarea value={carteMemo} onChange={e => setCarteMemo(e.target.value)} rows={6} placeholder="主訴、施術内容、次回への申し送りなど" />
@@ -198,7 +198,7 @@ export default function CustomersPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div><h1 className="text-xl font-bold text-slate-900">顧客管理</h1><p className="text-xs text-slate-400 mt-0.5">{customers.length}名</p></div>
+        <div><h1 className="text-xl font-bold text-slate-900">患者管理</h1><p className="text-xs text-slate-400 mt-0.5">{customers.length}名</p></div>
       </div>
       <Input placeholder="名前、メール、電話で検索..." value={search} onChange={(e) => setSearch(e.target.value)} />
       <div className="flex gap-1.5 overflow-x-auto pb-1">
@@ -216,7 +216,7 @@ export default function CustomersPage() {
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-50 text-xs font-semibold text-blue-600 shrink-0">{c.name[0]}</div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-slate-900">{c.name}</p>
-                <p className="text-[11px] text-slate-400">{c.phone} · 来店{c.totalVisits}回 · {formatPrice(c.totalRevenue)}</p>
+                <p className="text-[11px] text-slate-400">{c.phone} · 来院{c.totalVisits}回 · {formatPrice(c.totalRevenue)}</p>
               </div>
               <div className="flex gap-1 shrink-0">
                 {c.tagAssignments.map(ta => (

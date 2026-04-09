@@ -35,7 +35,7 @@ export default function SalesPage() {
               <span className="text-lg font-bold text-slate-900">{formatPrice(d.revenue)}</span>
             </div>
             <div className="flex items-center gap-4 mt-2 text-xs text-slate-400">
-              <span>予約 {d.bookings}件</span>
+              <span>来院 {d.bookings}件</span>
               <span>新規 {d.newCustomers}名</span>
               {d.bookings > 0 && <span>客単価 {formatPrice(Math.round(d.revenue / d.bookings))}</span>}
             </div>
@@ -48,7 +48,7 @@ export default function SalesPage() {
       {/* Menu Ranking */}
       {data && data.menuRanking.length > 0 && (
         <div>
-          <h2 className="text-sm font-semibold text-slate-900 mb-3">メニュー別ランキング（今月）</h2>
+          <h2 className="text-sm font-semibold text-slate-900 mb-3">施術メニュー別ランキング（今月）</h2>
           <Card className="border-0 shadow-sm"><CardContent className="p-0"><div className="divide-y divide-slate-100">
             {data.menuRanking.map((m, i) => (
               <div key={m.name} className="flex items-center gap-3 px-4 py-3">
@@ -64,7 +64,7 @@ export default function SalesPage() {
       {/* Staff Ranking */}
       {data && data.staffRanking.length > 0 && (
         <div>
-          <h2 className="text-sm font-semibold text-slate-900 mb-3">スタッフ別（今月）</h2>
+          <h2 className="text-sm font-semibold text-slate-900 mb-3">施術者別（今月）</h2>
           <Card className="border-0 shadow-sm"><CardContent className="p-0"><div className="divide-y divide-slate-100">
             {data.staffRanking.map(s => (
               <div key={s.name} className="flex items-center gap-3 px-4 py-3">

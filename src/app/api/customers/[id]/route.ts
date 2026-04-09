@@ -32,7 +32,7 @@ export async function GET(req: NextRequest, { params }: Params) {
       },
     })
 
-    if (!customer) throw new ApiError(404, 'NOT_FOUND', '顧客が見つかりません')
+    if (!customer) throw new ApiError(404, 'NOT_FOUND', '患者が見つかりません')
     return NextResponse.json({ data: customer })
   } catch (error) {
     return handleApiError(error)
@@ -46,7 +46,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     const body = await req.json()
 
     const existing = await prisma.customer.findFirst({ where: { id, tenantId } })
-    if (!existing) throw new ApiError(404, 'NOT_FOUND', '顧客が見つかりません')
+    if (!existing) throw new ApiError(404, 'NOT_FOUND', '患者が見つかりません')
 
     const customer = await prisma.customer.update({
       where: { id },

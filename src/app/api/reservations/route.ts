@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
         menuOptions: true,
       },
     })
-    if (!menu) throw new ApiError(404, 'NOT_FOUND', 'メニューが見つかりません')
+    if (!menu) throw new ApiError(404, 'NOT_FOUND', '施術メニューが見つかりません')
 
     // 2. 選択オプション取得
     const selectedOptions = (menu.menuOptions as MenuOption[]).filter((o: MenuOption) => optionIds.includes(o.id))
@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
     let nominationFee = 0
     if (staffId) {
       const staff = await prisma.staff.findFirst({ where: { id: staffId, tenantId } })
-      if (!staff) throw new ApiError(404, 'NOT_FOUND', 'スタッフが見つかりません')
+      if (!staff) throw new ApiError(404, 'NOT_FOUND', '施術者が見つかりません')
       nominationFee = staff.nominationFee
     }
 

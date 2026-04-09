@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     const customer = await prisma.customer.findFirst({
       where: { id: body.customerId, tenantId },
     })
-    if (!customer) throw new ApiError(404, 'NOT_FOUND', '顧客が見つかりません')
+    if (!customer) throw new ApiError(404, 'NOT_FOUND', '患者が見つかりません')
 
     const expiresAt = new Date()
     expiresAt.setMonth(expiresAt.getMonth() + template.validMonths)

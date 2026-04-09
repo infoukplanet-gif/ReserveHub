@@ -36,8 +36,8 @@ export default function StaffPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div><h1 className="text-xl font-bold text-slate-900">スタッフ管理</h1><p className="text-xs text-slate-400 mt-0.5">{staffList.length}名</p></div>
-        <Button onClick={() => setEditing({ name: '', nominationFee: 0, isActive: true })}>+ スタッフを追加</Button>
+        <div><h1 className="text-xl font-bold text-slate-900">施術者管理</h1><p className="text-xs text-slate-400 mt-0.5">{staffList.length}名</p></div>
+        <Button onClick={() => setEditing({ name: '', nominationFee: 0, isActive: true })}>+ 施術者を追加</Button>
       </div>
       {loading ? <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-16 bg-slate-100 rounded-lg animate-pulse" />)}</div> : (
         <div className="space-y-3">{staffList.map(s => (
@@ -46,7 +46,7 @@ export default function StaffPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 text-base font-bold text-blue-600 shrink-0">{s.name[0]}</div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2"><p className="text-sm font-semibold text-slate-900">{s.name}</p><Badge variant="secondary">{s.isActive ? '公開中' : '非公開'}</Badge></div>
-                <p className="text-xs text-slate-400 mt-0.5">メニュー: {s.staffMenus?.length || 0}個 · 指名料: {s.nominationFee > 0 ? `¥${s.nominationFee}` : 'なし'}</p>
+                <p className="text-xs text-slate-400 mt-0.5">施術メニュー: {s.staffMenus?.length || 0}個 · 指名料: {s.nominationFee > 0 ? `¥${s.nominationFee}` : 'なし'}</p>
               </div>
               <span className="material-symbols-outlined text-slate-300">chevron_right</span>
             </div></CardContent>
@@ -55,7 +55,7 @@ export default function StaffPage() {
       )}
       <Sheet open={!!editing} onOpenChange={() => setEditing(null)}>
         <SheetContent className="w-full sm:w-[480px] overflow-y-auto px-6">
-          {editing && (<><SheetHeader><SheetTitle>{editing.id ? 'スタッフ編集' : 'スタッフを追加'}</SheetTitle></SheetHeader>
+          {editing && (<><SheetHeader><SheetTitle>{editing.id ? '施術者編集' : '施術者を追加'}</SheetTitle></SheetHeader>
             <div className="space-y-5 mt-6">
               <div className="space-y-2"><Label>表示名 *</Label><Input value={editing.name || ''} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} /></div>
               <div className="space-y-2"><Label>メールアドレス</Label><Input value={editing.email || ''} onChange={e => setEditing(p => p ? { ...p, email: e.target.value } : null)} /></div>

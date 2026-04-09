@@ -76,8 +76,8 @@ export default function SettingsPage() {
       <Tabs defaultValue={typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('tab') || 'hours' : 'hours'}>
         <TabsList>
           <TabsTrigger value="hours">営業時間</TabsTrigger>
-          <TabsTrigger value="general">基本情報</TabsTrigger>
-          <TabsTrigger value="booking">予約設定</TabsTrigger>
+          <TabsTrigger value="general">院情報</TabsTrigger>
+          <TabsTrigger value="booking">来院予約設定</TabsTrigger>
           <TabsTrigger value="carte">カルテ設定</TabsTrigger>
         </TabsList>
 
@@ -181,7 +181,7 @@ export default function SettingsPage() {
           }}>保存する</Button>
         </TabsContent>
 
-        {/* 基本情報 */}
+        {/* 院情報 */}
         <TabsContent value="general" className="mt-4 space-y-6">
           <Card className="border-0 shadow-sm">
             <CardContent className="p-5 space-y-5">
@@ -232,22 +232,22 @@ export default function SettingsPage() {
             await fetch('/api/settings', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
               tenant: { name: shopName, phone, email, postalCode: postal, address }
             })})
-            toast.success('基本情報を保存しました')
+            toast.success('院情報を保存しました')
           }}>保存する</Button>
         </TabsContent>
 
-        {/* 予約設定 */}
+        {/* 来院予約設定 */}
         <TabsContent value="booking" className="mt-4 space-y-6">
           <Card className="border-0 shadow-sm">
             <CardContent className="p-5 space-y-5">
-              <h2 className="text-sm font-semibold text-slate-900">予約受付</h2>
+              <h2 className="text-sm font-semibold text-slate-900">来院予約受付</h2>
               <div className="space-y-2">
-                <Label className="text-xs">予約受付締切</Label>
+                <Label className="text-xs">来院来院予約受付締切</Label>
                 <div className="flex items-center gap-2">
                   <Input type="number" value={bookingDeadline} onChange={(e) => setBookingDeadline(parseInt(e.target.value) || 0)} className="w-20" />
                   <span className="text-sm text-slate-500">時間前まで</span>
                 </div>
-                <p className="text-[10px] text-slate-400">予約開始時刻のX時間前まで受付</p>
+                <p className="text-[10px] text-slate-400">来院予約開始時刻のX時間前まで受付</p>
               </div>
               <div className="space-y-2">
                 <Label className="text-xs">キャンセル締切</Label>
@@ -257,7 +257,7 @@ export default function SettingsPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label className="text-xs">予約可能期間</Label>
+                <Label className="text-xs">来院予約可能期間</Label>
                 <div className="flex items-center gap-2">
                   <Input type="number" value={maxFutureDays} onChange={(e) => setMaxFutureDays(parseInt(e.target.value) || 0)} className="w-20" />
                   <span className="text-sm text-slate-500">日先まで</span>
@@ -277,7 +277,7 @@ export default function SettingsPage() {
                   <Switch />
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-700">新規予約通知（スタッフ宛）</span>
+                  <span className="text-sm text-slate-700">新規来院予約通知（施術者宛）</span>
                   <Switch defaultChecked />
                 </div>
               </div>
@@ -287,7 +287,7 @@ export default function SettingsPage() {
             await fetch('/api/settings', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
               tenant: { bookingDeadlineHours: bookingDeadline, cancelDeadlineHours: cancelDeadline, maxFutureDays }
             })})
-            toast.success('予約設定を保存しました')
+            toast.success('来院来院予約設定を保存しました')
           }}>保存する</Button>
         </TabsContent>
 

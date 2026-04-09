@@ -163,7 +163,7 @@ export default function MenuEditPage() {
         toast.error(data.error || 'エラーが発生しました')
         return
       }
-      toast.success(isNew ? 'メニューを作成しました' : '保存しました')
+      toast.success(isNew ? '施術メニューを作成しました' : '保存しました')
       if (isNew) router.push(`/dashboard/menus/${data.data.id}`)
     } finally {
       setSaving(false)
@@ -172,7 +172,7 @@ export default function MenuEditPage() {
 
   const handleAddRule = async () => {
     if (isNew) {
-      toast.error('先にメニューを保存してください')
+      toast.error('先に施術メニューを保存してください')
       return
     }
     const res = await fetch(`/api/menus/${id}/pricing-rules`, {
@@ -226,12 +226,12 @@ export default function MenuEditPage() {
       {/* Header */}
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="sm" onClick={() => router.push('/dashboard/menus')}>
-          ← メニュー管理
+          ← 施術メニュー
         </Button>
       </div>
 
       <h1 className="text-2xl font-bold text-slate-900">
-        {isNew ? 'メニューを追加' : menu.name}
+        {isNew ? '施術メニューを追加' : menu.name}
       </h1>
 
       {/* Basic Info */}
@@ -241,7 +241,7 @@ export default function MenuEditPage() {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label>メニュー名 *</Label>
+            <Label>施術メニュー名 *</Label>
             <Input
               value={menu.name}
               onChange={(e) => setMenu((prev) => ({ ...prev, name: e.target.value }))}
@@ -253,7 +253,7 @@ export default function MenuEditPage() {
             <Textarea
               value={menu.description || ''}
               onChange={(e) => setMenu((prev) => ({ ...prev, description: e.target.value }))}
-              placeholder="メニューの説明"
+              placeholder="施術メニューの説明"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">

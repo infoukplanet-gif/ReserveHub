@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
       where: { id: menuId, tenantId: tenant.id },
       include: { menuOptions: true, pricingRules: true },
     })
-    if (!menu) throw new ApiError(404, 'NOT_FOUND', 'メニューが見つかりません')
+    if (!menu) throw new ApiError(404, 'NOT_FOUND', '施術メニューが見つかりません')
 
     // オプション取得
     const optionIds = optionIdsParam ? optionIdsParam.split(',') : []

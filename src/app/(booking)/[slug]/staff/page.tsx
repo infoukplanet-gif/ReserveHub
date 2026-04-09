@@ -18,11 +18,11 @@ export default async function StaffPage({ params }: Props) {
     <div className="min-h-screen bg-white">
       <header className="sticky top-0 z-50 bg-white border-b"><div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
         <Link href={`/${slug}`} className="text-slate-500 text-sm">← {tenant.name}</Link>
-        <Link href={`/${slug}/book`}><button className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium">予約する</button></Link>
+        <Link href={`/${slug}/book`}><button className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium">来院予約する</button></Link>
       </div></header>
 
       <div className="max-w-5xl mx-auto px-4 py-12">
-        <h1 className="text-2xl font-bold text-slate-900 text-center mb-8">スタッフ紹介</h1>
+        <h1 className="text-2xl font-bold text-slate-900 text-center mb-8">施術者紹介</h1>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
           {staff.map(s => (
             <div key={s.id} className="text-center">
@@ -32,7 +32,7 @@ export default async function StaffPage({ params }: Props) {
               <p className="mt-3 text-base font-semibold text-slate-900">{s.name}</p>
               {s.bio && <p className="mt-1 text-sm text-slate-500">{s.bio}</p>}
               {s.nominationFee > 0 && <p className="mt-1 text-xs text-slate-400">指名料 ¥{s.nominationFee.toLocaleString()}</p>}
-              <Link href={`/${slug}/book`}><button className="mt-3 px-4 py-1.5 rounded-lg border border-blue-600 text-blue-600 text-xs font-medium hover:bg-blue-50">このスタッフで予約</button></Link>
+              <Link href={`/${slug}/book`}><button className="mt-3 px-4 py-1.5 rounded-lg border border-blue-600 text-blue-600 text-xs font-medium hover:bg-blue-50">この施術者で来院予約</button></Link>
             </div>
           ))}
         </div>

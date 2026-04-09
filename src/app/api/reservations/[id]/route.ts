@@ -25,7 +25,7 @@ export async function GET(req: NextRequest, { params }: Params) {
       },
     })
 
-    if (!reservation) throw new ApiError(404, 'NOT_FOUND', '予約が見つかりません')
+    if (!reservation) throw new ApiError(404, 'NOT_FOUND', '来院予約が見つかりません')
 
     return NextResponse.json({ data: reservation })
   } catch (error) {
@@ -48,7 +48,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     }
 
     const existing = await prisma.reservation.findFirst({ where: { id, tenantId } })
-    if (!existing) throw new ApiError(404, 'NOT_FOUND', '予約が見つかりません')
+    if (!existing) throw new ApiError(404, 'NOT_FOUND', '来院予約が見つかりません')
 
     const reservation = await prisma.reservation.update({
       where: { id },

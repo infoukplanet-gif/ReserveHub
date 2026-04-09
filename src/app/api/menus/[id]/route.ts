@@ -23,7 +23,7 @@ export async function GET(req: NextRequest, { params }: Params) {
       },
     })
 
-    if (!menu) throw new ApiError(404, 'NOT_FOUND', 'メニューが見つかりません')
+    if (!menu) throw new ApiError(404, 'NOT_FOUND', '施術メニューが見つかりません')
 
     return NextResponse.json({ data: menu })
   } catch (error) {
@@ -47,7 +47,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
     // テナント分離チェック
     const existing = await prisma.menu.findFirst({ where: { id, tenantId } })
-    if (!existing) throw new ApiError(404, 'NOT_FOUND', 'メニューが見つかりません')
+    if (!existing) throw new ApiError(404, 'NOT_FOUND', '施術メニューが見つかりません')
 
     const menu = await prisma.menu.update({
       where: { id },
@@ -71,7 +71,7 @@ export async function DELETE(req: NextRequest, { params }: Params) {
     const { id } = await params
 
     const existing = await prisma.menu.findFirst({ where: { id, tenantId } })
-    if (!existing) throw new ApiError(404, 'NOT_FOUND', 'メニューが見つかりません')
+    if (!existing) throw new ApiError(404, 'NOT_FOUND', '施術メニューが見つかりません')
 
     await prisma.menu.delete({ where: { id } })
 

@@ -136,7 +136,7 @@ export default function TicketsPage() {
                 <div className="space-y-2"><Label>有効期間</Label><div className="flex items-center gap-2"><Input type="number" value={editing.validMonths || 0} onChange={e => setEditing(p => p ? { ...p, validMonths: parseInt(e.target.value) || 0 } : null)} className="w-24" /><span className="text-sm text-slate-500">ヶ月</span></div></div>
                 <div className="flex items-center gap-3"><Switch checked={editing.isOnSale ?? true} onCheckedChange={v => setEditing(p => p ? { ...p, isOnSale: v } : null)} /><Label>販売中</Label></div>
                 <Separator />
-                <div className="rounded-lg border border-amber-200 bg-amber-50 p-3"><p className="text-xs text-amber-700">回数券はメニュー本体のみ消化されます。オプション・指名料は別途精算です。</p></div>
+                <div className="rounded-lg border border-amber-200 bg-amber-50 p-3"><p className="text-xs text-amber-700">回数券は施術メニュー本体のみ消化されます。オプション・指名料は別途精算です。</p></div>
                 <div className="flex gap-2">
                   <Button variant="outline" className="flex-1" onClick={() => setEditing(null)}>キャンセル</Button>
                   <Button className="flex-1" onClick={async () => {
@@ -168,9 +168,9 @@ export default function TicketsPage() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>顧客 *</Label>
+              <Label>患者 *</Label>
               <Select value={purchaseCustomerId} onValueChange={(v) => { if (v) setPurchaseCustomerId(v) }}>
-                <SelectTrigger><SelectValue placeholder="顧客を選択" /></SelectTrigger>
+                <SelectTrigger><SelectValue placeholder="患者を選択" /></SelectTrigger>
                 <SelectContent>
                   {customers.map(c => (
                     <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
@@ -179,7 +179,7 @@ export default function TicketsPage() {
               </Select>
             </div>
             <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
-              <p className="text-xs text-amber-700">回数券はメニュー本体のみ消化されます。オプション・指名料は別途精算です。</p>
+              <p className="text-xs text-amber-700">回数券は施術メニュー本体のみ消化されます。オプション・指名料は別途精算です。</p>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" className="flex-1" onClick={() => setShowPurchase(false)}>キャンセル</Button>

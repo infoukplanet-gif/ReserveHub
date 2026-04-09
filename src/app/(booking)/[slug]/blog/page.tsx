@@ -18,7 +18,7 @@ export default async function BlogListPage({ params }: Props) {
     <div className="min-h-screen bg-white">
       <header className="sticky top-0 z-50 bg-white border-b"><div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
         <Link href={`/${slug}`} className="text-slate-500 text-sm">← {tenant.name}</Link>
-        <Link href={`/${slug}/book`}><button className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium">予約する</button></Link>
+        <Link href={`/${slug}/book`}><button className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium">来院予約する</button></Link>
       </div></header>
 
       <div className="max-w-3xl mx-auto px-4 py-12">

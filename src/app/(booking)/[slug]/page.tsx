@@ -105,11 +105,11 @@ export default async function PublicHomePage({ params }: Props) {
           <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
             <span className="font-bold text-slate-900">{tenant.name}</span>
             <nav className="hidden md:flex items-center gap-6 text-sm text-slate-600">
-              <Link href={`/${slug}/menu`} className="hover:text-slate-900">メニュー</Link>
-              <Link href={`/${slug}/staff`} className="hover:text-slate-900">スタッフ</Link>
+              <Link href={`/${slug}/menu`} className="hover:text-slate-900">施術メニュー</Link>
+              <Link href={`/${slug}/staff`} className="hover:text-slate-900">施術者紹介</Link>
               <Link href={`/${slug}/blog`} className="hover:text-slate-900">ブログ</Link>
             </nav>
-            <Link href={`/${slug}/book`}><button className="px-4 py-2 rounded-lg text-white text-sm font-medium" style={{ backgroundColor: color }}>予約する</button></Link>
+            <Link href={`/${slug}/book`}><button className="px-4 py-2 rounded-lg text-white text-sm font-medium" style={{ backgroundColor: color }}>来院予約する</button></Link>
           </div>
         </header>
       )}
@@ -118,7 +118,7 @@ export default async function PublicHomePage({ params }: Props) {
         <header className="sticky top-0 z-50 bg-white border-b">
           <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
             <span className="font-bold text-slate-900">{tenant.name}</span>
-            <Link href={`/${slug}/book`}><button className="px-4 py-2 rounded-lg text-white text-sm font-medium" style={{ backgroundColor: color }}>予約する</button></Link>
+            <Link href={`/${slug}/book`}><button className="px-4 py-2 rounded-lg text-white text-sm font-medium" style={{ backgroundColor: color }}>来院予約する</button></Link>
           </div>
         </header>
       )}
@@ -133,21 +133,21 @@ export default async function PublicHomePage({ params }: Props) {
           <div className={`relative max-w-5xl mx-auto px-4 py-24 ${heroAlign === 'left' ? 'text-left' : heroAlign === 'right' ? 'text-right' : 'text-center'}`}>
             <h1 className="text-3xl md:text-4xl font-bold leading-tight">{hp?.heroTitle || tenant.name}</h1>
             {hp?.heroSubtitle && <p className="mt-4 text-white/70 text-base">{hp.heroSubtitle}</p>}
-            <Link href={`/${slug}/book`}><button className="mt-8 px-8 py-3 bg-white rounded-lg font-semibold text-base" style={{ color }}>今すぐ予約する</button></Link>
+            <Link href={`/${slug}/book`}><button className="mt-8 px-8 py-3 bg-white rounded-lg font-semibold text-base" style={{ color }}>今すぐ来院予約する</button></Link>
           </div>
         </section>
       ) : (
         <section className="max-w-5xl mx-auto px-4 py-24 text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-slate-900">{hp?.heroTitle || tenant.name}</h1>
           {hp?.heroSubtitle && <p className="mt-4 text-slate-500">{hp.heroSubtitle}</p>}
-          <Link href={`/${slug}/book`}><button className="mt-8 px-8 py-3 rounded-lg text-white font-semibold" style={{ backgroundColor: color }}>今すぐ予約する</button></Link>
+          <Link href={`/${slug}/book`}><button className="mt-8 px-8 py-3 rounded-lg text-white font-semibold" style={{ backgroundColor: color }}>今すぐ来院予約する</button></Link>
         </section>
       )}
 
       {/* Menus */}
       {menus.length > 0 && (
         <section className={`max-w-5xl mx-auto px-4 py-16 ${animClass}`} style={{ backgroundColor: sectionConfig.menus?.bgColor as string || undefined }}>
-          <h2 className="text-2xl font-bold text-slate-900 text-center mb-8">メニュー・料金</h2>
+          <h2 className="text-2xl font-bold text-slate-900 text-center mb-8">施術メニュー・料金</h2>
           <div className={`grid ${sectionConfig.menus?.style === 'list' ? 'grid-cols-1' : 'md:grid-cols-2'} gap-4`}>
             {menus.slice(0, (sectionConfig.menus?.count as number) || 4).map(menu => (
               <div key={menu.id} className="border rounded-xl p-5">
@@ -160,7 +160,7 @@ export default async function PublicHomePage({ params }: Props) {
               </div>
             ))}
           </div>
-          <div className="text-center mt-6"><Link href={`/${slug}/menu`} className="text-sm font-medium" style={{ color }}>メニューをすべて見る →</Link></div>
+          <div className="text-center mt-6"><Link href={`/${slug}/menu`} className="text-sm font-medium" style={{ color }}>施術メニューをすべて見る →</Link></div>
         </section>
       )}
 
@@ -168,7 +168,7 @@ export default async function PublicHomePage({ params }: Props) {
       {staff.length > 0 && (
         <section className={`py-16 ${animClass}`} style={{ backgroundColor: sectionConfig.staff?.bgColor as string || '#F8FAFC' }}>
           <div className="max-w-5xl mx-auto px-4">
-            <h2 className="text-2xl font-bold text-slate-900 text-center mb-8">スタッフ紹介</h2>
+            <h2 className="text-2xl font-bold text-slate-900 text-center mb-8">施術者紹介</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
               {staff.map(s => (
                 <div key={s.id} className="text-center">
@@ -211,7 +211,7 @@ export default async function PublicHomePage({ params }: Props) {
       {/* CTA */}
       <section className="py-12 text-center" style={{ backgroundColor: color }}>
         <p className="text-white text-lg font-semibold">ご予約はこちら</p>
-        <Link href={`/${slug}/book`}><button className="mt-4 px-8 py-3 bg-white rounded-lg font-semibold" style={{ color }}>今すぐ予約する</button></Link>
+        <Link href={`/${slug}/book`}><button className="mt-4 px-8 py-3 bg-white rounded-lg font-semibold" style={{ color }}>今すぐ来院予約する</button></Link>
       </section>
 
       {/* Footer */}
@@ -224,10 +224,10 @@ export default async function PublicHomePage({ params }: Props) {
           </div>
           {footerLayout !== '1col' && (
             <div className="flex flex-col gap-1">
-              <Link href={`/${slug}/menu`} className="text-xs text-slate-500 hover:text-slate-900">メニュー</Link>
-              <Link href={`/${slug}/staff`} className="text-xs text-slate-500 hover:text-slate-900">スタッフ</Link>
+              <Link href={`/${slug}/menu`} className="text-xs text-slate-500 hover:text-slate-900">施術メニュー</Link>
+              <Link href={`/${slug}/staff`} className="text-xs text-slate-500 hover:text-slate-900">施術者紹介</Link>
               <Link href={`/${slug}/blog`} className="text-xs text-slate-500 hover:text-slate-900">ブログ</Link>
-              <Link href={`/${slug}/book`} className="text-xs text-slate-500 hover:text-slate-900">予約する</Link>
+              <Link href={`/${slug}/book`} className="text-xs text-slate-500 hover:text-slate-900">来院予約する</Link>
             </div>
           )}
           {footerSns.length > 0 && (
@@ -245,13 +245,13 @@ export default async function PublicHomePage({ params }: Props) {
       {navType === 'footer' ? (
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t flex items-center justify-around py-2 lg:hidden">
           <Link href={`/${slug}`} className="flex flex-col items-center gap-0.5"><span className="material-symbols-outlined text-[20px] text-blue-600">home</span><span className="text-[10px] text-blue-600">ホーム</span></Link>
-          <Link href={`/${slug}/menu`} className="flex flex-col items-center gap-0.5"><span className="material-symbols-outlined text-[20px] text-slate-400">restaurant_menu</span><span className="text-[10px] text-slate-400">メニュー</span></Link>
-          <Link href={`/${slug}/book`} className="flex flex-col items-center gap-0.5"><span className="material-symbols-outlined text-[20px] text-slate-400">calendar_month</span><span className="text-[10px] text-slate-400">予約</span></Link>
-          <Link href={`/${slug}/staff`} className="flex flex-col items-center gap-0.5"><span className="material-symbols-outlined text-[20px] text-slate-400">group</span><span className="text-[10px] text-slate-400">スタッフ</span></Link>
+          <Link href={`/${slug}/menu`} className="flex flex-col items-center gap-0.5"><span className="material-symbols-outlined text-[20px] text-slate-400">spa</span><span className="text-[10px] text-slate-400">施術</span></Link>
+          <Link href={`/${slug}/book`} className="flex flex-col items-center gap-0.5"><span className="material-symbols-outlined text-[20px] text-slate-400">calendar_month</span><span className="text-[10px] text-slate-400">来院予約</span></Link>
+          <Link href={`/${slug}/staff`} className="flex flex-col items-center gap-0.5"><span className="material-symbols-outlined text-[20px] text-slate-400">group</span><span className="text-[10px] text-slate-400">施術者</span></Link>
         </div>
       ) : (
         <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-t p-3 lg:hidden">
-          <Link href={`/${slug}/book`} className="block"><button className="w-full py-3 rounded-lg text-white font-semibold" style={{ backgroundColor: color }}>予約する</button></Link>
+          <Link href={`/${slug}/book`} className="block"><button className="w-full py-3 rounded-lg text-white font-semibold" style={{ backgroundColor: color }}>来院予約する</button></Link>
         </div>
       )}
     </div>

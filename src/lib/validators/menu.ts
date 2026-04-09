@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const createMenuSchema = z.object({
-  name: z.string().min(1, 'メニュー名は必須です').max(200),
+  name: z.string().min(1, '施術メニュー名は必須です').max(200),
   description: z.string().optional(),
   categoryId: z.string().uuid().optional().nullable(),
   durationMinutes: z.number().int().min(5, '5分以上で設定してください'),

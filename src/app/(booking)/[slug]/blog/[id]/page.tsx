@@ -18,7 +18,7 @@ export default async function BlogPostPage({ params }: Props) {
     <div className="min-h-screen bg-white">
       <header className="sticky top-0 z-50 bg-white border-b"><div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
         <Link href={`/${slug}/blog`} className="text-slate-500 text-sm">← ブログ一覧</Link>
-        <Link href={`/${slug}/book`}><button className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium">予約する</button></Link>
+        <Link href={`/${slug}/book`}><button className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium">来院予約する</button></Link>
       </div></header>
 
       <article className="max-w-3xl mx-auto px-4 py-12">
@@ -29,7 +29,7 @@ export default async function BlogPostPage({ params }: Props) {
         <h1 className="text-2xl font-bold text-slate-900 mb-8">{post.title}</h1>
         <div className="prose prose-slate max-w-none" dangerouslySetInnerHTML={{ __html: post.content }} />
         <div className="mt-12 text-center">
-          <Link href={`/${slug}/book`}><button className="px-8 py-3 rounded-lg bg-blue-600 text-white font-semibold">予約はこちら</button></Link>
+          <Link href={`/${slug}/book`}><button className="px-8 py-3 rounded-lg bg-blue-600 text-white font-semibold">来院予約はこちら</button></Link>
         </div>
       </article>
     </div>

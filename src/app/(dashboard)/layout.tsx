@@ -9,10 +9,10 @@ import { useState } from 'react'
 
 const navItems = [
   { href: '/dashboard', label: 'ダッシュボード', icon: 'dashboard' },
-  { href: '/dashboard/reservations', label: '予約管理', icon: 'calendar_month' },
-  { href: '/dashboard/menus', label: 'メニュー管理', icon: 'restaurant_menu' },
-  { href: '/dashboard/staff', label: 'スタッフ管理', icon: 'group' },
-  { href: '/dashboard/customers', label: '顧客管理', icon: 'person' },
+  { href: '/dashboard/reservations', label: '来院予約', icon: 'calendar_month' },
+  { href: '/dashboard/menus', label: '施術メニュー', icon: 'spa' },
+  { href: '/dashboard/staff', label: '施術者管理', icon: 'group' },
+  { href: '/dashboard/customers', label: '患者管理', icon: 'person' },
   { href: '/dashboard/tickets', label: '回数券管理', icon: 'confirmation_number' },
   { href: '/dashboard/sales', label: '売上レポート', icon: 'bar_chart' },
   { href: '/dashboard/homepage', label: 'ホームページ', icon: 'language' },
@@ -21,7 +21,7 @@ const navItems = [
 
 const settingsItems = [
   { href: '/dashboard/settings?tab=hours', label: '営業時間', icon: 'schedule' },
-  { href: '/dashboard/settings?tab=general', label: '基本情報', icon: 'info' },
+  { href: '/dashboard/settings?tab=general', label: '院情報', icon: 'info' },
   { href: '/dashboard/settings?tab=booking', label: '予約設定', icon: 'tune' },
   { href: '/dashboard/settings?tab=carte', label: 'カルテ設定', icon: 'medical_information' },
 ]

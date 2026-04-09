@@ -2,35 +2,35 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'ReserveHub | 予約管理 × ホームページ × 顧客管理',
-  description: '中小事業者向けの予約管理Webアプリ。柔軟な料金設定、顧客管理、ホームページ作成が月額無料から。',
+  title: 'ReserveHub | 整体院・鍼灸院の予約管理 × カルテ × リピート促進',
+  description: '整体院・鍼灸院・接骨院に特化した予約管理アプリ。来院予約、カルテ、自動フォローアップ、LINE連携、ホームページ作成が月額1,980円から。',
 }
 
 const features = [
   {
     title: '柔軟な料金設定',
-    description: '平日/休日、時間帯、曜日×時間帯の組み合わせで自動的に料金を切り替え。オプション・指名料も1メニューで管理。',
+    description: '平日/休日、時間帯、曜日×時間帯の組み合わせで自動的に料金を切り替え。オプション・指名料も1施術メニューで管理。',
     icon: '💰',
   },
   {
-    title: 'ホームページ作成',
-    description: 'テンプレ感ゼロのHP。ナビ・ヒーロー・セクション・フッターを自由にカスタマイズ。SEO・OGP対応。',
-    icon: '🌐',
+    title: '自動フォローアップ',
+    description: '来院サイクルを学習し、最適なタイミングで自動リマインド。季節や症状に応じたメッセージで再来院を促進。',
+    icon: '🔄',
   },
   {
-    title: '顧客管理・カルテ',
-    description: '来店履歴、カルテ記録、タグ管理で顧客を深く理解。回数券の販売・消化も自動追跡。',
-    icon: '👥',
+    title: 'カルテ管理',
+    description: '主訴、施術履歴、経過観察をデジタル管理。施術者ごとのテンプレートで記録を効率化。回数券の販売・消化も自動追跡。',
+    icon: '📋',
   },
   {
-    title: 'かんたん予約受付',
-    description: '顧客はスマホから24時間予約可能。ダブルブッキング防止、リマインドメール自動送信。',
+    title: 'かんたん来院予約',
+    description: '患者様はスマホから24時間予約可能。ダブルブッキング防止、リマインドメール自動送信で無断キャンセルを削減。',
     icon: '📅',
   },
   {
-    title: 'ブログ機能',
-    description: 'noteのようなブロックエディタでお知らせやコラムを発信。SEO効果でHPへの流入を増加。',
-    icon: '✍️',
+    title: 'ホームページ作成',
+    description: 'テンプレ感ゼロのHP。ナビ・ヒーロー・セクション・フッターを自由にカスタマイズ。SEO・OGP対応で集患力UP。',
+    icon: '🌐',
   },
   {
     title: '回数券・チケット',
@@ -41,29 +41,29 @@ const features = [
 
 const plans = [
   {
-    name: 'Free',
-    price: '¥0',
+    name: 'ライト',
+    price: '¥1,980',
     period: '/月',
-    description: 'まずは試してみたい方に',
-    features: ['予約管理（月30件まで）', 'HP作成（基本テンプレート）', '顧客管理（100名まで）', 'メール通知'],
-    cta: '無料ではじめる',
+    description: 'まずは予約管理を効率化したい院に',
+    features: ['来院予約管理', 'カルテ（50件まで）', '施術メニュー管理', '回数券管理', 'メール通知'],
+    cta: '14日間無料トライアル',
     highlighted: false,
   },
   {
-    name: 'Standard',
-    price: '¥2,980',
+    name: 'スタンダード',
+    price: '¥4,980',
     period: '/月',
-    description: '本格運用したい事業者に',
-    features: ['予約管理（無制限）', 'HP作成（全テンプレート）', '顧客管理（無制限）', 'カルテ・回数券', 'ブログ機能', 'スタッフ管理（5名まで）'],
+    description: 'リピート率を上げたい院に',
+    features: ['ライトの全機能', 'カルテ（無制限）', '自動フォローアップ', 'LINE連携チャット', 'メール配信', '施術者管理（5名まで）'],
     cta: '14日間無料トライアル',
     highlighted: true,
   },
   {
-    name: 'Pro',
-    price: '¥5,980',
+    name: 'プロ',
+    price: '¥12,000',
     period: '/月',
-    description: '複数スタッフの事業者に',
-    features: ['Standardの全機能', 'スタッフ管理（無制限）', 'カスタムHTML/CSS', 'Google Tag Manager', '独自ドメイン対応', '優先サポート'],
+    description: '集患もHPもまるごと任せたい院に',
+    features: ['スタンダードの全機能', '施術者管理（無制限）', 'HP/ブログ機能', 'デザインテーマ5種', '分析ダッシュボード', '優先サポート'],
     cta: '14日間無料トライアル',
     highlighted: false,
   },
@@ -92,12 +92,12 @@ export default function LandingPage() {
       <section className="pt-32 pb-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 leading-tight">
-            予約も、HPも、顧客管理も。<br />
-            <span className="text-blue-600">これ1つで。</span>
+            予約、カルテ、リピート促進。<br />
+            <span className="text-blue-600">整体院の経営を、これ1つで。</span>
           </h1>
           <p className="mt-6 text-lg text-slate-500 max-w-2xl mx-auto">
-            平日/休日で料金を変えたい。オプションや指名料を柔軟に設定したい。
-            そんな事業者の声から生まれた、新しい予約管理アプリ。
+            施術中に電話が鳴る。リピート促進が手動。回数券の管理が煩雑。
+            そんな整体院・鍼灸院の悩みを解決する、業界特化の予約管理アプリ。
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/register" className="w-full sm:w-auto bg-blue-600 text-white px-8 py-3.5 rounded-lg text-base font-medium hover:bg-blue-700 transition-colors">
@@ -116,7 +116,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-slate-900">必要なものが、すべて揃う</h2>
-            <p className="mt-3 text-slate-500">予約管理に必要な機能をワンストップで提供</p>
+            <p className="mt-3 text-slate-500">整体院・鍼灸院の経営に必要な機能をワンストップで提供</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((f) => (

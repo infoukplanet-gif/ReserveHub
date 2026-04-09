@@ -32,7 +32,7 @@ export default async function MenuPage({ params }: Props) {
       </div></header>
 
       <div className="max-w-5xl mx-auto px-4 py-12">
-        <h1 className="text-2xl font-bold text-slate-900 text-center mb-8">メニュー・料金</h1>
+        <h1 className="text-2xl font-bold text-slate-900 text-center mb-8">施術メニュー・料金</h1>
 
         {categories.map(cat => {
           const catMenus = menus.filter(m => m.categoryId === cat.id)
@@ -60,7 +60,7 @@ export default async function MenuPage({ params }: Props) {
                         ))}
                       </div>
                     )}
-                    <Link href={`/${slug}/book`}><button className="mt-4 w-full py-2 rounded-lg border border-blue-600 text-blue-600 text-sm font-medium hover:bg-blue-50">このメニューで予約</button></Link>
+                    <Link href={`/${slug}/book`}><button className="mt-4 w-full py-2 rounded-lg border border-blue-600 text-blue-600 text-sm font-medium hover:bg-blue-50">このメニューで来院予約</button></Link>
                   </div>
                 ))}
               </div>
@@ -68,7 +68,7 @@ export default async function MenuPage({ params }: Props) {
           )
         })}
 
-        <p className="text-xs text-slate-400 text-center mt-8">※料金は曜日・時間帯により異なります。詳細は予約画面でご確認ください。</p>
+        <p className="text-xs text-slate-400 text-center mt-8">※料金は曜日・時間帯により異なります。詳細は来院予約画面でご確認ください。</p>
       </div>
     </div>
   )

@@ -95,8 +95,8 @@ export default function ReservationsPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-slate-900">予約管理</h1>
-        <Button onClick={() => setShowManualBooking(true)}>+ 手動予約</Button>
+        <h1 className="text-xl font-bold text-slate-900">来院予約</h1>
+        <Button onClick={() => setShowManualBooking(true)}>+ 手動登録</Button>
       </div>
 
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
@@ -119,7 +119,7 @@ export default function ReservationsPage() {
           <CardContent className="p-0">
             <div className="divide-y divide-slate-100">
               {reservations.length === 0 ? (
-                <div className="py-12 text-center"><span className="material-symbols-outlined text-4xl text-slate-300">event_busy</span><p className="text-sm text-slate-400 mt-2">この日の予約はありません</p></div>
+                <div className="py-12 text-center"><span className="material-symbols-outlined text-4xl text-slate-300">event_busy</span><p className="text-sm text-slate-400 mt-2">この日の来院予約はありません</p></div>
               ) : reservations.map(r => (
                 <button key={r.id} onClick={() => setSelectedReservation(r)} className="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-slate-50 transition-colors">
                   <span className="text-xs font-mono text-slate-400 w-10 shrink-0">{formatTime(r.startsAt)}</span>
@@ -144,7 +144,7 @@ export default function ReservationsPage() {
         <SheetContent className="w-full sm:w-[480px] overflow-y-auto">
           {selectedReservation && (
             <>
-              <SheetHeader><SheetTitle>予約詳細</SheetTitle></SheetHeader>
+              <SheetHeader><SheetTitle>来院予約詳細</SheetTitle></SheetHeader>
               <div className="space-y-5 mt-6">
                 <div className="space-y-2">
                   <label className="text-xs text-slate-400 font-medium">ステータス</label>
@@ -160,12 +160,12 @@ export default function ReservationsPage() {
                 </div>
                 <Separator />
                 <div className="space-y-1"><label className="text-xs text-slate-400">日時</label><p className="text-sm">{new Date(selectedReservation.startsAt).toLocaleString('ja-JP')}〜{formatTime(selectedReservation.endsAt)}</p></div>
-                <div className="space-y-1"><label className="text-xs text-slate-400">顧客</label><p className="text-sm font-medium">{selectedReservation.customer.name}</p>{selectedReservation.customer.phone && <p className="text-xs text-slate-500">{selectedReservation.customer.phone}</p>}</div>
-                <div className="space-y-1"><label className="text-xs text-slate-400">メニュー</label><p className="text-sm">{selectedReservation.menu.name}</p></div>
+                <div className="space-y-1"><label className="text-xs text-slate-400">患者</label><p className="text-sm font-medium">{selectedReservation.customer.name}</p>{selectedReservation.customer.phone && <p className="text-xs text-slate-500">{selectedReservation.customer.phone}</p>}</div>
+                <div className="space-y-1"><label className="text-xs text-slate-400">施術メニュー</label><p className="text-sm">{selectedReservation.menu.name}</p></div>
                 {selectedReservation.staff && <div className="space-y-1"><label className="text-xs text-slate-400">担当</label><p className="text-sm">{selectedReservation.staff.name}</p></div>}
                 <Separator />
                 <div className="space-y-1.5 text-sm">
-                  <div className="flex justify-between"><span className="text-slate-500">メニュー</span><span>{formatPrice(selectedReservation.menuPrice)}</span></div>
+                  <div className="flex justify-between"><span className="text-slate-500">施術料</span><span>{formatPrice(selectedReservation.menuPrice)}</span></div>
                   {selectedReservation.optionPrice > 0 && <div className="flex justify-between"><span className="text-slate-500">オプション</span><span>{formatPrice(selectedReservation.optionPrice)}</span></div>}
                   {selectedReservation.nominationFee > 0 && <div className="flex justify-between"><span className="text-slate-500">指名料</span><span>{formatPrice(selectedReservation.nominationFee)}</span></div>}
                   <Separator />
@@ -180,18 +180,18 @@ export default function ReservationsPage() {
       {/* Manual Booking Sheet */}
       <Sheet open={showManualBooking} onOpenChange={setShowManualBooking}>
         <SheetContent className="w-full sm:w-[480px] overflow-y-auto px-6">
-          <SheetHeader><SheetTitle>手動予約</SheetTitle></SheetHeader>
+          <SheetHeader><SheetTitle>手動登録</SheetTitle></SheetHeader>
           <div className="space-y-5 mt-6">
-            <div className="space-y-2"><label className="text-xs text-slate-400">顧客名 *</label><Input id="mb-name" placeholder="山田 太郎" /></div>
+            <div className="space-y-2"><label className="text-xs text-slate-400">患者名 *</label><Input id="mb-name" placeholder="山田 太郎" /></div>
             <div className="space-y-2"><label className="text-xs text-slate-400">電話番号 *</label><Input id="mb-phone" placeholder="090-1234-5678" /></div>
             <div className="space-y-2"><label className="text-xs text-slate-400">メールアドレス *</label><Input id="mb-email" placeholder="yamada@example.com" /></div>
             <Separator />
-            <div className="space-y-2"><label className="text-xs text-slate-400">メニュー *</label>
-              <Select value={mbMenuId} onValueChange={(v) => { if (v) setMbMenuId(v) }}><SelectTrigger><SelectValue placeholder="メニューを選択" /></SelectTrigger><SelectContent>
+            <div className="space-y-2"><label className="text-xs text-slate-400">施術メニュー *</label>
+              <Select value={mbMenuId} onValueChange={(v) => { if (v) setMbMenuId(v) }}><SelectTrigger><SelectValue placeholder="施術メニューを選択" /></SelectTrigger><SelectContent>
                 {menuList.map(m => <SelectItem key={m.id} value={m.id}>{m.name}（{m.durationMinutes}分・¥{m.basePrice.toLocaleString()}）</SelectItem>)}
               </SelectContent></Select>
             </div>
-            <div className="space-y-2"><label className="text-xs text-slate-400">担当スタッフ</label>
+            <div className="space-y-2"><label className="text-xs text-slate-400">担当施術者</label>
               <Select value={mbStaffId} onValueChange={(v) => { if (v) setMbStaffId(v) }}><SelectTrigger><SelectValue placeholder="指名なし" /></SelectTrigger><SelectContent>
                 <SelectItem value="none">指名なし</SelectItem>
                 {staffListData.map(s => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
@@ -217,9 +217,9 @@ export default function ReservationsPage() {
                   method: 'POST', headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ menuId: mbMenuId, staffId: mbStaffId && mbStaffId !== 'none' ? mbStaffId : undefined, startsAt, optionIds: [], customer: { name, phone, email }, memo, source: 'manual' }),
                 })
-                if (res.ok) { toast.success('予約を作成しました'); setShowManualBooking(false); setLoading(true); setCurrentDate(new Date(date)) }
+                if (res.ok) { toast.success('来院予約を登録しました'); setShowManualBooking(false); setLoading(true); setCurrentDate(new Date(date)) }
                 else { const d = await res.json(); toast.error(d.error || '作成に失敗しました') }
-              }}>予約を作成</Button>
+              }}>登録する</Button>
             </div>
           </div>
         </SheetContent>
