@@ -363,3 +363,104 @@ section_config: jsonb (セクションごとの詳細設定)
 - shadcn Select の onValueChange は `(v) => { if (v) setXxx(v) }` でラップする（直接setStateを渡さない）
 - 認証フロー変更時は必ず「テナント自動作成」の整合性を確認する
 - 並列実行可能な作業はAgent toolで同時に実行する（ユーザー体験向上）
+
+---
+
+## 2026-04-10 — 6機能一括実装 + ミナオスなびプラットフォーム
+
+### 実装完了（1セッションで完了）
+
+#### F1: 整体用カルテテンプレート
+- `src/lib/carte-template-defaults.ts` — 整体院13項目/鍼灸院14項目のデフォルトテンプレート定義
+- `src/components/carte/CarteFieldRenderer.tsx` — fieldType別レンダラー（text/textarea/select/multiselect/date/number/image）
+- `src/components/carte/CarteForm.tsx` — テンプレート選択+フィールド入力+バリデーション
+- `src/app/api/carte-templates/seed/route.ts` — テナントへのデフォルトテンプレートシード
+- 顧客詳細ページ: カルテタブを構造化表示に改修（フィールド名+値の一覧表示）
+- 設定ページ: 「整体・鍼灸テンプレを追加」ボタン追加
+
+#### F2: 自動フォローアップ
+- `FollowUpRule` / `FollowUpLog` モデル追加
+- 4トリガータイプ: interval（来院N日後）、symptom（カルテキーワード）、season（月日指定）、ticket_expiry（回数券期限前）
+- `src/lib/follow-up.ts` — 配信ロジック（全テナント横断処理）
+- プリセット6件（7日/14日/30日リマインド、回数券期限、梅雨/冬の季節リマインド）
+- `src/app/api/cron/follow-up/route.ts` — 専用Cron（毎日JST 10:00）
+- ダッシュボード: ルール管理（CRUD+トグル）+ 送信ログ閲覧
+- `sendFollowUp()` メールテンプレート追加
+
+#### F3: Stripe課金
+- Tenant: `stripeCustomerId`, `stripeSubscriptionId`, `trialEndsAt` 追加
+- 3プラン: ライト¥1,980 / スタンダード¥4,980 / プロ¥9,800
+- `src/lib/stripe.ts` — 初期化+Price定数
+- `src/lib/plan-gate.ts` — プラン別機能制限チェック（maxCartes, followUp, lineIntegration, themes, customCss）
+- Checkout Session / Billing Portal / Webhook（4イベント処理）
+- 14日間無料トライアル対応
+- ダッシュボード: プラン比較+決済ボタン+支払い管理
+
+#### F4: LINE連携
+- `LineConfig` / `ChatMessage` モデル追加、Customer.lineUserId追加
+- `src/lib/line.ts` — 署名検証、メッセージ送信、プロフィール取得（raw fetch、SDK不使用）
+- Webhook: メッセージ受信 → 顧客自動紐付け（lineUserId）、友だち追加時に自動Customer作成
+- チャットUI: 顧客リスト（未読バッジ）+ バブルチャット + 5秒ポーリング
+- 設定ページ: LINE連携タブ（Channel ID/Secret/Token + Webhook URL表示）
+- フォローアップのLINE配信対応（follow-up.tsにLINEチャネル分岐追加）
+
+#### F5: デザインテーマ切替
+- 5テーマ: flat / skeuomorphic / neumorphic / glassmorphic / liquid-glass
+- CSS変数オーバーライド方式（`[data-theme="xxx"]`セレクタ）
+- `ThemeProvider` — data-theme属性管理のReactコンテキスト
+- `ThemeSwitcher` — プレビュースウォッチ付きテーマ選択UI
+- ダッシュボードレイアウトをThemeProviderでラップ
+- 設定ページ: テーマ設定タブ追加
+
+#### F6: ミナオスなびプラットフォーム
+- `Review` / `PlatformBoost` / `PaidListing` / `PlatformUser` / `PlatformFavorite` / `PlatformDisclosure` モデル追加
+- **掲載設計**: ReserveHub利用院は無料自動掲載 / 非利用院はPaidListingで有料掲載(basic/premium)
+- **検索**: エリア×症状、premium掲載を上位表示
+- **院詳細**: SSR + JSON-LD(LocalBusiness+AggregateRating) + Google Maps埋め込み
+- **口コミ**: 投稿（承認制）→ 院側ダッシュボードで承認/拒否/公開管理
+- **Google Maps連携**: Place ID設定、地図埋め込み、「Google Mapsで口コミを書く」CTA
+- **ユーザーアカウント**: お気に入り、プロフィール、情報開示設定
+- **情報開示管理**: 院ごとに6項目（氏名/生年月日/電話/性別/カルテ/施術履歴）をチェックボックスでオン/オフ。院名は開示しない設計。施術部位・問診情報のみ引き継ぎ。
+- **デザイン**: モダンUI、hero-mesh背景、スクロールアニメーション(ScrollReveal)、stagger children、clinic-card hover、search-bar glow
+- **アクセシビリティ**: prefers-reduced-motion対応
+
+#### インフラ・SEO・テスト
+- Prismaマイグレーション: 10テーブル新規作成、3テーブルカラム追加（1回のマイグレーションで適用）
+- Vercel環境変数: Stripe関連6つ設定
+- Stripe: 3商品作成、Webhookエンドポイント登録
+- sitemap拡張: プラットフォーム院詳細/口コミ、症状別8ページ、エリア別8ページ
+- robots.txt: /clinics/ allow、/mypage disallow
+- E2Eテスト: プラットフォーム(検索/404/マイページ)、API(検索/口コミ/課金/フォローアップ/LINE/口コミ管理)
+
+### 新しい知見
+- Stripe v22では `subscription.current_period_end` がTypeScript型に含まれない → キャストで対応
+- Prisma migrate devはnon-interactive環境で使えない → 手動でmigration.sqlを作成し`migrate deploy`で適用
+- Google Maps口コミの自動連携はGoogleの規約で禁止 → 投稿後に誘導ボタンが最善策
+- shadcn Selectの`onValueChange`は`null`を返しうるので`if (v) { ... }`でガードが必要
+- ScrollRevealはサーバーコンポーネントから使えないが、子コンポーネントとして埋め込み可能
+
+### ユーザーからの要望・フィードバック
+- プロプラン: 12,000円 → 9,800円に変更
+- ミナオスなび: ReserveHub利用者は無料自動掲載、非利用院は有料掲載
+- ミナオスなび: 最新トレンドデザイン・アニメーションを希望
+- ミナオスなび: ノンストレスで院にたどり着ける設計
+- 情報開示: 他院の来院履歴で院名は開示しない。施術部位・問診情報のみ引き継ぎ
+- Stripe Connect（院が患者から決済を受け取る仕組み）は後回し
+
+### 課題・TODO（優先順位順）
+- [ ] Stripe Connect実装（院が患者からオンライン決済を受け取る）
+- [ ] Google OAuth有効化
+- [ ] Supabase Storageバケット作成（uploads）
+- [ ] RLSポリシー適用
+- [ ] 独自ドメイン設定
+- [ ] ミナオスなびの有料掲載申込フロー（PaidListing用Checkout）
+- [ ] PlatformUser認証フロー（患者側ログイン/登録）
+- [ ] 口コミを認証済みユーザー限定に変更（スパム防止）
+- [ ] LINE Rich Menu設定サポート
+- [ ] 設定代行サービス申込フロー
+
+### 開発ルールの追加
+- Stripe Webhookはraw body（`req.text()`）で署名検証。JSONパースは署名検証後に行う
+- Prismaマイグレーションはnon-interactive環境では手動SQL作成+`migrate deploy`で適用
+- プラットフォーム系ページはSSRを基本とし、JSON-LD構造化データを必ず出力
+- `useSearchParams()`を使うページは`<Suspense>`で必ずラップ（Next.js 16要件）
