@@ -223,6 +223,15 @@ export default function SettingsPage() {
 
               <Separator />
 
+              <h2 className="text-sm font-semibold text-slate-900">Google Maps連携</h2>
+              <div className="space-y-2">
+                <Label className="text-xs">Google Place ID</Label>
+                <Input id="googlePlaceId" placeholder="ChIJ..." />
+                <p className="text-[10px] text-slate-400">Google Mapsで院を検索 → URLの「place_id:」以降のIDを入力。ミナオスなびに地図と口コミ導線が表示されます。</p>
+              </div>
+
+              <Separator />
+
               <h2 className="text-sm font-semibold text-slate-900">説明文</h2>
               <div className="space-y-2">
                 <textarea
@@ -235,7 +244,7 @@ export default function SettingsPage() {
           </Card>
           <Button onClick={async () => {
             await fetch('/api/settings', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
-              tenant: { name: shopName, phone, email, postalCode: postal, address }
+              tenant: { name: shopName, phone, email, postalCode: postal, address, googlePlaceId: (document.getElementById('googlePlaceId') as HTMLInputElement)?.value || undefined }
             })})
             toast.success('院情報を保存しました')
           }}>保存する</Button>

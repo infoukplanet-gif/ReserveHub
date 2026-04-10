@@ -313,3 +313,53 @@ section_config: jsonb (セクションごとの詳細設定)
 - getTenantId()は使わない。getAuthenticatedTenantId()を使う（@/lib/auth）
 - 画像アップロードはImageUploadコンポーネント（@/components/shared/ImageUpload）を使う
 - HP公開ページはSSR（Server Component）で実装。クライアントコンポーネントにしない
+
+---
+
+## 2026-04-03 — 残タスク一括消化・認証フロー修正
+
+### 決定事項
+- LPの料金プラン: Free(¥0) / Standard(¥2,980) / Pro(¥5,980) の3プラン構成
+- 新規登録フロー: signUp → signIn試行 → テナント自動作成 → dashboard遷移
+- Google OAuth: callbackでテナント未存在なら自動作成（slug=メール@前をslugify）
+- E2Eテスト基盤: Playwright + Chromium、`pnpm test:e2e` で実行
+- エラーモニタリング: Sentry導入（NEXT_PUBLIC_SENTRY_DSN環境変数で有効化）
+
+### 完了した作業
+- [x] 不足UI: 特別日追加/削除フォーム + API（/api/settings/special-dates）
+- [x] 不足UI: 手動予約のメニュー・スタッフSelect選択（仮データ廃止）
+- [x] 不足UI: 回数券販売Sheet（顧客選択+テンプレート選択→購入API）
+- [x] sitemap.xml（テナント・ブログ記事を動的生成）
+- [x] robots.txt（dashboard/api等をDisallow）
+- [x] E2Eテスト基盤: 4テストファイル（認証、公開ページ、予約フロー、API）
+- [x] LP（ランディングページ）: 機能紹介・料金プラン・CTA
+- [x] 利用規約ページ（/terms）
+- [x] プライバシーポリシーページ（/privacy）
+- [x] 料金プランページ（/pricing）: 詳細比較・FAQ
+- [x] Sentry導入: client/server config、global-error.tsx、instrumentation.ts
+- [x] 認証フロー修正: 新規登録→テナント自動作成、OAuth callback→テナント自動作成
+- [x] Vercelデプロイ（push済み）
+
+### 新しい知見（技術）
+- shadcn/ui v2のSelect: onValueChangeの型が`(value: string | null, ...) => void`に変更。`setXxx`を直接渡すと型エラー → `(v) => { if (v) setXxx(v) }` でラップ必要
+- Next.js App Routerのsitemap.ts/robots.ts: export default関数でMetadataRoute型を返すだけで自動的にルート生成される
+- Sentry + Next.js 16: @sentry/nextjs v10、withSentryConfigでnext.config.tsをラップ、instrumentation.tsでサーバー初期化
+- Playwright: `pnpm add -D @playwright/test` → `npx playwright install chromium` でセットアップ完了
+
+### 失敗・修正から学んだこと
+- ユーザーから「並列でやって」と複数回指摘された → Agent toolを積極的に並列起動すべき。独立したタスク（ファイル作成、ビルド確認等）は同時実行が原則
+- 認証フローのテナント自動作成が抜けていた → 新規登録時は必ず「認証後にDB側のリソースが作られるか」を確認すべき
+
+### 課題・TODO（優先順位順）
+- [ ] Google OAuth有効化（Google Cloud Console + Supabase Dashboard設定）
+- [ ] Supabase Storageバケット作成（uploads）
+- [ ] RLSポリシー適用（SQLは作成済み。Supabase Dashboard or マイグレーションで実行）
+- [ ] 独自ドメイン設定
+- [ ] Stripe決済連携
+- [ ] LINE連携
+- [ ] SelectType競合調査、体験レッスンリサーチ
+
+### 開発ルールの追加・変更
+- shadcn Select の onValueChange は `(v) => { if (v) setXxx(v) }` でラップする（直接setStateを渡さない）
+- 認証フロー変更時は必ず「テナント自動作成」の整合性を確認する
+- 並列実行可能な作業はAgent toolで同時に実行する（ユーザー体験向上）

@@ -30,6 +30,7 @@ model Tenant {
   trialEndsAt          DateTime? @map("trial_ends_at") @db.Timestamptz()
   dashboardTheme       String   @default("flat") @map("dashboard_theme") @db.VarChar(30)
   isListedOnPlatform   Boolean  @default(false) @map("is_listed_on_platform")
+  googlePlaceId        String?  @map("google_place_id") @db.VarChar(255)
   symptoms             String[] @default([])
   timezone             String   @default("Asia/Tokyo") @db.VarChar(50)
   bookingBufferMinutes Int      @default(0) @map("booking_buffer_minutes")
