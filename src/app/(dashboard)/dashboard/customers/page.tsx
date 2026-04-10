@@ -7,10 +7,8 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Progress } from '@/components/ui/progress'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { Separator } from '@/components/ui/separator'
+import { CarteForm } from '@/components/carte/CarteForm'
 import { toast } from 'sonner'
 
 type Customer = {
@@ -25,7 +23,7 @@ type Customer = {
   memo: string | null
   tagAssignments: { tag: { name: string; color: string } }[]
   reservations?: { id: string; startsAt: string; menu: { name: string }; staff: { name: string } | null; totalPrice: number; status: string }[]
-  carteRecords?: { id: string; recordedAt: string; data: Record<string, unknown>; memo: string | null; staff: { name: string } | null }[]
+  carteRecords?: { id: string; recordedAt: string; data: Record<string, unknown>; memo: string | null; staff: { name: string } | null; template: { name: string; fields: { id: string; name: string; fieldType: string; options: string[] | null }[] } | null }[]
   purchasedTickets?: { id: string; remainingCount: number; expiresAt: string; status: string; ticketTemplate: { name: string; totalCount: number } }[]
 }
 
@@ -46,7 +44,6 @@ export default function CustomersPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [detail, setDetail] = useState<Customer | null>(null)
   const [showCarteForm, setShowCarteForm] = useState(false)
-  const [carteMemo, setCarteMemo] = useState('')
 
   useEffect(() => {
     const params = new URLSearchParams()
@@ -140,12 +137,37 @@ export default function CustomersPage() {
           <TabsContent value="carte" className="mt-4 space-y-3">
             {(!detail.carteRecords || detail.carteRecords.length === 0) ? (
               <Card className="border-0 shadow-sm"><CardContent className="py-8 text-center"><p className="text-sm text-slate-400">カルテがありません</p></CardContent></Card>
-            ) : detail.carteRecords.map(c => (
-              <Card key={c.id} className="border-0 shadow-sm"><CardContent className="p-4">
-                <div className="flex justify-between mb-2"><span className="text-xs font-semibold">{new Date(c.recordedAt).toLocaleDateString('ja-JP')}</span><span className="text-xs text-slate-400">{c.staff?.name}</span></div>
-                {c.memo && <p className="text-sm text-slate-700">{c.memo}</p>}
-              </CardContent></Card>
-            ))}
+            ) : detail.carteRecords.map(c => {
+              const fieldMap = new Map((c.template?.fields || []).map(f => [f.id, f]))
+              const dataEntries = Object.entries(c.data || {}).filter(([, v]) => v !== null && v !== '' && !(Array.isArray(v) && v.length === 0))
+              return (
+                <Card key={c.id} className="border-0 shadow-sm"><CardContent className="p-4 space-y-2">
+                  <div className="flex justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-semibold">{new Date(c.recordedAt).toLocaleDateString('ja-JP')}</span>
+                      {c.template && <Badge variant="outline" className="text-[10px]">{c.template.name}</Badge>}
+                    </div>
+                    <span className="text-xs text-slate-400">{c.staff?.name}</span>
+                  </div>
+                  {dataEntries.length > 0 && (
+                    <div className="space-y-1.5 mt-2">
+                      {dataEntries.map(([fieldId, value]) => {
+                        const field = fieldMap.get(fieldId)
+                        const label = field?.name || fieldId
+                        const display = Array.isArray(value) ? value.join('、') : String(value)
+                        return (
+                          <div key={fieldId} className="flex gap-2 text-sm">
+                            <span className="text-slate-400 shrink-0 w-28 text-xs">{label}</span>
+                            <span className="text-slate-700 text-xs">{display}</span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+                  {c.memo && <p className="text-xs text-slate-500 mt-2 border-t pt-2">{c.memo}</p>}
+                </CardContent></Card>
+              )
+            })}
             <Button variant="outline" className="w-full" onClick={() => setShowCarteForm(true)}>+ カルテを記録する</Button>
           </TabsContent>
           <TabsContent value="tickets" className="mt-4 space-y-3">
@@ -165,29 +187,17 @@ export default function CustomersPage() {
         <Sheet open={showCarteForm} onOpenChange={setShowCarteForm}>
           <SheetContent className="w-full sm:w-[480px] overflow-y-auto px-6">
             <SheetHeader><SheetTitle>カルテを記録</SheetTitle></SheetHeader>
-            <div className="space-y-5 mt-6">
-              <div className="text-sm text-slate-500">患者: {detail?.name}</div>
-              <div className="space-y-2">
-                <Label className="text-xs">メモ・施術内容</Label>
-                <Textarea value={carteMemo} onChange={e => setCarteMemo(e.target.value)} rows={6} placeholder="主訴、施術内容、次回への申し送りなど" />
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline" className="flex-1" onClick={() => setShowCarteForm(false)}>キャンセル</Button>
-                <Button className="flex-1" onClick={async () => {
-                  if (!detail) return
-                  const res = await fetch(`/api/customers/${detail.id}/cartes`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ templateId: null, memo: carteMemo }),
-                  })
-                  if (res.ok) {
-                    toast.success('カルテを記録しました')
-                    setShowCarteForm(false); setCarteMemo('')
-                    // リロード
-                    const r = await fetch(`/api/customers/${detail.id}`).then(r => r.json())
-                    setDetail(r.data)
-                  } else toast.error('保存に失敗しました')
-                }}>保存する</Button>
-              </div>
+            <div className="mt-6">
+              <div className="text-sm text-slate-500 mb-4">患者: {detail?.name}</div>
+              <CarteForm
+                customerId={detail?.id || ''}
+                onSaved={async () => {
+                  setShowCarteForm(false)
+                  const r = await fetch(`/api/customers/${detail?.id}`).then(r => r.json())
+                  setDetail(r.data)
+                }}
+                onCancel={() => setShowCarteForm(false)}
+              />
             </div>
           </SheetContent>
         </Sheet>

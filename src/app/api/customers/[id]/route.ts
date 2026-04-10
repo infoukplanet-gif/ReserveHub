@@ -22,7 +22,7 @@ export async function GET(req: NextRequest, { params }: Params) {
           take: 20,
         },
         carteRecords: {
-          include: { template: true, staff: true },
+          include: { template: { include: { fields: { orderBy: { displayOrder: 'asc' } } } }, staff: true },
           orderBy: { recordedAt: 'desc' },
         },
         purchasedTickets: {

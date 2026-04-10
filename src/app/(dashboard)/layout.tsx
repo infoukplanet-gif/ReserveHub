@@ -5,7 +5,9 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { ThemeProvider } from '@/components/theme/ThemeProvider'
+import type { ThemeId } from '@/lib/themes'
 
 const navItems = [
   { href: '/dashboard', label: 'ダッシュボード', icon: 'dashboard' },
@@ -14,9 +16,13 @@ const navItems = [
   { href: '/dashboard/staff', label: '施術者管理', icon: 'group' },
   { href: '/dashboard/customers', label: '患者管理', icon: 'person' },
   { href: '/dashboard/tickets', label: '回数券管理', icon: 'confirmation_number' },
+  { href: '/dashboard/follow-up', label: 'フォローアップ', icon: 'send' },
+  { href: '/dashboard/chat', label: 'チャット', icon: 'chat' },
+  { href: '/dashboard/reviews', label: '口コミ管理', icon: 'reviews' },
   { href: '/dashboard/sales', label: '売上レポート', icon: 'bar_chart' },
   { href: '/dashboard/homepage', label: 'ホームページ', icon: 'language' },
   { href: '/dashboard/blog', label: 'ブログ', icon: 'edit_note' },
+  { href: '/dashboard/billing', label: '課金プラン', icon: 'credit_card' },
 ]
 
 const settingsItems = [
@@ -103,8 +109,17 @@ function SidebarContent({ pathname }: { pathname: string }) {
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  const [dashboardTheme, setDashboardTheme] = useState<ThemeId>('flat')
+
+  useEffect(() => {
+    fetch('/api/settings').then(r => r.json()).then(r => {
+      const theme = r.data?.tenant?.dashboardTheme
+      if (theme) setDashboardTheme(theme as ThemeId)
+    }).catch(() => {})
+  }, [])
 
   return (
+    <ThemeProvider initialTheme={dashboardTheme}>
     <>
       <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
@@ -141,5 +156,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </div>
     </>
+    </ThemeProvider>
   )
 }

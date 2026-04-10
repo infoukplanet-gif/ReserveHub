@@ -1,0 +1,90 @@
+/* ミナオスなび — Platform Animations & Styles */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.5s ease-out both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out both;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out both;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Staggered children animation */
+.stagger-children > * {
+  animation: fade-up 0.5s ease-out both;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 60ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 360ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 420ms; }
+
+/* Clinic card hover */
+.clinic-card {
+  transition: all 0.2s ease;
+}
+.clinic-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(0,0,0,0.08), 0 4px 10px -4px rgba(0,0,0,0.04);
+}
+
+/* Search input focus glow */
+.search-input:focus {
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.15);
+}
+
+/* Rating stars */
+.star-filled { color: #f59e0b; }
+.star-empty { color: #e2e8f0; }
+
+/* Pill tag hover */
+.symptom-pill {
+  transition: all 0.15s ease;
+}
+.symptom-pill:hover {
+  transform: scale(1.05);
+}
+
+/* Hero background mesh */
+.hero-mesh {
+  background-image:
+    radial-gradient(at 27% 37%, hsla(160, 64%, 57%, 0.08) 0px, transparent 50%),
+    radial-gradient(at 97% 21%, hsla(167, 65%, 65%, 0.06) 0px, transparent 50%),
+    radial-gradient(at 52% 99%, hsla(174, 80%, 55%, 0.05) 0px, transparent 50%),
+    radial-gradient(at 10% 29%, hsla(179, 55%, 52%, 0.04) 0px, transparent 50%);
+}

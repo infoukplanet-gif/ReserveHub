@@ -25,6 +25,12 @@ model Tenant {
   description          String?  @db.Text
   plan                 String   @default("free") @db.VarChar(20)
   planExpiresAt        DateTime? @map("plan_expires_at") @db.Timestamptz()
+  stripeCustomerId     String?  @unique @map("stripe_customer_id") @db.VarChar(255)
+  stripeSubscriptionId String?  @map("stripe_subscription_id") @db.VarChar(255)
+  trialEndsAt          DateTime? @map("trial_ends_at") @db.Timestamptz()
+  dashboardTheme       String   @default("flat") @map("dashboard_theme") @db.VarChar(30)
+  isListedOnPlatform   Boolean  @default(false) @map("is_listed_on_platform")
+  symptoms             String[] @default([])
   timezone             String   @default("Asia/Tokyo") @db.VarChar(50)
   bookingBufferMinutes Int      @default(0) @map("booking_buffer_minutes")
   cancelDeadlineHours  Int      @default(24) @map("cancel_deadline_hours")
@@ -48,6 +54,11 @@ model Tenant {
   hpPages          HpPage[]
   blogPosts        BlogPost[]
   notificationLogs NotificationLog[]
+  followUpRules    FollowUpRule[]
+  lineConfig       LineConfig?
+  chatMessages     ChatMessage[]
+  reviews          Review[]
+  platformBoosts   PlatformBoost[]
 
   @@map("tenants")
 }
@@ -189,6 +200,7 @@ model Customer {
   birthDate    DateTime? @map("birth_date") @db.Date
   gender       String?   @db.VarChar(10)
   memo         String?   @db.Text
+  lineUserId   String?   @map("line_user_id") @db.VarChar(100)
   totalVisits  Int       @default(0) @map("total_visits")
   totalRevenue Int       @default(0) @map("total_revenue")
   lastVisitAt  DateTime? @map("last_visit_at") @db.Timestamptz()
@@ -440,6 +452,7 @@ model HpSetting {
   id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   tenantId        String   @unique @map("tenant_id") @db.Uuid
   template        String   @default("simple") @db.VarChar(50)
+  uiTheme         String   @default("flat") @map("ui_theme") @db.VarChar(30)
   primaryColor    String   @default("#2563EB") @map("primary_color") @db.VarChar(7)
   secondaryColor  String   @default("#1D4ED8") @map("secondary_color") @db.VarChar(7)
 
@@ -546,4 +559,209 @@ model NotificationLog {
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   @@map("notification_logs")
+}
+
+// ==========================================
+// フォローアップ
+// ==========================================
+
+model FollowUpRule {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId         String   @map("tenant_id") @db.Uuid
+  name             String   @db.VarChar(100)
+  triggerType      String   @map("trigger_type") @db.VarChar(30)
+  intervalDays     Int?     @map("interval_days")
+  symptomKeyword   String?  @map("symptom_keyword") @db.VarChar(200)
+  seasonMonth      Int?     @map("season_month")
+  seasonDay        Int?     @map("season_day")
+  daysBeforeExpiry Int?     @map("days_before_expiry")
+  subject          String   @db.VarChar(200)
+  bodyTemplate     String   @map("body_template") @db.Text
+  channel          String   @default("email") @db.VarChar(20)
+  isActive         Boolean  @default(true) @map("is_active")
+  isPreset         Boolean  @default(false) @map("is_preset")
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  tenant Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  logs   FollowUpLog[]
+
+  @@index([tenantId])
+  @@map("follow_up_rules")
+}
+
+model FollowUpLog {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ruleId      String   @map("rule_id") @db.Uuid
+  customerId  String   @map("customer_id") @db.Uuid
+  channel     String   @db.VarChar(20)
+  status      String   @default("sent") @db.VarChar(20)
+  sentAt      DateTime @default(now()) @map("sent_at") @db.Timestamptz()
+  errorDetail String?  @map("error_detail") @db.Text
+
+  rule FollowUpRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+
+  @@index([ruleId])
+  @@index([customerId])
+  @@map("follow_up_logs")
+}
+
+// ==========================================
+// LINE連携
+// ==========================================
+
+model LineConfig {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId           String   @unique @map("tenant_id") @db.Uuid
+  channelId          String   @map("channel_id") @db.VarChar(50)
+  channelSecret      String   @map("channel_secret") @db.VarChar(100)
+  channelAccessToken String   @map("channel_access_token") @db.Text
+  isActive           Boolean  @default(true) @map("is_active")
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt          DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("line_configs")
+}
+
+model ChatMessage {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId      String   @map("tenant_id") @db.Uuid
+  customerId    String   @map("customer_id") @db.Uuid
+  direction     String   @db.VarChar(10)
+  messageType   String   @map("message_type") @db.VarChar(20)
+  content       String   @db.Text
+  lineMessageId String?  @map("line_message_id") @db.VarChar(100)
+  sentAt        DateTime @default(now()) @map("sent_at") @db.Timestamptz()
+
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, customerId])
+  @@index([tenantId, sentAt])
+  @@map("chat_messages")
+}
+
+// ==========================================
+// プラットフォーム（ミナオスなび）
+// ==========================================
+
+model Review {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId    String   @map("tenant_id") @db.Uuid
+  customerId  String?  @map("customer_id") @db.Uuid
+  authorName  String   @map("author_name") @db.VarChar(100)
+  rating      Int
+  title       String?  @db.VarChar(200)
+  content     String   @db.Text
+  isApproved  Boolean  @default(false) @map("is_approved")
+  isPublished Boolean  @default(false) @map("is_published")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, isPublished])
+  @@map("reviews")
+}
+
+model PlatformBoost {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String   @map("tenant_id") @db.Uuid
+  boostType String   @map("boost_type") @db.VarChar(30)
+  startsAt  DateTime @map("starts_at") @db.Timestamptz()
+  endsAt    DateTime @map("ends_at") @db.Timestamptz()
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([isActive, endsAt])
+  @@map("platform_boosts")
+}
+
+// 有料掲載院（ReserveHub非利用）
+model PaidListing {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug           String   @unique @db.VarChar(50)
+  name           String   @db.VarChar(100)
+  email          String   @db.VarChar(255)
+  phone          String?  @db.VarChar(20)
+  postalCode     String?  @map("postal_code") @db.VarChar(10)
+  address        String?  @db.Text
+  latitude       Decimal? @db.Decimal(10, 7)
+  longitude      Decimal? @db.Decimal(10, 7)
+  logoUrl        String?  @map("logo_url") @db.Text
+  coverImageUrl  String?  @map("cover_image_url") @db.Text
+  description    String?  @db.Text
+  symptoms       String[] @default([])
+  website        String?  @db.Text
+  businessHoursJson Json? @map("business_hours_json")
+  listingPlan    String   @default("basic") @map("listing_plan") @db.VarChar(20) // basic|premium
+  isActive       Boolean  @default(true) @map("is_active")
+  expiresAt      DateTime? @map("expires_at") @db.Timestamptz()
+  stripeCustomerId String? @map("stripe_customer_id") @db.VarChar(255)
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  @@map("paid_listings")
+}
+
+// ==========================================
+// プラットフォームユーザー（患者側アカウント）
+// ==========================================
+
+model PlatformUser {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String?  @unique @map("user_id") @db.Uuid  // Supabase Auth user
+  name        String   @db.VarChar(100)
+  email       String   @unique @db.VarChar(255)
+  birthDate   DateTime? @map("birth_date") @db.Date
+  phone       String?  @db.VarChar(20)
+  gender      String?  @db.VarChar(10)
+  avatarUrl   String?  @map("avatar_url") @db.Text
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  favorites       PlatformFavorite[]
+  disclosureRules PlatformDisclosure[]
+
+  @@map("platform_users")
+}
+
+// お気に入り
+model PlatformFavorite {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  platformUserId String   @map("platform_user_id") @db.Uuid
+  tenantId       String?  @map("tenant_id") @db.Uuid  // ReserveHub院
+  paidListingId  String?  @map("paid_listing_id") @db.Uuid  // 有料掲載院
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  platformUser PlatformUser @relation(fields: [platformUserId], references: [id], onDelete: Cascade)
+
+  @@unique([platformUserId, tenantId])
+  @@map("platform_favorites")
+}
+
+// 情報開示設定（院ごとに開示範囲を管理）
+model PlatformDisclosure {
+  id             String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  platformUserId String  @map("platform_user_id") @db.Uuid
+  tenantId       String  @map("tenant_id") @db.Uuid  // 開示先の院
+
+  // 開示項目（チェックボックスでオンオフ）
+  discloseName      Boolean @default(false) @map("disclose_name")
+  discloseBirthDate Boolean @default(false) @map("disclose_birth_date")
+  disclosePhone     Boolean @default(false) @map("disclose_phone")
+  discloseGender    Boolean @default(false) @map("disclose_gender")
+  discloseCarteData Boolean @default(false) @map("disclose_carte_data")  // 主訴・施術部位・施術内容（院名は含まない）
+  discloseVisitHistory Boolean @default(false) @map("disclose_visit_history")  // 過去の施術部位・問診情報（院名は開示しない）
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  platformUser PlatformUser @relation(fields: [platformUserId], references: [id], onDelete: Cascade)
+
+  @@unique([platformUserId, tenantId])
+  @@map("platform_disclosures")
 }

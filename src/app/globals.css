@@ -117,6 +117,78 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* ==========================================
+   Theme: Skeuomorphic
+   ========================================== */
+[data-theme="skeuomorphic"] {
+  --card: oklch(0.99 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --border: oklch(0.85 0 0);
+  --radius: 0.5rem;
+}
+[data-theme="skeuomorphic"] .shadow-sm {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8);
+}
+
+/* ==========================================
+   Theme: Neumorphic
+   ========================================== */
+[data-theme="neumorphic"] {
+  --background: oklch(0.93 0.005 250);
+  --card: oklch(0.93 0.005 250);
+  --card-foreground: oklch(0.25 0 0);
+  --border: oklch(0.93 0.005 250);
+  --input: oklch(0.90 0.005 250);
+  --radius: 1rem;
+}
+[data-theme="neumorphic"] .shadow-sm {
+  box-shadow: -4px -4px 8px rgba(255,255,255,0.7), 4px 4px 8px rgba(0,0,0,0.08);
+}
+[data-theme="neumorphic"] .border-0 {
+  border: none !important;
+}
+
+/* ==========================================
+   Theme: Glassmorphic
+   ========================================== */
+[data-theme="glassmorphic"] {
+  --background: oklch(0.55 0.15 270);
+  --foreground: oklch(1 0 0);
+  --card: oklch(1 0 0 / 15%);
+  --card-foreground: oklch(1 0 0);
+  --border: oklch(1 0 0 / 18%);
+  --input: oklch(1 0 0 / 20%);
+  --muted: oklch(1 0 0 / 10%);
+  --muted-foreground: oklch(1 0 0 / 70%);
+  --primary: oklch(1 0 0);
+  --primary-foreground: oklch(0.3 0.15 270);
+  --radius: 1rem;
+}
+[data-theme="glassmorphic"] .shadow-sm {
+  box-shadow: 0 8px 32px rgba(31,38,135,0.2);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+}
+
+/* ==========================================
+   Theme: Liquid Glass
+   ========================================== */
+[data-theme="liquid-glass"] {
+  --background: oklch(0.97 0.005 250);
+  --card: oklch(1 0 0 / 60%);
+  --card-foreground: oklch(0.2 0 0);
+  --border: oklch(1 0 0 / 30%);
+  --input: oklch(1 0 0 / 40%);
+  --primary: oklch(0.55 0.2 260);
+  --primary-foreground: oklch(1 0 0);
+  --radius: 1.25rem;
+}
+[data-theme="liquid-glass"] .shadow-sm {
+  box-shadow: inset 0 0.5px 0 rgba(255,255,255,0.4), 0 8px 40px rgba(0,0,0,0.06);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

@@ -9,6 +9,9 @@ import { Switch } from '@/components/ui/switch'
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { ThemeSwitcher } from '@/components/theme/ThemeSwitcher'
+import { ThemeProvider } from '@/components/theme/ThemeProvider'
+import type { ThemeId } from '@/lib/themes'
 import { toast } from 'sonner'
 
 const DAYS = ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日']
@@ -79,6 +82,8 @@ export default function SettingsPage() {
           <TabsTrigger value="general">院情報</TabsTrigger>
           <TabsTrigger value="booking">来院予約設定</TabsTrigger>
           <TabsTrigger value="carte">カルテ設定</TabsTrigger>
+          <TabsTrigger value="theme">テーマ</TabsTrigger>
+          <TabsTrigger value="line">LINE連携</TabsTrigger>
         </TabsList>
 
         {/* 営業時間 */}
@@ -295,6 +300,33 @@ export default function SettingsPage() {
         <TabsContent value="carte" className="mt-4 space-y-6">
           <CarteSettings />
         </TabsContent>
+
+        {/* LINE連携 */}
+        <TabsContent value="line" className="mt-4 space-y-6">
+          <LineSettings />
+        </TabsContent>
+
+        {/* テーマ設定 */}
+        <TabsContent value="theme" className="mt-4 space-y-6">
+          <Card className="border-0 shadow-sm">
+            <CardContent className="p-5 space-y-4">
+              <div>
+                <h2 className="text-sm font-semibold text-slate-900">管理画面テーマ</h2>
+                <p className="text-xs text-slate-400 mt-0.5">管理画面のデザインテーマを選択</p>
+              </div>
+              <ThemeProvider>
+                <ThemeSwitcher onSelect={async (theme) => {
+                  await fetch('/api/settings', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tenant: { dashboardTheme: theme } }),
+                  })
+                  toast.success('テーマを保存しました')
+                }} />
+              </ThemeProvider>
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
     </div>
   )
@@ -383,7 +415,23 @@ function CarteSettings() {
               <h2 className="text-sm font-semibold text-slate-900">カルテ項目</h2>
               <p className="text-xs text-slate-400 mt-0.5">項目を追加・編集して、カルテをカスタマイズ</p>
             </div>
-            <Button variant="outline" size="sm" onClick={addField}>+ 項目を追加</Button>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={async () => {
+                const res = await fetch('/api/carte-templates/seed', {
+                  method: 'POST', headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ types: ['seitai', 'shinkyu'] }),
+                })
+                if (res.ok) {
+                  const data = await res.json()
+                  if (data.data.created.length > 0) {
+                    toast.success(`${data.data.created.join('、')}を作成しました`)
+                  } else {
+                    toast.info('テンプレートは既に存在します')
+                  }
+                } else toast.error('作成に失敗しました')
+              }}>整体・鍼灸テンプレを追加</Button>
+              <Button variant="outline" size="sm" onClick={addField}>+ 項目を追加</Button>
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -513,6 +561,65 @@ function CarteSettings() {
       )}
 
       <Button onClick={() => toast.success('カルテ設定を保存しました')}>保存する</Button>
+    </div>
+  )
+}
+
+// --- LINE設定コンポーネント ---
+
+function LineSettings() {
+  const [channelId, setChannelId] = useState('')
+  const [channelSecret, setChannelSecret] = useState('')
+  const [channelAccessToken, setChannelAccessToken] = useState('')
+  const [isActive, setIsActive] = useState(true)
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/settings/line').then(r => r.json()).then(r => {
+      if (r.data) {
+        setChannelId(r.data.channelId || '')
+        setChannelSecret(r.data.channelSecret || '')
+        setChannelAccessToken(r.data.channelAccessToken || '')
+        setIsActive(r.data.isActive ?? true)
+      }
+      setLoaded(true)
+    })
+  }, [])
+
+  if (!loaded) return <div className="h-32 bg-slate-100 rounded-xl animate-pulse" />
+
+  return (
+    <div className="space-y-6">
+      <Card className="border-0 shadow-sm">
+        <CardContent className="p-5 space-y-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-sm font-semibold text-slate-900">LINE Messaging API</h2>
+              <p className="text-xs text-slate-400 mt-0.5">LINE公式アカウントと連携��て患者とチャット</p>
+            </div>
+            <Switch checked={isActive} onCheckedChange={setIsActive} />
+          </div>
+
+          <div className="space-y-2"><Label className="text-xs">Channel ID</Label><Input value={channelId} onChange={e => setChannelId(e.target.value)} placeholder="1234567890" /></div>
+          <div className="space-y-2"><Label className="text-xs">Channel Secret</Label><Input value={channelSecret} onChange={e => setChannelSecret(e.target.value)} type="password" /></div>
+          <div className="space-y-2"><Label className="text-xs">Channel Access Token</Label><Input value={channelAccessToken} onChange={e => setChannelAccessToken(e.target.value)} type="password" /></div>
+
+          <div className="rounded-lg bg-slate-50 p-3">
+            <p className="text-xs font-medium text-slate-600">Webhook URL</p>
+            <p className="text-xs text-slate-400 mt-1 font-mono break-all">{typeof window !== 'undefined' ? `${window.location.origin}/api/webhooks/line` : '/api/webhooks/line'}</p>
+            <p className="text-[10px] text-slate-400 mt-1">LINE Developersコンソールで上記URLをWebhook URLに設定してください</p>
+          </div>
+        </CardContent>
+      </Card>
+      <Button onClick={async () => {
+        const res = await fetch('/api/settings/line', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ channelId, channelSecret, channelAccessToken, isActive }),
+        })
+        if (res.ok) toast.success('LINE設定を保存しました')
+        else toast.error('保存に失敗しました')
+      }}>保存する</Button>
     </div>
   )
 }

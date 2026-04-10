@@ -106,6 +106,24 @@ export async function sendCancellationNotice(data: Pick<ReservationEmail, 'custo
   })
 }
 
+/** フォローアップメール */
+export async function sendFollowUp(data: { customerEmail: string; customerName: string; tenantName: string; subject: string; body: string }) {
+  await getResend()?.emails.send({
+    from: FROM,
+    to: data.customerEmail,
+    subject: `【${data.tenantName}】${data.subject}`,
+    html: `
+      <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 32px 24px; color: #0F172A;">
+        <h1 style="font-size: 20px; font-weight: 700; margin: 0 0 16px;">${data.subject}</h1>
+        <div style="background: #F8FAFC; border-radius: 12px; padding: 20px; white-space: pre-wrap; font-size: 14px; line-height: 1.8;">
+${data.body}
+        </div>
+        <p style="font-size: 12px; color: #94A3B8; margin-top: 24px;">このメールは${data.tenantName}の予約システム（ReserveHub）から自動送信されています。</p>
+      </div>
+    `,
+  })
+}
+
 /** 施術者への新規来院予約通知 */
 export async function sendStaffNotification(staffEmail: string, data: ReservationEmail) {
   await getResend()?.emails.send({
