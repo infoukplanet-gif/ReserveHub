@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ScrollReveal } from '@/components/platform/ScrollReveal'
 
 const POPULAR_SYMPTOMS = [
   { label: '肩こり', icon: '🦴' },
@@ -41,7 +42,7 @@ export default function PlatformTopPage() {
 
           {/* 検索フォーム */}
           <form action="/search" method="GET" className="mt-8 relative">
-            <div className="flex gap-0 bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-200/60 overflow-hidden max-w-2xl mx-auto">
+            <div className="search-bar flex gap-0 bg-white rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-200/60 overflow-hidden max-w-2xl mx-auto">
               <div className="flex-1 relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-[20px] text-slate-400">location_on</span>
                 <input
@@ -74,6 +75,7 @@ export default function PlatformTopPage() {
 
       {/* 使い方 */}
       <section className="py-16 border-b border-slate-100">
+        <ScrollReveal>
         <div className="mx-auto max-w-6xl px-4">
           <div className="grid sm:grid-cols-3 gap-6 stagger-children">
             {FEATURES.map(f => (
@@ -87,10 +89,12 @@ export default function PlatformTopPage() {
             ))}
           </div>
         </div>
+        </ScrollReveal>
       </section>
 
       {/* 症状から探す */}
       <section className="py-16 border-b border-slate-100">
+        <ScrollReveal>
         <div className="mx-auto max-w-6xl px-4">
           <h2 className="text-lg font-bold text-slate-900 mb-1">症状から探す</h2>
           <p className="text-xs text-slate-400 mb-6">気になる症状をタップして、対応できる院を検索</p>
@@ -107,10 +111,12 @@ export default function PlatformTopPage() {
             ))}
           </div>
         </div>
+        </ScrollReveal>
       </section>
 
       {/* エリアから探す */}
       <section className="py-16 border-b border-slate-100">
+        <ScrollReveal>
         <div className="mx-auto max-w-6xl px-4">
           <h2 className="text-lg font-bold text-slate-900 mb-1">エリアから探す</h2>
           <p className="text-xs text-slate-400 mb-6">主要都市から人気の院を検索</p>
@@ -127,10 +133,12 @@ export default function PlatformTopPage() {
             ))}
           </div>
         </div>
+        </ScrollReveal>
       </section>
 
       {/* 院の方向けCTA */}
       <section className="py-20">
+        <ScrollReveal>
         <div className="mx-auto max-w-3xl px-4 text-center">
           <h2 className="text-xl font-bold text-slate-900">院を経営されている方へ</h2>
           <p className="text-sm text-slate-500 mt-2">ミナオスなびに掲載して、新規患者を獲得しませんか？</p>
@@ -157,6 +165,7 @@ export default function PlatformTopPage() {
             </div>
           </div>
         </div>
+        </ScrollReveal>
       </section>
     </div>
   )

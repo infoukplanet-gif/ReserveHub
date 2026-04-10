@@ -67,7 +67,7 @@ function SearchContent() {
     <div className="mx-auto max-w-6xl px-4 py-8">
       {/* 検索バー */}
       <form onSubmit={doSearch} className="mb-6">
-        <div className="flex gap-0 bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
+        <div className="search-bar flex gap-0 bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden">
           <div className="flex-1 relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-[18px] text-slate-400">location_on</span>
             <input value={area} onChange={e => setArea(e.target.value)} type="text" placeholder="エリア" className="search-input w-full pl-10 pr-3 py-3 text-sm border-0 outline-none bg-transparent" />

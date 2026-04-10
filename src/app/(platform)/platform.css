@@ -1,7 +1,11 @@
 /* ミナオスなび — Platform Animations & Styles */
 
+/* ==========================================
+   Keyframes
+   ========================================== */
+
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -11,8 +15,13 @@
 }
 
 @keyframes scale-in {
-  from { opacity: 0; transform: scale(0.95); }
+  from { opacity: 0; transform: scale(0.92); }
   to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes shimmer {
@@ -25,66 +34,242 @@
   50% { transform: translateY(-6px); }
 }
 
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes border-draw {
+  from { border-color: transparent; }
+  to { border-color: #10b981; }
+}
+
+/* ==========================================
+   Base Animation Classes
+   ========================================== */
+
 .animate-fade-up {
-  animation: fade-up 0.5s ease-out both;
+  animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .animate-fade-in {
-  animation: fade-in 0.4s ease-out both;
+  animation: fade-in 0.5s ease-out both;
 }
 
 .animate-scale-in {
-  animation: scale-in 0.3s ease-out both;
+  animation: scale-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-slide-right {
+  animation: slide-in-right 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
 
-/* Staggered children animation */
+/* ==========================================
+   Scroll-triggered Animations (via IntersectionObserver)
+   ========================================== */
+
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-animate.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================
+   Stagger Children
+   ========================================== */
+
 .stagger-children > * {
-  animation: fade-up 0.5s ease-out both;
+  animation: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
 .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
-.stagger-children > *:nth-child(2) { animation-delay: 60ms; }
-.stagger-children > *:nth-child(3) { animation-delay: 120ms; }
-.stagger-children > *:nth-child(4) { animation-delay: 180ms; }
-.stagger-children > *:nth-child(5) { animation-delay: 240ms; }
-.stagger-children > *:nth-child(6) { animation-delay: 300ms; }
-.stagger-children > *:nth-child(7) { animation-delay: 360ms; }
-.stagger-children > *:nth-child(8) { animation-delay: 420ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 70ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 140ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 210ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 280ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 350ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 420ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 490ms; }
+.stagger-children > *:nth-child(9) { animation-delay: 560ms; }
+.stagger-children > *:nth-child(10) { animation-delay: 630ms; }
 
-/* Clinic card hover */
+/* ==========================================
+   Clinic Card
+   ========================================== */
+
 .clinic-card {
-  transition: all 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.25s ease;
 }
+
 .clinic-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px -5px rgba(0,0,0,0.08), 0 4px 10px -4px rgba(0,0,0,0.04);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -8px rgba(0,0,0,0.08), 0 4px 12px -4px rgba(0,0,0,0.03);
+  border-color: #d1fae5;
 }
 
-/* Search input focus glow */
+.clinic-card:active {
+  transform: translateY(-1px);
+  transition-duration: 0.1s;
+}
+
+/* 画像ズーム */
+.clinic-card .card-image {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.clinic-card:hover .card-image {
+  transform: scale(1.06);
+}
+
+/* ==========================================
+   Search Bar
+   ========================================== */
+
 .search-input:focus {
-  box-shadow: 0 0 0 3px rgba(16,185,129,0.15);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
 }
 
-/* Rating stars */
+.search-bar {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.search-bar:focus-within {
+  box-shadow: 0 4px 20px -4px rgba(16, 185, 129, 0.15);
+  border-color: #a7f3d0;
+}
+
+/* ==========================================
+   Rating Stars
+   ========================================== */
+
 .star-filled { color: #f59e0b; }
 .star-empty { color: #e2e8f0; }
 
-/* Pill tag hover */
-.symptom-pill {
-  transition: all 0.15s ease;
+.star-interactive {
+  cursor: pointer;
+  transition: transform 0.15s ease, color 0.15s ease;
 }
-.symptom-pill:hover {
-  transform: scale(1.05);
+.star-interactive:hover {
+  transform: scale(1.2);
 }
 
-/* Hero background mesh */
+/* ==========================================
+   Symptom Pills
+   ========================================== */
+
+.symptom-pill {
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.symptom-pill:hover {
+  transform: translateY(-1px) scale(1.03);
+  box-shadow: 0 4px 12px -2px rgba(16, 185, 129, 0.15);
+}
+
+.symptom-pill:active {
+  transform: scale(0.98);
+}
+
+/* ==========================================
+   Hero Section
+   ========================================== */
+
 .hero-mesh {
   background-image:
-    radial-gradient(at 27% 37%, hsla(160, 64%, 57%, 0.08) 0px, transparent 50%),
-    radial-gradient(at 97% 21%, hsla(167, 65%, 65%, 0.06) 0px, transparent 50%),
-    radial-gradient(at 52% 99%, hsla(174, 80%, 55%, 0.05) 0px, transparent 50%),
-    radial-gradient(at 10% 29%, hsla(179, 55%, 52%, 0.04) 0px, transparent 50%);
+    radial-gradient(at 27% 37%, hsla(160, 64%, 57%, 0.1) 0px, transparent 50%),
+    radial-gradient(at 97% 21%, hsla(167, 65%, 65%, 0.08) 0px, transparent 50%),
+    radial-gradient(at 52% 99%, hsla(174, 80%, 55%, 0.06) 0px, transparent 50%),
+    radial-gradient(at 10% 29%, hsla(179, 55%, 52%, 0.05) 0px, transparent 50%),
+    radial-gradient(at 76% 77%, hsla(156, 50%, 60%, 0.04) 0px, transparent 50%);
+}
+
+/* ==========================================
+   Skeleton Loading
+   ========================================== */
+
+.skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+/* ==========================================
+   Badge / Tag Animations
+   ========================================== */
+
+.badge-pop {
+  animation: scale-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ==========================================
+   Section Dividers
+   ========================================== */
+
+.section-fade-in {
+  opacity: 0;
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ==========================================
+   CTA Button Effects
+   ========================================== */
+
+.cta-button {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cta-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px -3px rgba(16, 185, 129, 0.4);
+}
+
+.cta-button:active {
+  transform: translateY(0);
+}
+
+/* ==========================================
+   Scroll Indicator (top page)
+   ========================================== */
+
+.scroll-indicator {
+  animation: float 2s ease-in-out infinite;
+  opacity: 0.5;
+}
+
+/* ==========================================
+   Responsive Adjustments
+   ========================================== */
+
+@media (max-width: 640px) {
+  .animate-fade-up { animation-duration: 0.4s; }
+  .stagger-children > * { animation-duration: 0.4s; }
+  .clinic-card:hover { transform: none; box-shadow: none; }
+  .symptom-pill:hover { transform: none; }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
