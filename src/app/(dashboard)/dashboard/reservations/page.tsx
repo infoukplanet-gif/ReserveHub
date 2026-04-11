@@ -99,15 +99,44 @@ export default function ReservationsPage() {
         <Button onClick={() => setShowManualBooking(true)}>+ 手動登録</Button>
       </div>
 
+      {/* 統計カード */}
+      {!loading && (
+        <div className="grid grid-cols-3 gap-3">
+          <div className="rounded-xl bg-blue-50 p-3">
+            <p className="text-[11px] text-blue-500 font-medium">本日の来院予約</p>
+            <p className="text-xl font-bold text-blue-700">{reservations.length}<span className="text-sm font-normal ml-0.5">件</span></p>
+          </div>
+          <div className="rounded-xl bg-green-50 p-3">
+            <p className="text-[11px] text-green-500 font-medium">確定</p>
+            <p className="text-xl font-bold text-green-700">{reservations.filter(r => r.status === 'confirmed').length}<span className="text-sm font-normal ml-0.5">件</span></p>
+          </div>
+          <div className="rounded-xl bg-slate-50 p-3">
+            <p className="text-[11px] text-slate-400 font-medium">売上見込み</p>
+            <p className="text-xl font-bold text-slate-700">¥{reservations.reduce((s, r) => s + r.totalPrice, 0).toLocaleString()}</p>
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={prevDay}>◀</Button>
+          <Button variant="ghost" size="sm" onClick={prevDay}>
+            <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+          </Button>
           <span className="text-sm font-semibold text-slate-900 min-w-[180px] text-center">{dateStr}</span>
-          <Button variant="ghost" size="sm" onClick={nextDay}>▶</Button>
+          <Button variant="ghost" size="sm" onClick={nextDay}>
+            <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+          </Button>
         </div>
         <div className="ml-auto">
           <Tabs value={view} onValueChange={(v) => setView(v as 'day' | 'list')}>
-            <TabsList><TabsTrigger value="list">リスト</TabsTrigger><TabsTrigger value="day">タイムライン</TabsTrigger></TabsList>
+            <TabsList>
+              <TabsTrigger value="list" className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[16px]">list</span>リスト
+              </TabsTrigger>
+              <TabsTrigger value="day" className="flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[16px]">schedule</span>タイムライン
+              </TabsTrigger>
+            </TabsList>
           </Tabs>
         </div>
       </div>

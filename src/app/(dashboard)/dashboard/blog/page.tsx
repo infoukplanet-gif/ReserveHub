@@ -12,13 +12,18 @@ import { toast } from 'sonner'
 type BlogPost = {
   id: string
   title: string
+  slug: string
   category: string
   isPublished: boolean
   publishedAt: string | null
   content: string
 }
 
-const CATEGORIES = ['お知らせ', 'キャンペーン', 'コラム']
+function generateSlug(title: string) {
+  return title.toLowerCase().replace(/[^a-z0-9\u3040-\u9fff]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').slice(0, 100) || `post-${Date.now()}`
+}
+
+const CATEGORIES = ['お知らせ', 'キャンペーン', 'コラム', '症例報告', '健康情報', 'スタッフ紹介']
 
 export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([])
@@ -52,7 +57,7 @@ export default function BlogPage() {
   }
 
   const openNew = () => {
-    setEditing({ id: `new-${Date.now()}`, title: '', category: 'お知らせ', isPublished: false, publishedAt: null, content: '' })
+    setEditing({ id: `new-${Date.now()}`, title: '', slug: '', category: 'お知らせ', isPublished: false, publishedAt: null, content: '' })
   }
 
   // List View
@@ -130,10 +135,25 @@ export default function BlogPage() {
       <input
         type="text"
         value={editing.title}
-        onChange={(e) => setEditing(p => p ? { ...p, title: e.target.value } : null)}
+        onChange={(e) => {
+          const title = e.target.value
+          setEditing(p => p ? { ...p, title, slug: p.slug || generateSlug(title) } : null)
+        }}
         placeholder="記事タイトル"
         className="w-full text-2xl font-bold text-slate-900 bg-transparent border-0 outline-none placeholder:text-slate-300"
       />
+
+      {/* Slug */}
+      <div className="flex items-center gap-2">
+        <span className="text-xs text-slate-400 shrink-0">URL:</span>
+        <input
+          type="text"
+          value={editing.slug || ''}
+          onChange={(e) => setEditing(p => p ? { ...p, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-') } : null)}
+          placeholder="auto-generated-from-title"
+          className="flex-1 text-xs text-slate-500 bg-transparent border-0 border-b border-dashed border-slate-200 outline-none py-1"
+        />
+      </div>
 
       {/* Category + Settings */}
       <div className="flex items-center gap-3 flex-wrap">

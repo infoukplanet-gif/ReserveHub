@@ -86,6 +86,48 @@ export async function POST(req: NextRequest) {
       }
       break
     }
+
+    case 'account.updated': {
+      // Stripe Connect: アカウントの charges_enabled 同期
+      const account = event.data.object as Stripe.Account
+      if (account.id) {
+        const tenant = await prisma.tenant.findFirst({
+          where: { stripeConnectAccountId: account.id },
+        })
+        if (tenant) {
+          await prisma.tenant.update({
+            where: { id: tenant.id },
+            data: { stripeConnectEnabled: account.charges_enabled ?? false },
+          })
+        }
+      }
+      break
+    }
+  }
+
+  // 有料掲載申込の処理（checkout.session.completed 内でメタデータ分岐）
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object as Stripe.Checkout.Session
+    if (session.metadata?.type === 'paid_listing') {
+      const { slug, name, email, phone, address, description, symptoms, listingPlan } = session.metadata
+      const subscriptionId = typeof session.subscription === 'string' ? session.subscription : session.subscription?.id
+      const customerId = typeof session.customer === 'string' ? session.customer : session.customer?.id
+      await prisma.paidListing.create({
+        data: {
+          slug: slug || name?.toLowerCase().replace(/[^a-z0-9]/g, '-').slice(0, 50) || 'clinic',
+          name: name || '',
+          email: email || '',
+          phone: phone || null,
+          address: address || null,
+          description: description || null,
+          symptoms: symptoms ? JSON.parse(symptoms) : [],
+          listingPlan: listingPlan || 'basic',
+          stripeCustomerId: customerId || null,
+          isActive: true,
+          expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        },
+      })
+    }
   }
 
   return NextResponse.json({ received: true })

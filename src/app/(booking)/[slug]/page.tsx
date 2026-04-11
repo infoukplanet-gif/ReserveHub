@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
@@ -26,11 +28,12 @@ export default async function PublicHomePage({ params }: Props) {
   const tenant = await prisma.tenant.findUnique({ where: { slug } })
   if (!tenant) notFound()
 
-  const [hp, menus, staff, businessHours] = await Promise.all([
+  const [hp, menus, staff, businessHours, blogs] = await Promise.all([
     prisma.hpSetting.findUnique({ where: { tenantId: tenant.id } }),
     prisma.menu.findMany({ where: { tenantId: tenant.id, isActive: true }, include: { pricingRules: true }, orderBy: { displayOrder: 'asc' }, take: 6 }),
     prisma.staff.findMany({ where: { tenantId: tenant.id, isActive: true }, orderBy: { displayOrder: 'asc' } }),
     prisma.businessHour.findMany({ where: { tenantId: tenant.id }, orderBy: { dayOfWeek: 'asc' } }),
+    prisma.blogPost.findMany({ where: { tenantId: tenant.id, isPublished: true }, orderBy: { publishedAt: 'desc' }, take: 3 }),
   ])
 
   const color = hp?.primaryColor || '#2563EB'
@@ -173,7 +176,7 @@ export default async function PublicHomePage({ params }: Props) {
               {staff.map(s => (
                 <div key={s.id} className="text-center">
                   <div className={`w-20 h-20 mx-auto ${sectionConfig.staff?.photoShape === 'square' ? 'rounded-xl' : 'rounded-full'} bg-blue-50 flex items-center justify-center text-2xl font-bold text-blue-600 overflow-hidden`}>
-                    {s.avatarUrl ? <img src={s.avatarUrl} alt={s.name} className="w-full h-full object-cover" /> : s.name[0]}
+                    {s.avatarUrl ? <img src={s.avatarUrl} alt={s.name} className="w-full h-full object-cover" /> : (s.name?.[0] || '?')}
                   </div>
                   <p className="mt-3 text-sm font-semibold text-slate-900">{s.name}</p>
                   {(sectionConfig.staff?.showBio !== false) && s.bio && <p className="mt-1 text-xs text-slate-500">{s.bio}</p>}
@@ -182,6 +185,28 @@ export default async function PublicHomePage({ params }: Props) {
               ))}
             </div>
           </div>
+        </section>
+      )}
+
+      {/* Blog */}
+      {blogs.length > 0 && (
+        <section className={`max-w-5xl mx-auto px-4 py-16 ${animClass}`}>
+          <h2 className="text-2xl font-bold text-slate-900 text-center mb-8">ブログ</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {blogs.map(post => (
+              <Link key={post.id} href={`/${slug}/blog/${post.id}`} className="group">
+                <div className="rounded-xl border overflow-hidden hover:shadow-md transition-shadow">
+                  {post.thumbnailUrl && <img src={post.thumbnailUrl} alt="" className="w-full h-36 object-cover" />}
+                  <div className="p-4">
+                    <p className="text-xs text-slate-400">{post.category}</p>
+                    <h3 className="text-sm font-semibold text-slate-900 mt-1 group-hover:text-blue-600">{post.title}</h3>
+                    <p className="text-xs text-slate-400 mt-2">{post.publishedAt ? new Date(post.publishedAt).toLocaleDateString('ja-JP') : ''}</p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="text-center mt-6"><Link href={`/${slug}/blog`} className="text-sm font-medium" style={{ color }}>ブログをすべて見る →</Link></div>
         </section>
       )}
 

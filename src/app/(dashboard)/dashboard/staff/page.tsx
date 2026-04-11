@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
+import { Separator } from '@/components/ui/separator'
 import { toast } from 'sonner'
 
 type Staff = {
@@ -56,14 +57,61 @@ export default function StaffPage() {
       <Sheet open={!!editing} onOpenChange={() => setEditing(null)}>
         <SheetContent className="w-full sm:w-[480px] overflow-y-auto px-6">
           {editing && (<><SheetHeader><SheetTitle>{editing.id ? '施術者編集' : '施術者を追加'}</SheetTitle></SheetHeader>
-            <div className="space-y-5 mt-6">
-              <div className="space-y-2"><Label>表示名 *</Label><Input value={editing.name || ''} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} /></div>
-              <div className="space-y-2"><Label>メールアドレス</Label><Input value={editing.email || ''} onChange={e => setEditing(p => p ? { ...p, email: e.target.value } : null)} /></div>
-              <div className="space-y-2"><Label>電話番号</Label><Input value={editing.phone || ''} onChange={e => setEditing(p => p ? { ...p, phone: e.target.value } : null)} /></div>
-              <div className="space-y-2"><Label>自己紹介</Label><Textarea value={editing.bio || ''} onChange={e => setEditing(p => p ? { ...p, bio: e.target.value } : null)} /></div>
-              <div className="space-y-2"><Label>指名料</Label><Input type="number" value={editing.nominationFee || 0} onChange={e => setEditing(p => p ? { ...p, nominationFee: parseInt(e.target.value) || 0 } : null)} /></div>
-              <div className="flex items-center gap-3"><Switch checked={editing.isActive ?? true} onCheckedChange={v => setEditing(p => p ? { ...p, isActive: v } : null)} /><Label>公開</Label></div>
-              <div className="flex gap-2"><Button variant="outline" className="flex-1" onClick={() => setEditing(null)}>キャンセル</Button><Button className="flex-1" onClick={save}>保存する</Button></div>
+            <div className="space-y-6 mt-6">
+              {/* 基本情報 */}
+              <div>
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">基本情報</p>
+                <div className="space-y-4">
+                  <div className="space-y-2"><Label>表示名 *</Label><Input value={editing.name || ''} onChange={e => setEditing(p => p ? { ...p, name: e.target.value } : null)} /></div>
+                  <div className="space-y-2"><Label>メールアドレス</Label><Input value={editing.email || ''} onChange={e => setEditing(p => p ? { ...p, email: e.target.value } : null)} /></div>
+                  <div className="space-y-2"><Label>電話番号</Label><Input value={editing.phone || ''} onChange={e => setEditing(p => p ? { ...p, phone: e.target.value } : null)} /></div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* プロフィール */}
+              <div>
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">プロフィール</p>
+                <div className="space-y-2">
+                  <Label>自己紹介・資格・経歴</Label>
+                  <Textarea
+                    rows={5}
+                    value={editing.bio || ''}
+                    onChange={e => setEditing(p => p ? { ...p, bio: e.target.value } : null)}
+                    placeholder={"例:\n柔道整復師・はり師・きゅう師\n\n得意施術: 腰痛治療、美容鍼、スポーツ障害\n\n経歴: 〇〇整体院 5年、△△鍼灸院 3年\n患者様一人ひとりに合わせた丁寧な施術を心がけています。"}
+                  />
+                  <p className="text-[10px] text-slate-400">資格・得意施術・経歴・メッセージなどを自由に記載してください。HPの施術者紹介にも表示されます。</p>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* 料金設定 */}
+              <div>
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">料金設定</p>
+                <div className="space-y-2">
+                  <Label>指名料（税込）</Label>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-slate-400">¥</span>
+                    <Input type="number" value={editing.nominationFee || 0} onChange={e => setEditing(p => p ? { ...p, nominationFee: parseInt(e.target.value) || 0 } : null)} className="w-32" />
+                  </div>
+                  <p className="text-[10px] text-slate-400">0の場合、指名料なしとして表示されます</p>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* 表示設定 */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>公開設定</Label>
+                  <p className="text-[10px] text-slate-400 mt-0.5">オフにするとHPおよび来院予約画面に表示されません</p>
+                </div>
+                <Switch checked={editing.isActive ?? true} onCheckedChange={v => setEditing(p => p ? { ...p, isActive: v } : null)} />
+              </div>
+
+              <div className="flex gap-2 pt-2"><Button variant="outline" className="flex-1" onClick={() => setEditing(null)}>キャンセル</Button><Button className="flex-1" onClick={save}>保存する</Button></div>
             </div></>
           )}
         </SheetContent>

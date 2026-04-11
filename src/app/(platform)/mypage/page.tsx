@@ -85,7 +85,7 @@ export default function MyPage() {
         <span className="material-symbols-outlined text-[32px] text-slate-300">person</span>
       </div>
       <p className="text-sm text-slate-500">ログインが必要です</p>
-      <Link href="/login" className="inline-flex items-center mt-4 px-6 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">ログイン</Link>
+      <Link href="/platform-login" className="inline-flex items-center mt-4 px-6 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">ログイン</Link>
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     </div>
   )

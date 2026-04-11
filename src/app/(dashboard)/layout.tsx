@@ -9,27 +9,33 @@ import { useState, useEffect } from 'react'
 import { ThemeProvider } from '@/components/theme/ThemeProvider'
 import type { ThemeId } from '@/lib/themes'
 
-const navItems = [
-  { href: '/dashboard', label: 'ダッシュボード', icon: 'dashboard' },
-  { href: '/dashboard/reservations', label: '来院予約', icon: 'calendar_month' },
-  { href: '/dashboard/menus', label: '施術メニュー', icon: 'spa' },
-  { href: '/dashboard/staff', label: '施術者管理', icon: 'group' },
-  { href: '/dashboard/customers', label: '患者管理', icon: 'person' },
-  { href: '/dashboard/tickets', label: '回数券管理', icon: 'confirmation_number' },
-  { href: '/dashboard/follow-up', label: 'フォローアップ', icon: 'send' },
-  { href: '/dashboard/chat', label: 'チャット', icon: 'chat' },
-  { href: '/dashboard/reviews', label: '口コミ管理', icon: 'reviews' },
-  { href: '/dashboard/sales', label: '売上レポート', icon: 'bar_chart' },
-  { href: '/dashboard/homepage', label: 'ホームページ', icon: 'language' },
-  { href: '/dashboard/blog', label: 'ブログ', icon: 'edit_note' },
-  { href: '/dashboard/billing', label: '課金プラン', icon: 'credit_card' },
-]
-
-const settingsItems = [
-  { href: '/dashboard/settings?tab=hours', label: '営業時間', icon: 'schedule' },
-  { href: '/dashboard/settings?tab=general', label: '院情報', icon: 'info' },
-  { href: '/dashboard/settings?tab=booking', label: '予約設定', icon: 'tune' },
-  { href: '/dashboard/settings?tab=carte', label: 'カルテ設定', icon: 'medical_information' },
+const navGroups = [
+  { items: [
+    { href: '/dashboard', label: 'ダッシュボード', icon: 'dashboard' },
+  ]},
+  { label: '予約・施術', items: [
+    { href: '/dashboard/reservations', label: '来院予約', icon: 'calendar_month' },
+    { href: '/dashboard/menus', label: '施術メニュー', icon: 'spa' },
+    { href: '/dashboard/staff', label: '施術者管理', icon: 'group' },
+  ]},
+  { label: '患者', items: [
+    { href: '/dashboard/customers', label: '患者管理', icon: 'person' },
+    { href: '/dashboard/tickets', label: '回数券管理', icon: 'confirmation_number' },
+    { href: '/dashboard/follow-up', label: 'フォローアップ', icon: 'send' },
+  ]},
+  { label: 'コミュニケーション', items: [
+    { href: '/dashboard/chat', label: 'チャット', icon: 'chat' },
+    { href: '/dashboard/reviews', label: '口コミ管理', icon: 'reviews' },
+  ]},
+  { label: 'サイト', items: [
+    { href: '/dashboard/homepage', label: 'ホームページ', icon: 'language' },
+    { href: '/dashboard/blog', label: 'ブログ', icon: 'edit_note' },
+  ]},
+  { label: '管理', items: [
+    { href: '/dashboard/sales', label: '売上レポート', icon: 'bar_chart' },
+    { href: '/dashboard/billing', label: '課金プラン', icon: 'credit_card' },
+    { href: '/dashboard/settings', label: '設定', icon: 'settings' },
+  ]},
 ]
 
 function SidebarContent({ pathname }: { pathname: string }) {
@@ -44,42 +50,31 @@ function SidebarContent({ pathname }: { pathname: string }) {
         </Link>
       </div>
 
-      <nav className="flex-1 space-y-1 p-3">
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={cn(
-              'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
-              pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
-                ? 'bg-blue-50 text-blue-600 font-semibold'
-                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+      <nav className="flex-1 overflow-y-auto p-3 space-y-4">
+        {navGroups.map((group, gi) => (
+          <div key={gi}>
+            {group.label && (
+              <p className="px-3 pb-1 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{group.label}</p>
             )}
-          >
-            <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
-            {item.label}
-          </Link>
+            <div className="space-y-0.5">
+              {group.items.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
+                    pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
+                      ? 'bg-blue-50 text-blue-600 font-semibold'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  )}
+                >
+                  <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
         ))}
-
-        <div className="my-3 border-t" />
-
-        <p className="px-3 py-1 text-xs font-medium text-slate-400 uppercase tracking-wider">設定</p>
-        {settingsItems.map((item) => {
-          const isActive = pathname.startsWith('/dashboard/settings') && item.href.includes(pathname === '/dashboard/settings' ? (item.href.includes('hours') ? 'hours' : '') : '')
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
-                'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-              )}
-            >
-              <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
-              {item.label}
-            </Link>
-          )
-        })}
       </nav>
 
       <div className="border-t p-4">

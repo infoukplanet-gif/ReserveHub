@@ -85,7 +85,7 @@ export default function ChatPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-bold text-slate-900">チャ���ト</h1>
+      <h1 className="text-xl font-bold text-slate-900">チャット</h1>
 
       {customers.length === 0 ? (
         <Card className="border-0 shadow-sm"><CardContent className="py-12 text-center">

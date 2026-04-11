@@ -27,15 +27,39 @@ async function ensureUniqueSlug(base: string): Promise<string> {
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
+  const type = searchParams.get('type') // 'platform' for patient registration
 
   if (code) {
     const supabase = await createClient()
     await supabase.auth.exchangeCodeForSession(code)
 
-    // ユーザー情報を取得し、テナントがなければ自動作成
     const { data: { user } } = await supabase.auth.getUser()
 
     if (user?.email) {
+      // プラットフォームユーザー（患者側）の場合
+      if (type === 'platform') {
+        const existingPlatformUser = await prisma.platformUser.findUnique({
+          where: { email: user.email },
+        })
+        if (!existingPlatformUser) {
+          const meta = user.user_metadata as Record<string, string> | undefined
+          await prisma.platformUser.create({
+            data: {
+              userId: user.id,
+              name: meta?.full_name || user.email.split('@')[0],
+              email: user.email,
+            },
+          })
+        } else if (!existingPlatformUser.userId) {
+          await prisma.platformUser.update({
+            where: { id: existingPlatformUser.id },
+            data: { userId: user.id },
+          })
+        }
+        return NextResponse.redirect(`${origin}/mypage`)
+      }
+
+      // テナント（事業者側）の場合
       const existingStaff = await prisma.staff.findFirst({
         where: { email: user.email },
       })
@@ -69,7 +93,6 @@ export async function GET(request: NextRequest) {
             },
           })
         } else {
-          // テナントはあるがスタッフがない場合、スタッフを作成
           const meta = user.user_metadata as Record<string, string> | undefined
           await prisma.staff.create({
             data: {

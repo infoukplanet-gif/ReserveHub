@@ -4,8 +4,10 @@ import { updateSession } from '@/lib/supabase/middleware'
 export async function middleware(request: NextRequest) {
   const response = await updateSession(request)
 
-  // 認証ガード: /dashboard/* は認証必須
-  if (request.nextUrl.pathname.startsWith('/dashboard')) {
+  // 認証ガード: /dashboard/*, /mypage は認証必須
+  const protectedPaths = ['/dashboard', '/mypage']
+  const isProtected = protectedPaths.some(p => request.nextUrl.pathname.startsWith(p))
+  if (isProtected) {
     const supabaseAuth = request.cookies.getAll().some(c => c.name.includes('auth-token'))
     if (!supabaseAuth) {
       return NextResponse.redirect(new URL('/login', request.url))

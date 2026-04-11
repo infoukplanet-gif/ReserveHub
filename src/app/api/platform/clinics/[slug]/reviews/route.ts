@@ -37,17 +37,26 @@ export async function POST(req: NextRequest, { params }: Params) {
     const { slug } = await params
     const body = await req.json()
 
+    // 認証必須（PlatformUserのみ投稿可能）
+    const { createClient } = await import('@/lib/supabase/server')
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) throw new ApiError(401, 'UNAUTHORIZED', '口コミを投稿するにはログインが必要です')
+
+    const platformUser = await prisma.platformUser.findUnique({ where: { userId: user.id } })
+    if (!platformUser) throw new ApiError(401, 'UNAUTHORIZED', 'ミナオスなびのアカウント登録が必要です')
+
     const tenant = await prisma.tenant.findUnique({ where: { slug }, select: { id: true } })
     if (!tenant) throw new ApiError(404, 'NOT_FOUND', '院が見つかりません')
 
-    if (!body.authorName?.trim()) throw new ApiError(400, 'INVALID_INPUT', 'お名前を入力してください')
     if (!body.content?.trim()) throw new ApiError(400, 'INVALID_INPUT', '口コミ内容を入力してください')
     if (!body.rating || body.rating < 1 || body.rating > 5) throw new ApiError(400, 'INVALID_INPUT', '評価は1〜5で入力してください')
 
     const review = await prisma.review.create({
       data: {
         tenantId: tenant.id,
-        authorName: body.authorName,
+        platformUserId: platformUser.id,
+        authorName: body.authorName?.trim() || platformUser.name,
         rating: body.rating,
         title: body.title || null,
         content: body.content,

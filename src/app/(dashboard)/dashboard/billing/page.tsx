@@ -119,17 +119,17 @@ export default function BillingPage() {
       </Card>
 
       {/* プラン一覧 */}
-      <div className="grid md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {PLANS.map(plan => {
           const isCurrent = status?.plan === plan.id
           return (
-            <Card key={plan.id} className={`border-0 shadow-sm relative ${plan.popular ? 'ring-2 ring-blue-600' : ''}`}>
+            <Card key={plan.id} className={`border-0 shadow-sm relative overflow-hidden ${plan.popular ? 'ring-2 ring-blue-600' : ''}`}>
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                   <Badge className="bg-blue-600 text-white">人気</Badge>
                 </div>
               )}
-              <CardContent className="p-5 space-y-4">
+              <CardContent className="p-5 flex flex-col h-full">
                 <div>
                   <h3 className="text-sm font-semibold text-slate-900">{plan.name}</h3>
                   <div className="mt-1">
@@ -138,7 +138,7 @@ export default function BillingPage() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="mt-4 space-y-2 flex-1">
                   {plan.features.map(f => (
                     <div key={f} className="flex items-center gap-2 text-xs text-slate-700">
                       <span className="material-symbols-outlined text-[14px] text-green-500">check_circle</span>
@@ -153,17 +153,19 @@ export default function BillingPage() {
                   ))}
                 </div>
 
-                {isCurrent ? (
-                  <Button variant="outline" className="w-full" disabled>現在のプラン</Button>
-                ) : (
-                  <Button
-                    className={`w-full ${plan.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
-                    onClick={() => handleCheckout(plan.id)}
-                    disabled={!!checkoutLoading}
-                  >
-                    {checkoutLoading === plan.id ? '処理中...' : isCurrent ? '現在のプラン' : 'このプランにする'}
-                  </Button>
-                )}
+                <div className="mt-4">
+                  {isCurrent ? (
+                    <Button variant="outline" className="w-full" disabled>現在のプラン</Button>
+                  ) : (
+                    <Button
+                      className={`w-full ${plan.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
+                      onClick={() => handleCheckout(plan.id)}
+                      disabled={!!checkoutLoading}
+                    >
+                      {checkoutLoading === plan.id ? '処理中...' : 'このプランにする'}
+                    </Button>
+                  )}
+                </div>
               </CardContent>
             </Card>
           )

@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -29,6 +30,22 @@ const DEFAULT_HOURS = [
 type SpecialDateItem = { id?: string; date: string; isClosed: boolean; openTime: string; closeTime: string; label: string }
 
 export default function SettingsPage() {
+  return (
+    <Suspense fallback={<div className="h-64 bg-slate-100 rounded-xl animate-pulse" />}>
+      <SettingsContent />
+    </Suspense>
+  )
+}
+
+function SettingsContent() {
+  const searchParams = useSearchParams()
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'hours')
+
+  useEffect(() => {
+    const tab = searchParams.get('tab')
+    if (tab) setActiveTab(tab)
+  }, [searchParams])
+
   const [hours, setHours] = useState(DEFAULT_HOURS)
   const [specialDates, setSpecialDates] = useState<SpecialDateItem[]>([])
   const [showAddSpecial, setShowAddSpecial] = useState(false)
@@ -76,14 +93,16 @@ export default function SettingsPage() {
     <div className="space-y-6 pb-6">
       <h1 className="text-xl font-bold text-slate-900">設定</h1>
 
-      <Tabs defaultValue={typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('tab') || 'hours' : 'hours'}>
-        <TabsList>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="flex-wrap">
           <TabsTrigger value="hours">営業時間</TabsTrigger>
           <TabsTrigger value="general">院情報</TabsTrigger>
           <TabsTrigger value="booking">来院予約設定</TabsTrigger>
           <TabsTrigger value="carte">カルテ設定</TabsTrigger>
           <TabsTrigger value="theme">テーマ</TabsTrigger>
           <TabsTrigger value="line">LINE連携</TabsTrigger>
+          <TabsTrigger value="connect">オンライン決済</TabsTrigger>
+          <TabsTrigger value="services">サービス依頼</TabsTrigger>
         </TabsList>
 
         {/* 営業時間 */}
@@ -336,6 +355,16 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
         </TabsContent>
+
+        {/* オンライン決済（Stripe Connect） */}
+        <TabsContent value="connect" className="mt-4 space-y-6">
+          <ConnectSettings />
+        </TabsContent>
+
+        {/* サービス依頼 */}
+        <TabsContent value="services" className="mt-4 space-y-6">
+          <ServiceRequestSettings />
+        </TabsContent>
       </Tabs>
     </div>
   )
@@ -570,6 +599,254 @@ function CarteSettings() {
       )}
 
       <Button onClick={() => toast.success('カルテ設定を保存しました')}>保存する</Button>
+    </div>
+  )
+}
+
+// --- Stripe Connect設定コンポーネント ---
+
+function ConnectSettings() {
+  const [status, setStatus] = useState<{ connected: boolean; chargesEnabled: boolean; dashboardUrl?: string } | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [onboarding, setOnboarding] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/connect/status').then(r => r.json()).then(r => {
+      setStatus(r.data)
+      setLoading(false)
+    }).catch(() => setLoading(false))
+  }, [])
+
+  const handleOnboard = async () => {
+    setOnboarding(true)
+    const res = await fetch('/api/connect/onboard', { method: 'POST' })
+    const data = await res.json()
+    if (data.data?.url) {
+      window.location.href = data.data.url
+    } else {
+      toast.error('エラーが発生しました')
+      setOnboarding(false)
+    }
+  }
+
+  if (loading) return <div className="h-32 bg-slate-100 rounded-xl animate-pulse" />
+
+  return (
+    <div className="space-y-6">
+      <Card className="border-0 shadow-sm">
+        <CardContent className="p-5 space-y-5">
+          <div>
+            <h2 className="text-sm font-semibold text-slate-900">オンライン決済（Stripe Connect）</h2>
+            <p className="text-xs text-slate-400 mt-0.5">患者がオンラインで施術料金を支払えるようにします</p>
+          </div>
+
+          {status?.chargesEnabled ? (
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 p-4 rounded-xl bg-green-50">
+                <span className="material-symbols-outlined text-[24px] text-green-600">check_circle</span>
+                <div>
+                  <p className="text-sm font-medium text-green-800">オンライン決済が有効です</p>
+                  <p className="text-xs text-green-600 mt-0.5">患者は来院予約時にオンライン決済が利用できます</p>
+                </div>
+              </div>
+              {status.dashboardUrl && (
+                <Button variant="outline" onClick={() => window.open(status.dashboardUrl, '_blank')}>
+                  Stripeダッシュボードを開く
+                </Button>
+              )}
+            </div>
+          ) : status?.connected ? (
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 p-4 rounded-xl bg-yellow-50">
+                <span className="material-symbols-outlined text-[24px] text-yellow-600">pending</span>
+                <div>
+                  <p className="text-sm font-medium text-yellow-800">セットアップを完了してください</p>
+                  <p className="text-xs text-yellow-600 mt-0.5">Stripeの審査が完了するとオンライン決済が有効になります</p>
+                </div>
+              </div>
+              <Button onClick={handleOnboard} disabled={onboarding}>
+                {onboarding ? 'リダイレクト中...' : 'セットアップを続ける'}
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="rounded-xl bg-slate-50 p-4 space-y-3">
+                <p className="text-sm text-slate-700">オンライン決済を導入すると：</p>
+                <ul className="space-y-1.5">
+                  <li className="flex items-start gap-2 text-xs text-slate-600"><span className="material-symbols-outlined text-[14px] text-blue-500 mt-0.5">check</span>患者が来院予約時にクレジットカード決済</li>
+                  <li className="flex items-start gap-2 text-xs text-slate-600"><span className="material-symbols-outlined text-[14px] text-blue-500 mt-0.5">check</span>売上は直接あなたの銀行口座に入金</li>
+                  <li className="flex items-start gap-2 text-xs text-slate-600"><span className="material-symbols-outlined text-[14px] text-blue-500 mt-0.5">check</span>手数料: 決済額の3.6% + プラットフォーム手数料10%</li>
+                </ul>
+              </div>
+              <Button onClick={handleOnboard} disabled={onboarding}>
+                {onboarding ? 'リダイレクト中...' : 'Stripeアカウントを作成して始める'}
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+// --- サービス依頼コンポーネント ---
+
+type ServiceReq = { id: string; type: string; status: string; formData: Record<string, unknown>; createdAt: string }
+
+const STATUS_LABELS: Record<string, { label: string; className: string }> = {
+  pending: { label: '受付済み', className: 'bg-yellow-50 text-yellow-700' },
+  in_progress: { label: '対応中', className: 'bg-blue-50 text-blue-700' },
+  completed: { label: '完了', className: 'bg-green-50 text-green-700' },
+  cancelled: { label: 'キャンセル', className: 'bg-slate-100 text-slate-500' },
+}
+
+function ServiceRequestSettings() {
+  const [requests, setRequests] = useState<ServiceReq[]>([])
+  const [activeForm, setActiveForm] = useState<'line_setup' | 'richmenu_design' | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+
+  // LINE設定代行フォーム
+  const [lineContact, setLineContact] = useState('')
+  const [linePreferredDate, setLinePreferredDate] = useState('')
+  const [lineNote, setLineNote] = useState('')
+
+  // Rich Menuフォーム
+  const [rmSplit, setRmSplit] = useState('6')
+  const [rmButtons, setRmButtons] = useState('')
+  const [rmStyle, setRmStyle] = useState('')
+  const [rmRefUrl, setRmRefUrl] = useState('')
+  const [rmColor, setRmColor] = useState('#2563EB')
+  const [rmNote, setRmNote] = useState('')
+
+  useEffect(() => {
+    fetch('/api/service-requests').then(r => r.json()).then(r => {
+      if (r.data) setRequests(r.data)
+    }).catch(() => {})
+  }, [])
+
+  const submitRequest = async (type: string, formData: Record<string, unknown>) => {
+    setSubmitting(true)
+    const res = await fetch('/api/service-requests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type, formData }),
+    })
+    if (res.ok) {
+      const data = await res.json()
+      setRequests(prev => [data.data, ...prev])
+      setActiveForm(null)
+      toast.success('依頼を送信しました。担当者からご連絡いたします。')
+    } else {
+      toast.error('送信に失敗しました')
+    }
+    setSubmitting(false)
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* LINE設定代行カード */}
+      <Card className="border-0 shadow-sm">
+        <CardContent className="p-5 space-y-4">
+          <div className="flex items-start justify-between">
+            <div>
+              <h2 className="text-sm font-semibold text-slate-900">LINE設定代行</h2>
+              <p className="text-xs text-slate-400 mt-0.5">LINE公式アカウントの開設からMessaging APIの設定まで代行いたします</p>
+            </div>
+            <span className="text-sm font-bold text-slate-900">¥5,000<span className="text-[10px] font-normal text-slate-400">（税込）</span></span>
+          </div>
+
+          {activeForm === 'line_setup' ? (
+            <div className="space-y-4 border-t pt-4">
+              <div className="space-y-2"><Label className="text-xs">ご担当者名 *</Label><Input value={lineContact} onChange={e => setLineContact(e.target.value)} /></div>
+              <div className="space-y-2"><Label className="text-xs">ご希望の設定日時</Label><Input value={linePreferredDate} onChange={e => setLinePreferredDate(e.target.value)} placeholder="例: 平日10-17時希望" /></div>
+              <div className="space-y-2"><Label className="text-xs">備考</Label><textarea className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none resize-none" rows={2} value={lineNote} onChange={e => setLineNote(e.target.value)} /></div>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => setActiveForm(null)}>キャンセル</Button>
+                <Button disabled={submitting || !lineContact} onClick={() => submitRequest('line_setup', { 担当者名: lineContact, 希望日時: linePreferredDate, 備考: lineNote })}>
+                  {submitting ? '送信中...' : '依頼する'}
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <Button variant="outline" onClick={() => setActiveForm('line_setup')}>依頼フォームを開く</Button>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Rich Menu制作依頼カード */}
+      <Card className="border-0 shadow-sm">
+        <CardContent className="p-5 space-y-4">
+          <div className="flex items-start justify-between">
+            <div>
+              <h2 className="text-sm font-semibold text-slate-900">Rich Menu制作依頼</h2>
+              <p className="text-xs text-slate-400 mt-0.5">あなたの院に合ったLINEリッチメニューをデザイン・制作いたします</p>
+            </div>
+            <span className="text-sm font-bold text-slate-900">¥10,000〜<span className="text-[10px] font-normal text-slate-400">（税込）</span></span>
+          </div>
+
+          {activeForm === 'richmenu_design' ? (
+            <div className="space-y-4 border-t pt-4">
+              <div className="space-y-2">
+                <Label className="text-xs">メニューの分割数</Label>
+                <Select value={rmSplit} onValueChange={(v) => { if (v) setRmSplit(v) }}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="2">2分割</SelectItem>
+                    <SelectItem value="3">3分割</SelectItem>
+                    <SelectItem value="4">4分割</SelectItem>
+                    <SelectItem value="6">6分割</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2"><Label className="text-xs">各ボタンに入れたい内容 *</Label><textarea className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none resize-none" rows={3} value={rmButtons} onChange={e => setRmButtons(e.target.value)} placeholder="例: 予約する、メニュー、アクセス、LINE問合せ、スタッフ紹介、お知らせ" /></div>
+              <div className="space-y-2"><Label className="text-xs">希望するデザインの雰囲気</Label><textarea className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none resize-none" rows={2} value={rmStyle} onChange={e => setRmStyle(e.target.value)} placeholder="例: シンプル、高級感、ナチュラル、可愛い..." /></div>
+              <div className="space-y-2"><Label className="text-xs">参考画像URL（任意）</Label><Input value={rmRefUrl} onChange={e => setRmRefUrl(e.target.value)} placeholder="https://..." /></div>
+              <div className="space-y-2">
+                <Label className="text-xs">ブランドカラー</Label>
+                <div className="flex items-center gap-3">
+                  <input type="color" value={rmColor} onChange={e => setRmColor(e.target.value)} className="w-10 h-10 rounded border border-slate-200 cursor-pointer" />
+                  <Input value={rmColor} onChange={e => setRmColor(e.target.value)} className="w-28" />
+                </div>
+              </div>
+              <div className="space-y-2"><Label className="text-xs">その他要望</Label><textarea className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none resize-none" rows={2} value={rmNote} onChange={e => setRmNote(e.target.value)} /></div>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => setActiveForm(null)}>キャンセル</Button>
+                <Button disabled={submitting || !rmButtons} onClick={() => submitRequest('richmenu_design', { 分割数: `${rmSplit}分割`, ボタン内容: rmButtons, デザイン雰囲気: rmStyle, 参考画像: rmRefUrl, ブランドカラー: rmColor, その他: rmNote })}>
+                  {submitting ? '送信中...' : '依頼する'}
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <Button variant="outline" onClick={() => setActiveForm('richmenu_design')}>ヒアリングフォームを開く</Button>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* 既存の依頼一覧 */}
+      {requests.length > 0 && (
+        <Card className="border-0 shadow-sm">
+          <CardContent className="p-5 space-y-4">
+            <h2 className="text-sm font-semibold text-slate-900">依頼履歴</h2>
+            <div className="space-y-2">
+              {requests.map(req => (
+                <div key={req.id} className="flex items-center justify-between py-3 px-4 rounded-xl bg-slate-50">
+                  <div>
+                    <span className="text-sm font-medium text-slate-900">
+                      {req.type === 'line_setup' ? 'LINE設定代行' : 'Rich Menu制作'}
+                    </span>
+                    <span className="text-xs text-slate-400 ml-2">
+                      {new Date(req.createdAt).toLocaleDateString('ja-JP')}
+                    </span>
+                  </div>
+                  <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium ${STATUS_LABELS[req.status]?.className || 'bg-slate-100 text-slate-500'}`}>
+                    {STATUS_LABELS[req.status]?.label || req.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

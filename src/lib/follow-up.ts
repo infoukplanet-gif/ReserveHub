@@ -53,6 +53,17 @@ export async function processFollowUpRules(): Promise<SendResult> {
               await sendLineMessage(lineConfig.channelAccessToken, target.lineUserId, [
                 { type: 'text', text: `${rule.subject}\n\n${body}` },
               ])
+              // チャット履歴にも記録
+              await prisma.chatMessage.create({
+                data: {
+                  tenantId: rule.tenantId,
+                  customerId: target.customerId,
+                  direction: 'outbound',
+                  messageType: 'text',
+                  content: `${rule.subject}\n\n${body}`,
+                  sentAt: new Date(),
+                },
+              })
             }
           }
 
