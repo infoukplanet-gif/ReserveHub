@@ -123,15 +123,14 @@ export default function BillingPage() {
         {PLANS.map(plan => {
           const isCurrent = status?.plan === plan.id
           return (
-            <Card key={plan.id} className={`border-0 shadow-sm relative overflow-hidden ${plan.popular ? 'ring-2 ring-blue-600' : ''}`}>
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <Badge className="bg-blue-600 text-white">人気</Badge>
-                </div>
-              )}
+            <Card key={plan.id} className={`border-0 shadow-sm relative ${plan.popular ? 'ring-2 ring-blue-600' : ''}`}>
               <CardContent className="p-5 flex flex-col h-full">
-                <div>
+                <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold text-slate-900">{plan.name}</h3>
+                  {plan.popular && (
+                    <Badge className="bg-blue-600 text-white text-[10px]">人気</Badge>
+                  )}
+                </div>
                   <div className="mt-1">
                     <span className="text-2xl font-bold text-slate-900">¥{plan.price.toLocaleString()}</span>
                     <span className="text-xs text-slate-400">/月</span>
