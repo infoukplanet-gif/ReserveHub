@@ -131,10 +131,9 @@ export default function BillingPage() {
                     <Badge className="bg-blue-600 text-white text-[10px]">人気</Badge>
                   )}
                 </div>
-                  <div className="mt-1">
-                    <span className="text-2xl font-bold text-slate-900">¥{plan.price.toLocaleString()}</span>
-                    <span className="text-xs text-slate-400">/月</span>
-                  </div>
+                <div className="mt-1">
+                  <span className="text-2xl font-bold text-slate-900">¥{plan.price.toLocaleString()}</span>
+                  <span className="text-xs text-slate-400">/月</span>
                 </div>
 
                 <div className="mt-4 space-y-2 flex-1">
