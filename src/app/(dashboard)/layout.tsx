@@ -16,7 +16,7 @@ const navGroups = [
   { label: '予約・施術', items: [
     { href: '/dashboard/reservations', label: '来院予約', icon: 'calendar_month' },
     { href: '/dashboard/menus', label: '施術メニュー', icon: 'spa' },
-    { href: '/dashboard/staff', label: '施術者管理', icon: 'group' },
+    { href: '/dashboard/staff', label: 'スタッフ管理', icon: 'group' },
   ]},
   { label: '患者', items: [
     { href: '/dashboard/customers', label: '患者管理', icon: 'person' },

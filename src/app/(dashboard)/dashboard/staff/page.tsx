@@ -37,7 +37,7 @@ export default function StaffPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div><h1 className="text-xl font-bold text-slate-900">施術者管理</h1><p className="text-xs text-slate-400 mt-0.5">{staffList.length}名</p></div>
+        <div><h1 className="text-xl font-bold text-slate-900">スタッフ管理</h1><p className="text-xs text-slate-400 mt-0.5">{staffList.length}名</p></div>
         <Button onClick={() => setEditing({ name: '', nominationFee: 0, isActive: true })}>+ 施術者を追加</Button>
       </div>
       {loading ? <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-16 bg-slate-100 rounded-lg animate-pulse" />)}</div> : (
