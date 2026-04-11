@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
+import DatePicker from '@/components/shared/DatePicker'
 
 type Reservation = {
   id: string
@@ -227,7 +228,7 @@ export default function ReservationsPage() {
               </SelectContent></Select>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2"><label className="text-xs text-slate-400">日付 *</label><Input id="mb-date" type="date" defaultValue={currentDate.toISOString().split('T')[0]} /></div>
+              <div className="space-y-2"><label className="text-xs text-slate-400">日付 *</label><DatePicker value={currentDate.toISOString().split('T')[0]} onChange={(d) => { (document.getElementById('mb-date-hidden') as HTMLInputElement).value = d }} /><input type="hidden" id="mb-date-hidden" defaultValue={currentDate.toISOString().split('T')[0]} /></div>
               <div className="space-y-2"><label className="text-xs text-slate-400">時間 *</label><Input id="mb-time" type="time" defaultValue="10:00" /></div>
             </div>
             <div className="space-y-2"><label className="text-xs text-slate-400">メモ</label><Input id="mb-memo" placeholder="電話予約" /></div>

@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { toast } from 'sonner'
+import DatePicker from '@/components/shared/DatePicker'
 
 type Menu = { id: string; name: string; description: string | null; durationMinutes: number; basePrice: number; priceRange: string; menuOptions: { id: string; name: string; price: number; durationMinutes: number }[]; pricingRules: { price: number }[] }
 type Staff = { id: string; name: string; role: string; nominationFee: number; bio: string | null }
@@ -178,7 +179,14 @@ export default function BookingPage() {
 
         {/* Step 4: DateTime */}
         {step === 3 && <div className="space-y-4"><h2 className="text-lg font-semibold text-slate-900">日時を選ぶ</h2>
-          <div className="space-y-2"><Label>日付</Label><Input type="date" value={selectedDate} onChange={e => { setSelectedDate(e.target.value); setSelectedTime(null) }} min={new Date().toISOString().split('T')[0]} /></div>
+          <div className="space-y-2">
+            <Label>日付</Label>
+            <DatePicker
+              value={selectedDate}
+              onChange={(d) => { setSelectedDate(d); setSelectedTime(null) }}
+              minDate={new Date().toISOString().split('T')[0]}
+            />
+          </div>
           <h3 className="text-sm font-semibold text-slate-900">{selectedDate} の空き時間</h3>
           {slots.length === 0 ? <Card><CardContent className="py-8 text-center"><p className="text-sm text-slate-400">空き枠がありません</p></CardContent></Card> :
             <div className="space-y-2">{slots.map(s => {
