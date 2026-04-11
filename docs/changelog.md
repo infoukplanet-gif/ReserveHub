@@ -464,3 +464,57 @@ section_config: jsonb (セクションごとの詳細設定)
 - Prismaマイグレーションはnon-interactive環境では手動SQL作成+`migrate deploy`で適用
 - プラットフォーム系ページはSSRを基本とし、JSON-LD構造化データを必ず出力
 - `useSearchParams()`を使うページは`<Suspense>`で必ずラップ（Next.js 16要件）
+
+---
+
+## 2026-04-11 — 残タスク一括消化 + UIフィードバック全13件 + カレンダー改善
+
+### 決定事項
+- LINE Rich Menu制作は外注。アプリ内にヒアリングフォーム（分割数/ボタン内容/デザイン雰囲気/参考画像/ブランドカラー/その他）→ 大野さんにメール通知 → 外注
+- LINE設定代行: ¥5,000（税込）、Rich Menu制作依頼: ¥10,000〜（税込）
+- 「施術者管理」→「スタッフ管理」にリネーム
+- PlatformUser（患者側）のログイン/登録パス: `/platform-login`, `/platform-register`（route group競合回避）
+
+### 完了した作業
+- [x] RLSポリシー全36テーブル対応 + ヘルパー関数 + Storageバケット作成SQL
+- [x] auth.ts 開発用フォールバック除去（セキュリティ修正）
+- [x] middleware.ts に /mypage 認証ガード追加
+- [x] Stripe Connect Express実装（onboard/status/checkout API + stripe-connect.ts + Webhook）
+- [x] PlatformUser認証フロー（/platform-login, /platform-register, auth callback分岐）
+- [x] 口コミ投稿を認証済みPlatformUser限定に変更
+- [x] ミナオスなび有料掲載申込（/list-your-clinic + Stripe Checkout + Webhook自動作成）
+- [x] 設定代行サービス申込（ServiceRequestモデル + API + ヒアリングフォーム + メール通知）
+- [x] Prismaマイグレーション（ServiceRequest, Stripe Connectカラム, Review.platformUserId）
+- [x] サイドメニューをグループ分け（予約・施術/患者/コミュニケーション/サイト/管理）
+- [x] 設定サブメニュー削除 + タブURL連携修正（useSearchParams）
+- [x] 課金プランカードのレスポンシブ修正 + 人気バッジ見切れ修正
+- [x] HP公開ページにブログセクション追加 + force-dynamic追加
+- [x] ブログにスラッグ設定 + カテゴリー6種に拡張
+- [x] フォローアップ→チャット履歴連動（LINE送信時にchat_messagesにも記録）
+- [x] 来院予約に統計カード + アイコン付きタブ + ナビボタン改善
+- [x] スタッフフォームをセクション分け（基本情報/プロフィール/料金/表示設定）
+- [x] チャット文字化け修正（チャ���ト→チャット）
+- [x] カスタムDatePickerコンポーネント（日本語対応、曜日色分け、今日マーカー）
+
+### 新しい知見（技術）
+- Next.js 16でroute group内の同名パスが競合する → `/platform-login` のように一意にする
+- `createBrowserClient`をコンポーネントトップレベルで呼ぶとSSG時にビルド失敗 → `getSupabase()` で遅延初期化
+- Vercel Git連携が切れている場合 → `npx vercel --prod` で手動デプロイ可能
+- `overflow-hidden` + `absolute -top-N` でバッジ見切れ → カード内配置が正解
+- JSX編集で閉じタグ不整合 → Vercelビルド失敗。ローカルビルドは通るがTurbopackで検出される場合がある
+
+### 課題・TODO（優先順位順）
+- [ ] Vercel Git連携の修正（pushで自動デプロイされるようにする）
+- [ ] Google OAuth有効化（Google Cloud Console + Supabase Dashboard設定）
+- [ ] Supabase SQL EditorでRLSポリシー適用（rls-policies.sql実行）
+- [ ] Supabase SQL Editorでマイグレーション適用（migration.sql実行）
+- [ ] 独自ドメイン設定
+- [ ] Stripe Webhook に account.updated イベント追加
+- [ ] Stripe Connect 環境変数設定
+
+### 開発ルールの追加・変更
+- route group内で同名パスを作らない（`/(auth)/login` と `/(platform)/login` は競合する）
+- `createBrowserClient` は関数ラップ（`getSupabase()`）で遅延初期化
+- CSSの `overflow-hidden` 使用時は `absolute` 配置の子要素が見切れないか確認
+- JSX編集後は閉じタグの整合性を確認してからcommit
+- Vercelデプロイが反映されない場合は `npx vercel --prod` で手動デプロイ
